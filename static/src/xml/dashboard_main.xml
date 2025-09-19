@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+        
+        <!-- Main Dashboard Template -->
+        <t t-name="farm_management_dashboard.MainTemplate" owl="1">
+            <div class="farm-dashboard-wrapper" t-att-class="state.isMobile ? 'mobile' : 'desktop'">
+                
+                <!-- Loading Overlay -->
+                <div t-if="state.loading.global" class="dashboard-loading-overlay">
+                    <div class="loading-spinner">
+                        <i class="fa fa-spinner fa-spin fa-3x"/>
+                        <p class="mt-3">Loading Farm Dashboard...</p>
+                    </div>
+                </div>
+                
+                <!-- Mobile Header -->
+                <div t-if="state.isMobile" class="mobile-header">
+                    <button class="btn btn-link mobile-menu-toggle" t-on-click="toggleSidebar">
+                        <i class="fa fa-bars"/>
+                    </button>
+                    <h4 class="mobile-title">
+                        <t t-esc="dashboardTitle"/>
+                    </h4>
+                    <div class="mobile-actions">
+                        <button class="btn btn-sm btn-outline-primary" t-on-click="refreshCurrentTab">
+                            <i class="fa fa-refresh"/>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Sidebar Overlay for Mobile -->
+                <div t-if="state.isMobile and !state.sidebarCollapsed" 
+                     class="sidebar-overlay" 
+                     t-on-click="toggleSidebar"/>
+                
+                <!-- Main Layout -->
+                <div class="dashboard-layout" t-att-class="state.sidebarCollapsed ? 'sidebar-collapsed' : 'sidebar-expanded'">
+                    
+                    <!-- Sidebar -->
+                    <DashboardSidebar 
+                        activeTab="state.activeTab"
+                        sidebarCollapsed="state.sidebarCollapsed"
+                        accessibleTabs="state.accessibleTabs"
+                        userPermissions="state.userPermissions"
+                        onTabSwitch.bind="switchTab"
+                        onToggleSidebar.bind="toggleSidebar"
+                        onRefresh.bind="refreshCurrentTab"
+                        onExport.bind="exportTabData"
+                        liveRefreshEnabled="state.liveRefreshEnabled"
+                        onToggleLiveRefresh.bind="toggleLiveRefresh"
+                        isMobile="state.isMobile"
+                    />
+                    
+                    <!-- Main Content Area -->
+                    <div class="dashboard-main-content">
+                        
+                        <!-- Desktop Header -->
+                        <div t-if="!state.isMobile" class="desktop-header">
+                            <div class="header-left">
+                                <button class="btn btn-link sidebar-toggle" t-on-click="toggleSidebar">
+                                    <i t-att-class="state.sidebarCollapsed ? 'fa fa-bars' : 'fa fa-times'"/>
+                                </button>
+                                <h2 class="dashboard-title">
+                                    <t t-esc="dashboardTitle"/>
+                                </h2>
+                            </div>
+                            
+                            <div class="header-right">
+                                <!-- Live Refresh Indicator -->
+                                <div t-if="showLiveRefreshToggle" class="live-refresh-indicator">
+                                    <span t-att-class="state.liveRefreshEnabled ? 'badge badge-success' : 'badge badge-secondary'">
+                                        <i class="fa fa-circle" t-att-class="state.liveRefreshEnabled ? 'text-success' : 'text-muted'"/>
+                                        <t t-if="state.liveRefreshEnabled">Live</t>
+                                        <t t-else="">Static</t>
+                                    </span>
+                                </div>
+                                
+                                <!-- Last Refresh Time -->
+                                <small t-if="state.lastRefresh" class="text-muted me-3">
+                                    Last updated: <t t-esc="new Date(state.lastRefresh).toLocaleTimeString()"/>
+                                </small>
+                                
+                                <!-- Action Buttons -->
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-outline-primary" 
+                                            t-on-click="refreshCurrentTab"
+                                            t-att-disabled="isCurrentTabLoading">
+                                        <i class="fa fa-refresh" t-att-class="isCurrentTabLoading ? 'fa-spin' : ''"/>
+                                        Refresh
+                                    </button>
+                                    
+                                    <button t-if="canExport" 
+                                            class="btn btn-sm btn-outline-secondary" 
+                                            t-on-click="exportTabData">
+                                        <i class="fa fa-download"/>
+                                        Export
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Tab Content -->
+                        <div class="tab-content-wrapper">
+                            
+                            <!-- Tab Loading Indicator -->
+                            <div t-if="isCurrentTabLoading" class="tab-loading">
+                                <div class="d-flex align-items-center justify-content-center p-4">
+                                    <i class="fa fa-spinner fa-spin me-2"/>
+                                    <span>Loading <t t-esc="state.activeTab"/> data...</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Error State -->
+                            <div t-elif="currentTabData.error" class="tab-error">
+                                <div class="alert alert-danger m-4">
+                                    <i class="fa fa-exclamation-triangle me-2"/>
+                                    <strong>Error loading data:</strong>
+                                    <t t-esc="currentTabData.error"/>
+                                </div>
+                            </div>
+                            
+                            <!-- Tab Components -->
+                            <div t-else="" class="tab-content-area">
+                                
+                                <!-- Overview Tab -->
+                                <OverviewTab t-if="state.activeTab === 'overview'"
+                                            data="currentTabData"
+                                            filters="state.filters"
+                                            userPermissions="state.userPermissions"
+                                            onFiltersChange.bind="onFiltersChange"/>
+                                
+                                <!-- Projects Tab -->
+                                <ProjectsTab t-elif="state.activeTab === 'projects'"
+                                            data="currentTabData"
+                                            filters="state.filters"
+                                            userPermissions="state.userPermissions"
+                                            onFiltersChange.bind="onFiltersChange"
+                                            rpcCall.bind="rpcCall"/>
+                                
+                                <!-- Crops Tab -->
+                                <CropsTab t-elif="state.activeTab === 'crops'"
+                                         data="currentTabData"
+                                         filters="state.filters"
+                                         userPermissions="state.userPermissions"
+                                         onFiltersChange.bind="onFiltersChange"
+                                         rpcCall.bind="rpcCall"/>
+                                
+                                <!-- Financials Tab -->
+                                <FinancialsTab t-elif="state.activeTab === 'financials'"
+                                              data="currentTabData"
+                                              filters="state.filters"
+                                              userPermissions="state.userPermissions"
+                                              onFiltersChange.bind="onFiltersChange"
+                                              rpcCall.bind="rpcCall"/>
+                                
+                                <!-- Sales Tab -->
+                                <SalesTab t-elif="state.activeTab === 'sales'"
+                                         data="currentTabData"
+                                         filters="state.filters"
+                                         userPermissions="state.userPermissions"
+                                         onFiltersChange.bind="onFiltersChange"
+                                         rpcCall.bind="rpcCall"/>
+                                
+                                <!-- Purchases Tab -->
+                                <PurchasesTab t-elif="state.activeTab === 'purchases'"
+                                             data="currentTabData"
+                                             filters="state.filters"
+                                             userPermissions="state.userPermissions"
+                                             onFiltersChange.bind="onFiltersChange"/>
+                                
+                                <!-- Inventory Tab -->
+                                <InventoryTab t-elif="state.activeTab === 'inventory'"
+                                             data="currentTabData"
+                                             filters="state.filters"
+                                             userPermissions="state.userPermissions"
+                                             rpcCall.bind="rpcCall"
+                                             onFiltersChange.bind="onFiltersChange"/>
+                                
+                                <!-- Reports Tab -->
+                                <ReportsTab t-elif="state.activeTab === 'reports'"
+                                           data="currentTabData"
+                                           filters="state.filters"
+                                           userPermissions="state.userPermissions"
+                                           onFiltersChange.bind="onFiltersChange"/>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+        
+        <!-- Sidebar Template -->
+        <t t-name="farm_management_dashboard.SidebarTemplate" owl="1">
+            <div t-att-class="sidebarClasses">
+                
+                <!-- Sidebar Header -->
+                <div class="sidebar-header">
+                    <div class="sidebar-logo" t-att-class="props.sidebarCollapsed ? 'collapsed' : 'expanded'">
+                        <i class="fa fa-leaf sidebar-icon"/>
+                        <span t-if="!props.sidebarCollapsed" class="sidebar-title">Farm Dashboard</span>
+                    </div>
+                    
+                    <!-- User Info -->
+                    <div t-if="!props.sidebarCollapsed" class="user-info">
+                        <div class="user-avatar">
+                            <span t-esc="userRoleIcon"/>
+                        </div>
+                        <div class="user-details">
+                            <div class="user-name" t-esc="userRoleLabel"/>
+                            <div class="user-role" t-esc="userRole"/>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Navigation Tabs -->
+                <nav class="sidebar-nav">
+                    <ul class="nav-list">
+                        <li t-foreach="props.accessibleTabs" t-as="tab" t-key="tab.key" class="nav-item">
+                            <a href="#" 
+                               t-att-class="getTabClasses(tab.key)"
+                               t-on-click="(ev) => this.onTabClick(tab.key, ev)"
+                               t-att-title="tab.name">
+                                
+                                <span class="tab-icon" t-esc="tab.icon"/>
+                                
+                                <span t-if="!props.sidebarCollapsed" class="tab-label">
+                                    <t t-esc="tab.name"/>
+                                </span>
+                                
+                                <!-- Tab Badge -->
+                                <span t-if="!props.sidebarCollapsed and getTabBadge(tab.key)" 
+                                      class="tab-badge badge badge-primary"
+                                      t-esc="getTabBadge(tab.key)"/>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                
+                <!-- Sidebar Footer -->
+                <div class="sidebar-footer">
+                    
+                    <!-- Live Refresh Toggle -->
+                    <div t-if="showLiveRefreshToggle and !props.sidebarCollapsed" class="sidebar-control">
+                        <label class="form-check-label">
+                            <input type="checkbox" 
+                                   class="form-check-input"
+                                   t-att-checked="props.liveRefreshEnabled"
+                                   t-on-change="props.onToggleLiveRefresh"/>
+                            <span class="ms-2">Live Refresh</span>
+                        </label>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="sidebar-actions">
+                        <button class="btn btn-sm btn-outline-light" 
+                                t-on-click="props.onRefresh"
+                                t-att-title="props.sidebarCollapsed ? 'Refresh' : ''">
+                            <i class="fa fa-refresh"/>
+                            <span t-if="!props.sidebarCollapsed" class="ms-1">Refresh</span>
+                        </button>
+                        
+                        <button t-if="canExport" 
+                                class="btn btn-sm btn-outline-light" 
+                                t-on-click="props.onExport"
+                                t-att-title="props.sidebarCollapsed ? 'Export' : ''">
+                            <i class="fa fa-download"/>
+                            <span t-if="!props.sidebarCollapsed" class="ms-1">Export</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </t>
+        
+</templates>

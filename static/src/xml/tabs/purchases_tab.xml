@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-name="farm_management_dashboard.PurchasesTabTemplate" owl="1">
+        <div class="purchases-tab">
+            <!-- Header with Navigation -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="d-flex align-items-center">
+                    <i class="fa fa-truck fa-2x text-primary me-3"/>
+                    <div>
+                        <h3 class="mb-0">Purchases Management</h3>
+                        <small class="text-muted">Procurement, suppliers, and cost analysis</small>
+                    </div>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-secondary btn-sm" t-on-click="onToggleFilters">
+                        <i class="fa fa-filter me-1"/>
+                        Filters
+                    </button>
+                    <div class="btn-group" role="group">
+                        <button type="button" 
+                                t-att-class="'btn btn-sm ' + (state.currentView === 'overview' ? 'btn-primary' : 'btn-outline-primary')"
+                                t-on-click="() => this.onChangeView('overview')">
+                            Overview
+                        </button>
+                        <button type="button" 
+                                t-att-class="'btn btn-sm ' + (state.currentView === 'suppliers' ? 'btn-primary' : 'btn-outline-primary')"
+                                t-on-click="() => this.onChangeView('suppliers')">
+                            Suppliers
+                        </button>
+                        <button type="button" 
+                                t-att-class="'btn btn-sm ' + (state.currentView === 'products' ? 'btn-primary' : 'btn-outline-primary')"
+                                t-on-click="() => this.onChangeView('products')">
+                            Products
+                        </button>
+                        <button type="button" 
+                                t-att-class="'btn btn-sm ' + (state.currentView === 'pipeline' ? 'btn-primary' : 'btn-outline-primary')"
+                                t-on-click="() => this.onChangeView('pipeline')">
+                            Pipeline
+                        </button>
+                        <button type="button" 
+                                t-att-class="'btn btn-sm ' + (state.currentView === 'cost_analysis' ? 'btn-primary' : 'btn-outline-primary')"
+                                t-on-click="() => this.onChangeView('cost_analysis')">
+                            Cost Analysis
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters Panel -->
+            <div t-if="state.showFilters" class="card mb-4">
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label">Date Range</label>
+                            <select class="form-select" t-model="state.filters.date_range" t-on-change="() => this.onFilterChange('date_range', state.filters.date_range)">
+                                <option value="7_days">Last 7 Days</option>
+                                <option value="30_days">Last 30 Days</option>
+                                <option value="90_days">Last 90 Days</option>
+                                <option value="year">This Year</option>
+                                <option value="custom">Custom Range</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Supplier</label>
+                            <select class="form-select" t-model="state.filters.supplier_id" t-on-change="() => this.onFilterChange('supplier_id', state.filters.supplier_id)">
+                                <option value="">All Suppliers</option>
+                                <t t-foreach="filterOptions.suppliers || []" t-as="supplier" t-key="supplier.id">
+                                    <option t-att-value="supplier.id" t-esc="supplier.name"/>
+                                </t>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Status</label>
+                            <select class="form-select" t-model="state.filters.state" t-on-change="() => this.onFilterChange('state', state.filters.state)">
+                                <option value="">All Status</option>
+                                <t t-foreach="filterOptions.states || []" t-as="stateOption" t-key="stateOption.id">
+                                    <option t-att-value="stateOption.id" t-esc="stateOption.name"/>
+                                </t>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Search</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Search purchases..." 
+                                       t-model="state.filters.search" 
+                                       t-on-input="onSearchInputChange"
+                                       t-on-keypress="onSearchKeyPress"/>
+                                <button class="btn btn-outline-secondary" t-on-click="onSearchTrigger">
+                                    <i class="fa fa-search"/>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <button class="btn btn-sm btn-outline-danger" t-on-click="onClearFilters">
+                            <i class="fa fa-times me-1"/>
+                            Clear Filters
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Overview View -->
+            <div t-if="state.currentView === 'overview'" class="overview-view">
+                <!-- Summary Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <div class="bg-primary bg-opacity-10 rounded-3 p-3">
+                                            <i class="fa fa-shopping-cart fa-2x text-primary"/>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <div class="text-start">
+                                            <h3 class="mb-0" t-esc="formatNumber(purchasesSummary.total_orders || 0)"/>
+                                            <small class="text-muted">Total Orders</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <div class="bg-success bg-opacity-10 rounded-3 p-3">
+                                            <i class="fa fa-dollar-sign fa-2x text-success"/>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <div class="text-start">
+                                            <h3 class="mb-0" t-esc="formatCurrency(purchasesSummary.total_amount || 0)"/>
+                                            <small class="text-muted">Total Amount</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <div class="bg-info bg-opacity-10 rounded-3 p-3">
+                                            <i class="fa fa-users fa-2x text-info"/>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <div class="text-start">
+                                            <h3 class="mb-0" t-esc="formatNumber(supplierAnalysis.total_suppliers || 0)"/>
+                                            <small class="text-muted">Active Suppliers</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <div class="bg-warning bg-opacity-10 rounded-3 p-3">
+                                            <i class="fa fa-chart-line fa-2x text-warning"/>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <div class="text-start">
+                                            <h3 class="mb-0" t-esc="formatCurrency(purchasesSummary.average_order_value || 0)"/>
+                                            <small class="text-muted">Avg Order Value</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-transparent border-0">
+                                <h5 class="mb-0">Purchase Trends</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="purchaseTrendsChart" height="300"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-transparent border-0">
+                                <h5 class="mb-0">Status Distribution</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="statusDistributionChart" height="300"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Orders -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-transparent border-0">
+                        <h5 class="mb-0">Recent Purchase Orders</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Order #</th>
+                                        <th>Supplier</th>
+                                        <th>Date</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="purchasesSummary.recent_orders || []" t-as="order" t-key="order.id">
+                                        <tr>
+                                            <td>
+                                                <strong t-esc="order.name"/>
+                                            </td>
+                                            <td t-esc="order.partner_name"/>
+                                            <td t-esc="formatDate(order.date_order)"/>
+                                            <td>
+                                                <strong t-esc="formatCurrency(order.amount_total)"/>
+                                            </td>
+                                            <td>
+                                                <span t-att-class="'badge ' + getStateClass(order.state)" t-esc="getStateLabel(order.state)"/>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary" t-on-click="() => this.onViewPurchaseOrder(order.id)">
+                                                    <i class="fa fa-eye me-1"/>
+                                                    View
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Suppliers View -->
+            <div t-if="state.currentView === 'suppliers'" class="suppliers-view">
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-transparent border-0">
+                                <h5 class="mb-0">Top Suppliers by Amount</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="supplierAnalysisChart" height="400"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-transparent border-0">
+                                <h5 class="mb-0">Supplier Ratings</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="supplierPerformanceChart" height="400"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suppliers Table -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-transparent border-0">
+                        <h5 class="mb-0">Supplier Details</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Supplier</th>
+                                        <th>Contact</th>
+                                        <th>Orders</th>
+                                        <th>Total Amount</th>
+                                        <th>Rating</th>
+                                        <th>Last Order</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="supplierAnalysis.suppliers || []" t-as="supplier" t-key="supplier.id">
+                                        <tr>
+                                            <td>
+                                                <div>
+                                                    <strong t-esc="supplier.name"/>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <small class="text-muted" t-esc="supplier.email"/>
+                                                    <br/>
+                                                    <small class="text-muted" t-esc="supplier.phone"/>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-info" t-esc="supplier.total_orders"/>
+                                            </td>
+                                            <td>
+                                                <strong t-esc="formatCurrency(supplier.total_amount)"/>
+                                            </td>
+                                            <td>
+                                                <span t-att-class="'badge ' + getSupplierRatingClass(supplier.supplier_rating)" t-esc="supplier.supplier_rating"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="formatDate(supplier.last_order_date)"/>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary" 
+                                                        t-on-click="() => this.onViewSupplierDetail(supplier.id)">
+                                                    <i class="fa fa-eye me-1"/>
+                                                    Details
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products View -->
+            <div t-if="state.currentView === 'products'" class="products-view">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-transparent border-0">
+                                <h5 class="mb-0">Product Categories</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="productCategoriesChart" height="300"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-transparent border-0">
+                                <h5 class="mb-0">Top Products by Amount</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="topProductsChart" height="300"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Products Table -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-transparent border-0">
+                        <h5 class="mb-0">Product Purchase Analysis</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Category</th>
+                                        <th>Quantity</th>
+                                        <th>Total Amount</th>
+                                        <th>Avg Price</th>
+                                        <th>Orders</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="productPurchasesAnalysis.products || []" t-as="product" t-key="product.id">
+                                        <tr>
+                                            <td>
+                                                <strong t-esc="product.name"/>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-secondary" t-esc="product.category"/>
+                                            </td>
+                                            <td t-esc="formatNumber(product.total_quantity)"/>
+                                            <td>
+                                                <strong t-esc="formatCurrency(product.total_amount)"/>
+                                            </td>
+                                            <td t-esc="formatCurrency(product.average_price)"/>
+                                            <td>
+                                                <span class="badge bg-info" t-esc="product.orders_count"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pipeline View -->
+            <div t-if="state.currentView === 'pipeline'" class="pipeline-view">
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-transparent border-0">
+                                <h5 class="mb-0">Purchase Pipeline</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="pipelineChart" height="400"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-transparent border-0">
+                                <h5 class="mb-0">Performance Metrics</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <div class="d-flex justify-content-between">
+                                            <span>Approval Rate</span>
+                                            <strong t-esc="formatPercentage(performanceMetrics.approval_rate)"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="d-flex justify-content-between">
+                                            <span>Avg Processing Time</span>
+                                            <strong t-esc="(performanceMetrics.avg_processing_time || 0) + ' days'"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="d-flex justify-content-between">
+                                            <span>On-Time Delivery</span>
+                                            <strong t-esc="formatPercentage(performanceMetrics.on_time_delivery_rate)"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="d-flex justify-content-between">
+                                            <span>Cost Savings</span>
+                                            <strong class="text-success" t-esc="formatCurrency(performanceMetrics.cost_savings)"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pending Approvals -->
+                <div class="card border-0 shadow-sm" t-if="purchasePipeline.pending_approvals &amp;&amp; purchasePipeline.pending_approvals.length > 0">
+                    <div class="card-header bg-transparent border-0">
+                        <h5 class="mb-0">
+                            Pending Approvals 
+                            <span class="badge bg-warning ms-2" t-esc="purchasePipeline.pending_approvals.length"/>
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Order #</th>
+                                        <th>Supplier</th>
+                                        <th>Amount</th>
+                                        <th>Order Date</th>
+                                        <th>Days Pending</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="purchasePipeline.pending_approvals" t-as="order" t-key="order.id">
+                                        <tr>
+                                            <td>
+                                                <strong t-esc="order.name"/>
+                                            </td>
+                                            <td t-esc="order.partner_name"/>
+                                            <td>
+                                                <strong t-esc="formatCurrency(order.amount_total)"/>
+                                            </td>
+                                            <td t-esc="formatDate(order.date_order)"/>
+                                            <td>
+                                                <span t-att-class="'badge ' + (order.days_pending > 7 ? 'bg-danger' : 'bg-warning')" 
+                                                      t-esc="order.days_pending + ' days'"/>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <button class="btn btn-sm btn-success" t-on-click="() => this.onApprovePurchaseOrder(order.id)">
+                                                        <i class="fa fa-check me-1"/>
+                                                        Approve
+                                                    </button>
+                                                    <button class="btn btn-sm btn-outline-primary" t-on-click="() => this.onViewPurchaseOrder(order.id)">
+                                                        <i class="fa fa-eye me-1"/>
+                                                        View
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cost Analysis View -->
+            <div t-if="state.currentView === 'cost_analysis'" class="cost-analysis-view">
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <h2 class="text-primary" t-esc="formatCurrency(costAnalysis.total_spent || 0)"/>
+                                <p class="text-muted mb-0">Total Spent</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <h2 class="text-success" t-esc="formatCurrency(costAnalysis.budget_target || 0)"/>
+                                <p class="text-muted mb-0">Budget Target</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <h2 t-att-class="'text-' + (costAnalysis.budget_variance >= 0 ? 'success' : 'danger')" 
+                                    t-esc="formatCurrency(costAnalysis.budget_variance || 0)"/>
+                                <p class="text-muted mb-0">Budget Variance</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-transparent border-0">
+                                <h5 class="mb-0">Cost Trends</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="costTrendsChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-transparent border-0">
+                                <h5 class="mb-0">Budget Utilization</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="budgetAnalysisChart" height="300"></canvas>
+                                </div>
+                                <div class="mt-3 text-center">
+                                    <h4 t-esc="formatPercentage(costAnalysis.budget_utilization || 0)"/>
+                                    <small class="text-muted">Budget Used</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

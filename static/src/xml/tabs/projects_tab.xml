@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <!-- Projects Tab Template -->
+    <t t-name="farm_management_dashboard.ProjectsTabTemplate" owl="1">
+        <div class="projects-tab">
+            <!-- Projects Header with Stats -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="mb-0">
+                            <i class="fa fa-seedling me-2 text-primary"/>
+                            Cultivation Projects
+                        </h4>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-outline-primary btn-sm" t-on-click="() => this.onToggleFilters()">
+                                <i class="fa fa-filter me-1"/>
+                                Filters
+                                <span t-if="hasActiveFilters" class="badge bg-primary ms-1" t-esc="activeFiltersCount"/>
+                            </button>
+                            <button class="btn btn-outline-secondary btn-sm" t-on-click="() => this.onClearFilters()">
+                                <i class="fa fa-times me-1"/>
+                                Clear
+                            </button>
+                            <button class="btn btn-primary btn-sm" t-on-click="() => this.onCreateProject()">
+                                <i class="fa fa-plus me-1"/>
+                                New Project
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project Stats Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3 mb-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="d-flex align-items-center justify-content-center mb-2">
+                                <div class="stat-icon bg-primary text-white rounded-circle me-3">
+                                    <i class="fa fa-seedling"/>
+                                </div>
+                                <div class="text-start">
+                                    <h3 class="mb-0" t-esc="stats.total_projects"/>
+                                    <small class="text-muted">Total Projects</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="d-flex align-items-center justify-content-center mb-2">
+                                <div class="stat-icon bg-success text-white rounded-circle me-3">
+                                    <i class="fa fa-play"/>
+                                </div>
+                                <div class="text-start">
+                                    <h3 class="mb-0" t-esc="stats.active_projects"/>
+                                    <small class="text-muted">Active Projects</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="d-flex align-items-center justify-content-center mb-2">
+                                <div class="stat-icon bg-warning text-white rounded-circle me-3">
+                                    <i class="fa fa-chart-area"/>
+                                </div>
+                                <div class="text-start">
+                                    <h3 class="mb-0" t-esc="formatNumber(stats.total_area)"/>
+                                    <small class="text-muted">Total Area (Ha)</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="d-flex align-items-center justify-content-center mb-2">
+                                <div class="stat-icon bg-info text-white rounded-circle me-3">
+                                    <i class="fa fa-dollar-sign"/>
+                                </div>
+                                <div class="text-start">
+                                    <h3 class="mb-0" t-esc="formatCurrency(stats.total_budget)"/>
+                                    <small class="text-muted">Total Budget</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Projects by Stage -->
+            <div class="row">
+                <t t-foreach="projectsByStage" t-as="stage" t-key="stage[0]">
+                    <div class="col-12 mb-4">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-light border-0" 
+                                 style="cursor: pointer;" 
+                                 t-on-click="() => this.toggleSection(stage[0])">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0 d-flex align-items-center">
+                                        <i t-att-class="isSectionExpanded(stage[0]) ? 'fa fa-chevron-down' : 'fa fa-chevron-right'" 
+                                           class="text-muted me-2" 
+                                           style="font-size: 0.8rem; transition: transform 0.2s ease;"/>
+                                        <i t-att-class="getStageIcon(stage[0])" class="me-2"/>
+                                        <t t-esc="getStageLabel(stage[0])"/>
+                                        <span class="badge bg-secondary ms-2" t-esc="stage[1].length"/>
+                                    </h5>
+                                    <div class="d-flex align-items-center">
+                                        <small class="text-muted me-3">
+                                            <i class="fa fa-clock me-1"/>
+                                            Last updated: <t t-esc="formatDateTime(lastUpdated)"/>
+                                        </small>
+                                        <small class="text-muted">
+                                            <i class="fa fa-info-circle me-1"/>
+                                            Click to <t t-if="isSectionExpanded(stage[0])">collapse</t><t t-else="">expand</t>
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Collapsible Card Body -->
+                            <div t-att-class="'card-body p-0 collapse' + (isSectionExpanded(stage[0]) ? ' show' : '')" 
+                                 t-att-id="'collapse-' + stage[0]"
+                                 style="transition: all 0.3s ease;">
+                                <t t-if="stage[1].length &gt; 0">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover mb-0">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>Project</th>
+                                                    <th>Farm &amp; Field</th>
+                                                    <th>Crop</th>
+                                                    <th>Timeline</th>
+                                                    <th>Budget</th>
+                                                    <th>Progress</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-foreach="stage[1]" t-as="project" t-key="project.id">
+                                                    <tr>
+                                                        <td>
+                                                            <div class="d-flex align-items-center">
+                                                                <div class="project-avatar bg-primary text-white rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                                                    <i class="fa fa-seedling"/>
+                                                                </div>
+                                                                <div>
+                                                                    <h6 class="mb-0" t-esc="project.name"/>
+                                                                    <small class="text-muted" t-esc="project.code"/>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div>
+                                                                <strong t-esc="project.farm_name"/>
+                                                                <br/>
+                                                                <small class="text-muted">
+                                                                    <i class="fa fa-map-marker-alt me-1"/>
+                                                                    <t t-esc="project.field_name"/>
+                                                                    (<t t-esc="formatNumber(project.field_area)"/> <t t-esc="project.area_unit"/>)
+                                                                </small>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <span class="badge bg-success" t-esc="project.crop_name"/>
+                                                        </td>
+                                                        <td>
+                                                            <div>
+                                                                <small class="text-muted">Start:</small> <t t-esc="formatDate(project.start_date)"/>
+                                                                <br/>
+                                                                <small class="text-muted">End:</small> <t t-esc="formatDate(project.planned_end_date)"/>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div>
+                                                                <strong t-esc="formatCurrency(project.budget)"/>
+                                                                <br/>
+                                                                <small class="text-muted">
+                                                                    Actual: <t t-esc="formatCurrency(project.actual_cost)"/>
+                                                                </small>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="progress" style="height: 8px;">
+                                                                <div class="progress-bar bg-success" 
+                                                                     t-att-style="'width: ' + project.progress_percentage + '%'"
+                                                                     t-att-aria-valuenow="project.progress_percentage"
+                                                                     aria-valuemin="0" aria-valuemax="100">
+                                                                </div>
+                                                            </div>
+                                                            <small class="text-muted" t-esc="project.progress_percentage + '%'"/>
+                                                        </td>
+                                                        <td>
+                                            <div class="btn-group btn-group-sm">
+                                                <button class="btn btn-outline-primary" title="View Details" 
+                                                        t-on-click="() => this.onViewProject(project.id)">
+                                                    <i class="fa fa-eye"/>
+                                                </button>
+                                                <button class="btn btn-outline-secondary" title="Edit"
+                                                        t-on-click="() => this.onEditProject(project.id)">
+                                                    <i class="fa fa-edit"/>
+                                                </button>
+                                                <button class="btn btn-outline-info" title="Reports"
+                                                        t-on-click="() => this.onViewReports(project.id)">
+                                                    <i class="fa fa-chart-line"/>
+                                                </button>
+                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </t>
+                                <t t-else="">
+                                    <div class="text-center p-4">
+                                        <i class="fa fa-seedling fa-2x text-muted mb-3"/>
+                                        <p class="text-muted">No projects in <t t-esc="getStageLabel(stage[0]).toLowerCase()"/> stage</p>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+
+            <!-- New Project Modal -->
+            <t t-if="state.showNewProjectModal">
+                <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+                    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header bg-success text-white">
+                                <h5 class="modal-title">
+                                    <i class="fa fa-plus me-2"/>
+                                    Create New Project
+                                </h5>
+                                <button type="button" class="btn-close btn-close-white" 
+                                        t-on-click="() => this.onCloseNewProjectModal()"/>
+                            </div>
+                            <div class="modal-body">
+                                <form t-on-submit.prevent="() => this.onSaveNewProject()">
+                                    <div class="row g-3">
+                                        <!-- Project Name -->
+                                        <div class="col-md-6">
+                                            <label class="form-label required">Project Name</label>
+                                            <input type="text" class="form-control" 
+                                                   t-model="state.newProject.name"
+                                                   placeholder="Enter project name..."
+                                                   required="required"
+                                                   t-att-class="{'is-invalid': state.validationErrors.name}"/>
+                                            <div t-if="state.validationErrors.name" class="invalid-feedback">
+                                                <t t-esc="state.validationErrors.name"/>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Project Code (Auto-generated) -->
+                                        <div class="col-md-6">
+                                            <label class="form-label">Project Code</label>
+                                            <input type="text" class="form-control" 
+                                                   value="Will be auto-generated (e.g., CP/2025/00003)"
+                                                   readonly="readonly"
+                                                   style="background-color: #f8f9fa; cursor: not-allowed;"/>
+                                            <small class="text-muted">Project code will be automatically generated using the format CP/YYYY/XXXXX</small>
+                                        </div>
+                                        
+                                        <!-- Farm -->
+                                        <div class="col-md-6">
+                                            <label class="form-label required">Farm</label>
+                                            <select class="form-select" t-model="state.newProject.farm_id" 
+                                                    t-on-change="() => this.onFarmChange()" required="required"
+                                                    t-att-class="{'is-invalid': state.validationErrors.farm_id}">
+                                                <option value="">Select Farm...</option>
+                                                <t t-foreach="availableFarms" t-as="farm" t-key="farm.id">
+                                                    <option t-att-value="farm.id" t-esc="farm.name"/>
+                                                </t>
+                                            </select>
+                                            <div t-if="state.validationErrors.farm_id" class="invalid-feedback">
+                                                <t t-esc="state.validationErrors.farm_id"/>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Field -->
+                                        <div class="col-md-6">
+                                            <label class="form-label required">Field</label>
+                                            <select class="form-select" t-model="state.newProject.field_id" required="required"
+                                                    t-att-disabled="!state.newProject.farm_id"
+                                                    t-att-class="{'is-invalid': state.validationErrors.field_id}">
+                                                <option value="">
+                                                    <t t-if="!state.newProject.farm_id">Select Farm First...</t>
+                                                    <t t-else="">Select Field...</t>
+                                                </option>
+                                                <t t-foreach="availableFields" t-as="field" t-key="field.id">
+                                                    <option t-att-value="field.id" t-esc="field.name + ' (' + field.area + ' ' + field.area_unit + ')'"/>
+                                                </t>
+                                            </select>
+                                            <div t-if="state.validationErrors.field_id" class="invalid-feedback">
+                                                <t t-esc="state.validationErrors.field_id"/>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Crop -->
+                                        <div class="col-md-6">
+                                            <label class="form-label required">Crop</label>
+                                            <select class="form-select" t-model="state.newProject.crop_id" 
+                                                    t-on-change="() => this.onCropChange()" required="required"
+                                                    t-att-class="{'is-invalid': state.validationErrors.crop_id}">
+                                                <option value="">Select Crop...</option>
+                                                <t t-foreach="availableCrops" t-as="crop" t-key="crop.id">
+                                                    <option t-att-value="crop.id" t-esc="crop.name"/>
+                                                </t>
+                                            </select>
+                                            <div t-if="state.validationErrors.crop_id" class="invalid-feedback">
+                                                <t t-esc="state.validationErrors.crop_id"/>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Crop BOM -->
+                                        <div class="col-md-6">
+                                            <label class="form-label required">Crop BOM (Bill of Materials)</label>
+                                            <select class="form-select" t-model="state.newProject.crop_bom_id" required="required"
+                                                    t-att-disabled="!state.newProject.crop_id"
+                                                    t-att-class="{'is-invalid': state.validationErrors.crop_bom_id}"
+                                                    t-on-change="() => this.onBomChange()">
+                                                <option value="">
+                                                    <t t-if="!state.newProject.crop_id">Select Crop First...</t>
+                                                    <t t-else="">Select BOM...</t>
+                                                </option>
+                                                <t t-foreach="availableCropBOMs" t-as="bom" t-key="bom.id">
+                                                    <option t-att-value="bom.id" t-esc="bom.name"/>
+                                                </t>
+                                            </select>
+                                            <div t-if="state.validationErrors.crop_bom_id" class="invalid-feedback">
+                                                <t t-esc="state.validationErrors.crop_bom_id"/>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Start Date -->
+                                        <div class="col-md-6">
+                                            <label class="form-label required">Start Date</label>
+                                            <input type="date" class="form-control" 
+                                                   t-model="state.newProject.start_date"
+                                                   required="required"
+                                                   t-att-class="{'is-invalid': state.validationErrors.start_date}"/>
+                                            <div t-if="state.validationErrors.start_date" class="invalid-feedback">
+                                                <t t-esc="state.validationErrors.start_date"/>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Planned End Date -->
+                                        <div class="col-md-6">
+                                            <label class="form-label required">Planned End Date</label>
+                                            <input type="date" class="form-control" 
+                                                   t-model="state.newProject.planned_end_date"
+                                                   required="required"
+                                                   t-att-class="{'is-invalid': state.validationErrors.planned_end_date}"/>
+                                            <div t-if="state.validationErrors.planned_end_date" class="invalid-feedback">
+                                                <t t-esc="state.validationErrors.planned_end_date"/>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Budget (Read-only, from BOM) -->
+                                        <div class="col-md-12">
+                                            <label class="form-label">Total Budget (Based on BOM)</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" 
+                                                       t-att-value="state.newProject.bomTotalCost ? formatCurrency(state.newProject.bomTotalCost) : 'Select BOM to calculate budget'"
+                                                       readonly="readonly"
+                                                       style="background-color: #f8f9fa; cursor: not-allowed;"/>
+                                                <span class="input-group-text">
+                                                    <i class="fa fa-calculator text-muted"/>
+                                                </span>
+                                            </div>
+                                            <small class="text-muted">Budget is automatically calculated based on the selected Crop BOM</small>
+                                        </div>
+                                        
+                                        <!-- Description -->
+                                        <div class="col-12">
+                                            <label class="form-label">Description</label>
+                                            <textarea class="form-control" rows="3" 
+                                                      t-model="state.newProject.description"
+                                                      placeholder="Enter project description..."/>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" 
+                                        t-on-click="() => this.onCloseNewProjectModal()">
+                                    <i class="fa fa-times me-1"/>
+                                    Cancel
+                                </button>
+                                <button type="button" class="btn btn-success" 
+                                        t-on-click="() => this.onSaveNewProject()"
+                                        t-att-disabled="state.savingNewProject">
+                                    <i t-if="state.savingNewProject" class="fa fa-spinner fa-spin me-1"/>
+                                    <i t-else="" class="fa fa-save me-1"/>
+                                    <t t-if="state.savingNewProject">Creating...</t>
+                                    <t t-else="">Create Project</t>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+    
+</templates>

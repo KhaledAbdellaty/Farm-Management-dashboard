@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <!-- Crops Tab Template -->
+    <t t-name="farm_management_dashboard.CropsTabTemplate" owl="1">
+        <div class="crops-tab">
+            <!-- Crops Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="mb-0">
+                            <i class="fa fa-leaf me-2 text-success"/>
+                            Crop Management &amp; Analysis
+                        </h4>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-outline-primary btn-sm" t-on-click="() => this.onToggleFilters()">
+                                <i class="fa fa-filter me-1"/>
+                                Filters
+                                <span t-if="state.showFilters" class="badge bg-primary ms-1">Active</span>
+                            </button>
+                            <div class="btn-group">
+                                <button type="button" 
+                                        t-att-class="'btn btn-sm ' + (state.selectedView === 'cards' ? 'btn-success' : 'btn-outline-secondary')"
+                                        t-on-click="() => this.onChangeView('cards')">
+                                    <i class="fa fa-th-large me-1"/>
+                                    Cards
+                                </button>
+                                <button type="button" 
+                                        t-att-class="'btn btn-sm ' + (state.selectedView === 'table' ? 'btn-success' : 'btn-outline-secondary')"
+                                        t-on-click="() => this.onChangeView('table')">
+                                    <i class="fa fa-table me-1"/>
+                                    Table
+                                </button>
+                                <button type="button" 
+                                        t-att-class="'btn btn-sm ' + (state.selectedView === 'performance' ? 'btn-success' : 'btn-outline-secondary')"
+                                        t-on-click="() => this.onChangeView('performance')">
+                                    <i class="fa fa-chart-line me-1"/>
+                                    Performance
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3 mb-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="d-flex align-items-center justify-content-center mb-2">
+                                <div class="stat-icon bg-success text-white rounded-circle me-3">
+                                    <i class="fa fa-leaf"/>
+                                </div>
+                                <div class="text-start">
+                                    <h3 class="mb-0" t-esc="summary.total_crops || 0"/>
+                                    <small class="text-muted">Total Crops</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="d-flex align-items-center justify-content-center mb-2">
+                                <div class="stat-icon bg-primary text-white rounded-circle me-3">
+                                    <i class="fa fa-seedling"/>
+                                </div>
+                                <div class="text-start">
+                                    <h3 class="mb-0" t-esc="summary.total_projects || 0"/>
+                                    <small class="text-muted">Active Projects</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="d-flex align-items-center justify-content-center mb-2">
+                                <div class="stat-icon bg-warning text-white rounded-circle me-3">
+                                    <i class="fa fa-chart-area"/>
+                                </div>
+                                <div class="text-start">
+                                    <h3 class="mb-0" t-esc="formatNumber(summary.total_cultivation_area || 0)"/>
+                                    <small class="text-muted">Total Area (Ha)</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="d-flex align-items-center justify-content-center mb-2">
+                                <div class="stat-icon bg-info text-white rounded-circle me-3">
+                                    <i class="fa fa-dollar-sign"/>
+                                </div>
+                                <div class="text-start">
+                                    <h3 class="mb-0" t-esc="formatCurrency(summary.total_revenue || 0)"/>
+                                    <small class="text-muted">Total Revenue</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cards View -->
+            <t t-if="state.selectedView === 'cards'">
+                <div class="row">
+                    <t t-foreach="crops || []" t-as="crop" t-key="crop.id">
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card border-0 shadow-sm h-100">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="crop-avatar bg-success text-white rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                            <i class="fa fa-leaf"/>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h5 class="mb-1" t-esc="crop.name"/>
+                                            <small class="text-muted" t-esc="crop.code"/>
+                                        </div>
+                                        <span t-att-class="'badge ' + (crop.active ? 'bg-success' : 'bg-secondary')" t-esc="crop.active ? 'Active' : 'Inactive'"/>
+                                    </div>
+                                    
+                                    <div class="row text-center mb-3">
+                                        <div class="col-4">
+                                            <h6 class="text-primary mb-0" t-esc="crop.total_projects"/>
+                                            <small class="text-muted">Projects</small>
+                                        </div>
+                                        <div class="col-4">
+                                            <h6 class="text-success mb-0" t-esc="formatNumber(crop.total_area)"/>
+                                            <small class="text-muted">Area</small>
+                                        </div>
+                                        <div class="col-4">
+                                            <h6 class="text-warning mb-0" t-esc="formatCurrency(crop.total_revenue)"/>
+                                            <small class="text-muted">Revenue</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <small class="text-muted">Profitability</small>
+                                            <small class="text-muted" t-esc="formatPercentage(crop.profitability_ratio)"/>
+                                        </div>
+                                        <div class="progress" style="height: 6px;">
+                                            <div t-att-class="'progress-bar ' + getPriorityClass(crop.profitability_ratio)" 
+                                                 t-att-style="'width: ' + Math.min(crop.profitability_ratio, 100) + '%'">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">
+                                            <i class="fa fa-calendar me-1"/>
+                                            <t t-esc="crop.growing_cycle"/> days cycle
+                                        </small>
+                                        <button class="btn btn-outline-primary btn-sm" 
+                                                t-on-click="() => this.onViewCropDetail(crop.id)"
+                                                title="View Details">
+                                            <i class="fa fa-eye"/>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </t>
+
+            <!-- Table View -->
+            <t t-if="state.selectedView === 'table'">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Crop</th>
+                                        <th>Status</th>
+                                        <th>Projects</th>
+                                        <th>Area (Ha)</th>
+                                        <th>Yield</th>
+                                        <th>Revenue</th>
+                                        <th>Profit</th>
+                                        <th>Profitability</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="crops || []" t-as="crop" t-key="crop.id">
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="crop-avatar bg-success text-white rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
+                                                        <i class="fa fa-leaf"/>
+                                                    </div>
+                                                    <div>
+                                                        <strong t-esc="crop.name"/>
+                                                        <br/>
+                                                        <small class="text-muted" t-esc="crop.code"/>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span t-att-class="'badge ' + (crop.active ? 'bg-success' : 'bg-secondary')" t-esc="crop.active ? 'Active' : 'Inactive'"/>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-primary" t-esc="crop.total_projects"/>
+                                                <br/>
+                                                <small class="text-muted" t-esc="crop.active_projects + ' active'"/>
+                                            </td>
+                                            <td>
+                                                <strong t-esc="formatNumber(crop.total_area)"/>
+                                                <br/>
+                                                <small class="text-muted" t-esc="crop.uom_name"/>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <strong t-esc="formatNumber(crop.total_actual_yield)"/>
+                                                    <br/>
+                                                    <small class="text-muted">
+                                                        Target: <t t-esc="formatNumber(crop.total_planned_yield)"/>
+                                                    </small>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <strong t-esc="formatCurrency(crop.total_revenue)"/>
+                                            </td>
+                                            <td>
+                                                <strong t-att-class="crop.profit >= 0 ? 'text-success' : 'text-danger'" t-esc="formatCurrency(crop.profit)"/>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="progress me-2" style="width: 60px; height: 8px;">
+                                                        <div t-att-class="'progress-bar ' + getPriorityClass(crop.profitability_ratio)" 
+                                                             t-att-style="'width: ' + Math.min(crop.profitability_ratio, 100) + '%'">
+                                                        </div>
+                                                    </div>
+                                                    <small t-esc="formatPercentage(crop.profitability_ratio)"/>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-outline-primary btn-sm" 
+                                                        t-on-click="() => this.onViewCropDetail(crop.id)"
+                                                        title="View Details">
+                                                    <i class="fa fa-eye"/>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </t>
+
+            <!-- Performance View -->
+            <t t-if="state.selectedView === 'performance'">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-light border-0">
+                                <h6 class="mb-0">
+                                    <i class="fa fa-chart-bar me-2 text-success"/>
+                                    Profitability Analysis
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="cropProfitabilityChart" width="400" height="300"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-light border-0">
+                                <h6 class="mb-0">
+                                    <i class="fa fa-chart-line me-2 text-success"/>
+                                    Efficiency Metrics
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="cropEfficiencyChart" width="400" height="300"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance Metrics Table -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-light border-0">
+                        <h6 class="mb-0">
+                            <i class="fa fa-tachometer-alt me-2 text-success"/>
+                            Performance Metrics
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-sm mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Crop</th>
+                                        <th>Cost Efficiency</th>
+                                        <th>Yield Efficiency</th>
+                                        <th>Avg Yield/Ha</th>
+                                        <th>ROI</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="crops || []" t-as="crop" t-key="crop.id">
+                                        <tr>
+                                            <td>
+                                                <strong t-esc="crop.name"/>
+                                            </td>
+                                            <td>
+                                                <span t-att-class="getStateColor(crop.cost_efficiency)" t-esc="formatPercentage(crop.cost_efficiency)"/>
+                                            </td>
+                                            <td>
+                                                <span t-att-class="getStateColor(crop.yield_efficiency)" t-esc="formatPercentage(crop.yield_efficiency)"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="formatNumber(crop.avg_yield_per_area)"/>
+                                            </td>
+                                            <td>
+                                                <span t-att-class="crop.profit >= 0 ? 'text-success' : 'text-danger'" t-esc="formatPercentage(crop.profitability_ratio)"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </t>
+
+            <!-- Crop Detail Modal -->
+            <t t-if="state.selectedCrop">
+                <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header bg-success text-white">
+                                <h5 class="modal-title">
+                                    <i class="fa fa-leaf me-2"/>
+                                    <t t-esc="state.selectedCrop.name"/>
+                                    <small class="ms-2 opacity-75">(<t t-esc="state.selectedCrop.code"/>)</small>
+                                </h5>
+                                <button type="button" class="btn-close btn-close-white" 
+                                        t-on-click="() => this.onCloseCropDetail()"/>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="row mb-4">
+                                            <div class="col-md-3 text-center">
+                                                <h4 class="text-primary" t-esc="state.selectedCrop.total_projects"/>
+                                                <small class="text-muted">Total Projects</small>
+                                            </div>
+                                            <div class="col-md-3 text-center">
+                                                <h4 class="text-success" t-esc="formatNumber(state.selectedCrop.total_area)"/>
+                                                <small class="text-muted">Area (Ha)</small>
+                                            </div>
+                                            <div class="col-md-3 text-center">
+                                                <h4 class="text-warning" t-esc="formatCurrency(state.selectedCrop.total_revenue)"/>
+                                                <small class="text-muted">Revenue</small>
+                                            </div>
+                                            <div class="col-md-3 text-center">
+                                                <h4 t-att-class="state.selectedCrop.profit >= 0 ? 'text-success' : 'text-danger'" t-esc="formatCurrency(state.selectedCrop.profit)"/>
+                                                <small class="text-muted">Profit</small>
+                                            </div>
+                                        </div>
+
+                                        <h6>Recent Projects</h6>
+                                        <div class="table-responsive">
+                                            <table class="table table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Project</th>
+                                                        <th>Farm</th>
+                                                        <th>Status</th>
+                                                        <th>Start Date</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <t t-foreach="state.selectedCrop.recent_projects || []" t-as="project" t-key="project.id">
+                                                        <tr>
+                                                            <td><t t-esc="project.name"/></td>
+                                                            <td><t t-esc="project.farm_name"/></td>
+                                                            <td>
+                                                                <span t-att-class="'badge bg-' + getStateColor(project.state)" t-esc="getStateName(project.state)"/>
+                                                            </td>
+                                                            <td><t t-esc="formatDate(project.start_date)"/></td>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h6>Crop Information</h6>
+                                        <p><strong>Growing Cycle:</strong> <t t-esc="state.selectedCrop.growing_cycle"/> days</p>
+                                        <p><strong>Unit of Measure:</strong> <t t-esc="state.selectedCrop.uom_name"/></p>
+                                        <p><strong>BOMs Available:</strong> <t t-esc="state.selectedCrop.bom_count"/></p>
+                                        
+                                        <h6 class="mt-4">Performance Metrics</h6>
+                                        <div class="mb-2">
+                                            <small class="text-muted">Cost Efficiency</small>
+                                            <div class="progress" style="height: 6px;">
+                                                <div t-att-class="'progress-bar ' + getPriorityClass(state.selectedCrop.cost_efficiency)" 
+                                                     t-att-style="'width: ' + Math.min(state.selectedCrop.cost_efficiency, 100) + '%'">
+                                                </div>
+                                            </div>
+                                            <small t-esc="formatPercentage(state.selectedCrop.cost_efficiency)"/>
+                                        </div>
+                                        <div class="mb-2">
+                                            <small class="text-muted">Yield Efficiency</small>
+                                            <div class="progress" style="height: 6px;">
+                                                <div t-att-class="'progress-bar ' + getPriorityClass(state.selectedCrop.yield_efficiency)" 
+                                                     t-att-style="'width: ' + Math.min(state.selectedCrop.yield_efficiency, 100) + '%'">
+                                                </div>
+                                            </div>
+                                            <small t-esc="formatPercentage(state.selectedCrop.yield_efficiency)"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" t-on-click="() => this.onCloseCropDetail()">
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+    
+</templates>

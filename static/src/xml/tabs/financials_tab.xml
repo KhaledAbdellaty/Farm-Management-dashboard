@@ -1,0 +1,858 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <!-- Financials Tab Template -->
+    <t t-name="farm_management_dashboard.FinancialsTabTemplate" owl="1">
+        <div class="financials-tab">
+            <!-- Financials Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="mb-0">
+                            <i class="fa fa-chart-line me-2 text-primary"/>
+                            Financial Analysis &amp; Reporting
+                        </h4>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-outline-primary btn-sm" t-on-click="() => this.onToggleFilters()">
+                                <i class="fa fa-filter me-1"/>
+                                Filters
+                            </button>
+                            <div class="btn-group">
+                                <button type="button" 
+                                        t-att-class="'btn btn-sm ' + (state.selectedView === 'overview' ? 'btn-primary' : 'btn-outline-secondary')"
+                                        t-on-click="() => this.onChangeView('overview')">
+                                    Overview
+                                </button>
+                                <button type="button" 
+                                        t-att-class="'btn btn-sm ' + (state.selectedView === 'analytical_accounts' ? 'btn-primary' : 'btn-outline-secondary')"
+                                        t-on-click="() => this.onChangeView('analytical_accounts')">
+                                    Analytical Accounts
+                                </button>
+                                <button type="button" 
+                                        t-att-class="'btn btn-sm ' + (state.selectedView === 'invoices_bills' ? 'btn-primary' : 'btn-outline-secondary')"
+                                        t-on-click="() => this.onChangeView('invoices_bills')">
+                                    Invoices &amp; Bills
+                                </button>
+                                <button type="button" 
+                                        t-att-class="'btn btn-sm ' + (state.selectedView === 'cash_flow' ? 'btn-primary' : 'btn-outline-secondary')"
+                                        t-on-click="() => this.onChangeView('cash_flow')">
+                                    Cash Flow
+                                </button>
+                                <button type="button" 
+                                        t-att-class="'btn btn-sm ' + (state.selectedView === 'financial_statements' ? 'btn-primary' : 'btn-outline-secondary')"
+                                        t-on-click="() => this.onChangeView('financial_statements')">
+                                    Financial Statements
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Financial Summary Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3 mb-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="d-flex align-items-center justify-content-center mb-2">
+                                <div class="stat-icon bg-success text-white rounded-circle me-3">
+                                    <i class="fa fa-arrow-up"/>
+                                </div>
+                                <div class="text-start">
+                                    <h3 class="mb-0" t-esc="formatCurrency(summary.total_revenue)"/>
+                                    <small class="text-muted">Total Revenue</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="d-flex align-items-center justify-content-center mb-2">
+                                <div class="stat-icon bg-danger text-white rounded-circle me-3">
+                                    <i class="fa fa-arrow-down"/>
+                                </div>
+                                <div class="text-start">
+                                    <h3 class="mb-0" t-esc="formatCurrency(summary.total_expenses)"/>
+                                    <small class="text-muted">Total Expenses</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="d-flex align-items-center justify-content-center mb-2">
+                                <div t-att-class="'stat-icon text-white rounded-circle me-3 ' + (summary.net_income >= 0 ? 'bg-success' : 'bg-danger')">
+                                    <i class="fa fa-chart-line"/>
+                                </div>
+                                <div class="text-start">
+                                    <h3 t-att-class="summary.net_income >= 0 ? 'text-success mb-0' : 'text-danger mb-0'" t-esc="formatCurrency(summary.net_income)"/>
+                                    <small class="text-muted">Net Income</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="d-flex align-items-center justify-content-center mb-2">
+                                <div class="stat-icon bg-info text-white rounded-circle me-3">
+                                    <i class="fa fa-university"/>
+                                </div>
+                                <div class="text-start">
+                                    <h3 class="mb-0" t-esc="formatCurrency(summary.cash_balance)"/>
+                                    <small class="text-muted">Cash Balance</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Overview View -->
+            <t t-if="state.selectedView === 'overview'">
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-light border-0">
+                                <h6 class="mb-0">
+                                    <i class="fa fa-chart-bar me-2 text-primary"/>
+                                    Revenue vs Expenses
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="revenueExpenseChart" width="400" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-light border-0">
+                                <h6 class="mb-0">
+                                    <i class="fa fa-exclamation-triangle me-2 text-warning"/>
+                                    Financial Alerts
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <t t-foreach="financialAlerts || []" t-as="alert" t-key="alert_index">
+                                    <div t-att-class="'alert alert-' + alert.severity + ' py-2 mb-2'">
+                                        <i t-att-class="'fa ' + alert.icon + ' me-2'"/>
+                                        <small t-esc="alert.message"/>
+                                    </div>
+                                </t>
+                                <t t-if="!financialAlerts or financialAlerts.length === 0">
+                                    <div class="alert alert-success py-2">
+                                        <i class="fa fa-check-circle me-2"/>
+                                        <small>All financial indicators are healthy</small>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KPIs Row -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-light border-0">
+                                <h6 class="mb-0">
+                                    <i class="fa fa-percentage me-2 text-success"/>
+                                    Profitability Ratios
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row text-center">
+                                    <div class="col-12 mb-3">
+                                        <h4 class="text-success" t-esc="formatPercentage(financialKPIs.gross_margin)"/>
+                                        <small class="text-muted">Gross Margin</small>
+                                    </div>
+                                    <div class="col-6">
+                                        <h5 class="text-primary" t-esc="formatPercentage(financialKPIs.net_margin)"/>
+                                        <small class="text-muted">Net Margin</small>
+                                    </div>
+                                    <div class="col-6">
+                                        <h5 class="text-info" t-esc="formatPercentage(financialKPIs.roi)"/>
+                                        <small class="text-muted">ROI</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-light border-0">
+                                <h6 class="mb-0">
+                                    <i class="fa fa-tint me-2 text-info"/>
+                                    Liquidity Ratios
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row text-center">
+                                    <div class="col-12 mb-3">
+                                        <h4 class="text-info" t-esc="formatNumber(financialKPIs.current_ratio)"/>
+                                        <small class="text-muted">Current Ratio</small>
+                                    </div>
+                                    <div class="col-6">
+                                        <h5 class="text-primary" t-esc="formatNumber(financialKPIs.quick_ratio)"/>
+                                        <small class="text-muted">Quick Ratio</small>
+                                    </div>
+                                    <div class="col-6">
+                                        <h5 class="text-success" t-esc="formatCurrency(financialKPIs.working_capital)"/>
+                                        <small class="text-muted">Working Capital</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-light border-0">
+                                <h6 class="mb-0">
+                                    <i class="fa fa-sync me-2 text-warning"/>
+                                    Efficiency Ratios
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row text-center">
+                                    <div class="col-12 mb-3">
+                                        <h4 class="text-warning" t-esc="formatNumber(financialKPIs.asset_turnover)"/>
+                                        <small class="text-muted">Asset Turnover</small>
+                                    </div>
+                                    <div class="col-6">
+                                        <h5 class="text-primary" t-esc="formatNumber(financialKPIs.receivables_turnover)"/>
+                                        <small class="text-muted">A/R Turnover</small>
+                                    </div>
+                                    <div class="col-6">
+                                        <h5 class="text-info" t-esc="formatNumber(financialKPIs.payables_turnover)"/>
+                                        <small class="text-muted">A/P Turnover</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+
+            <!-- Analytical Accounts View -->
+            <t t-if="state.selectedView === 'analytical_accounts'">
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-light border-0">
+                                <h6 class="mb-0">
+                                    <i class="fa fa-chart-bar me-2 text-primary"/>
+                                    Analytical Account Balances
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="analyticalAccountsChart" width="400" height="300"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-light border-0">
+                                <h6 class="mb-0">
+                                    <i class="fa fa-list me-2 text-primary"/>
+                                    Account Summary
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="text-center mb-3">
+                                    <h4 class="text-primary" t-esc="analyticalAccounts.summary?.total_accounts || 0"/>
+                                    <small class="text-muted">Total Accounts</small>
+                                </div>
+                                <div class="row text-center">
+                                    <div class="col-6">
+                                        <h5 class="text-success" t-esc="formatCurrency(analyticalAccounts.summary?.total_debit || 0)"/>
+                                        <small class="text-muted">Total Debit</small>
+                                    </div>
+                                    <div class="col-6">
+                                        <h5 class="text-danger" t-esc="formatCurrency(analyticalAccounts.summary?.total_credit || 0)"/>
+                                        <small class="text-muted">Total Credit</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytical Accounts Table -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-light border-0">
+                        <h6 class="mb-0">
+                            <i class="fa fa-table me-2 text-primary"/>
+                            Analytical Accounts Details
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Account</th>
+                                        <th>Debit</th>
+                                        <th>Credit</th>
+                                        <th>Balance</th>
+                                        <th>Invoices</th>
+                                        <th>Bills</th>
+                                        <th>Partner</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="analyticalAccounts.accounts || []" t-as="account" t-key="account.id">
+                                        <tr>
+                                            <td>
+                                                <div>
+                                                    <strong t-esc="account.name"/>
+                                                    <br/>
+                                                    <small class="text-muted" t-esc="account.code"/>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="text-success" t-esc="formatCurrency(account.debit)"/>
+                                            </td>
+                                            <td>
+                                                <span class="text-danger" t-esc="formatCurrency(account.credit)"/>
+                                            </td>
+                                            <td>
+                                                <strong t-att-class="account.balance >= 0 ? 'text-success' : 'text-danger'" t-esc="formatCurrency(account.balance)"/>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-info" t-esc="account.invoice_count"/>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-warning" t-esc="account.bill_count"/>
+                                            </td>
+                                            <td>
+                                                <small t-esc="account.partner_name || 'N/A'"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </t>
+
+            <!-- Invoices & Bills View -->
+            <t t-if="state.selectedView === 'invoices_bills'">
+                <!-- Summary Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <h4 class="text-success" t-esc="formatCurrency(invoicesBills.customer_invoices?.total_amount || 0)"/>
+                                <p class="text-muted mb-0">Total Invoices</p>
+                                <small class="text-muted" t-esc="(invoicesBills.customer_invoices?.count || 0) + ' invoices'"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <h4 class="text-warning" t-esc="formatCurrency(invoicesBills.vendor_bills?.total_amount || 0)"/>
+                                <p class="text-muted mb-0">Total Bills</p>
+                                <small class="text-muted" t-esc="(invoicesBills.vendor_bills?.count || 0) + ' bills'"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <h4 class="text-info" t-esc="formatCurrency(invoicesBills.customer_invoices?.outstanding_amount || 0)"/>
+                                <p class="text-muted mb-0">Outstanding Receivables</p>
+                                <small class="text-muted" t-esc="(invoicesBills.customer_invoices?.count || 0) + ' invoices'"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <h4 class="text-danger" t-esc="formatCurrency(invoicesBills.vendor_bills?.outstanding_amount || 0)"/>
+                                <p class="text-muted mb-0">Outstanding Payables</p>
+                                <small class="text-muted" t-esc="(invoicesBills.vendor_bills?.count || 0) + ' bills'"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-light border-0">
+                                <h6 class="mb-0">
+                                    <i class="fa fa-chart-line me-2 text-success"/>
+                                    Monthly Invoice &amp; Bill Trends
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="invoicesBillsChart" width="400" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-light border-0">
+                                <h6 class="mb-0">
+                                    <i class="fa fa-pie-chart me-2 text-success"/>
+                                    Status Distribution
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="invoicesStatusChart" width="200" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Documents Table -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-light border-0">
+                        <h6 class="mb-0">
+                            <i class="fa fa-file-invoice me-2 text-success"/>
+                            Recent Invoices &amp; Bills
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Document</th>
+                                        <th>Partner</th>
+                                        <th>Date</th>
+                                        <th>Due Date</th>
+                                        <th>Amount</th>
+                                        <th>Outstanding</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="invoicesBills.recent_documents || []" t-as="doc" t-key="doc.id">
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <i t-att-class="'fa ' + (doc.move_type === 'out_invoice' ? 'fa-file-invoice text-success' : 'fa-file-invoice-dollar text-warning') + ' me-2'"/>
+                                                    <div>
+                                                        <strong t-esc="doc.name"/>
+                                                        <br/>
+                                                        <small class="text-muted" t-esc="doc.move_type === 'out_invoice' ? 'Customer Invoice' : 'Vendor Bill'"/>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <t t-esc="doc.partner_name"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="formatDate(doc.invoice_date)"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="formatDate(doc.invoice_date_due)"/>
+                                                <t t-if="doc.is_overdue">
+                                                    <br/>
+                                                    <small class="text-danger">Overdue</small>
+                                                </t>
+                                            </td>
+                                            <td>
+                                                <strong t-esc="formatCurrency(doc.amount_total)"/>
+                                            </td>
+                                            <td>
+                                                <span t-att-class="doc.amount_residual > 0 ? 'text-warning' : 'text-success'" t-esc="formatCurrency(doc.amount_residual)"/>
+                                            </td>
+                                            <td>
+                                                <span t-att-class="'badge ' + getInvoiceStatusClass(doc.state)" t-esc="getInvoiceStatusLabel(doc.state)"/>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-outline-primary btn-sm" title="View">
+                                                    <i class="fa fa-eye"/>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </t>
+
+            <!-- Cash Flow View -->
+            <t t-if="state.selectedView === 'cash_flow'">
+                <!-- Summary Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <h4 class="text-success" t-esc="formatCurrency(payments.summary?.total_inbound || 0)"/>
+                                <p class="text-muted mb-0">Total Inbound</p>
+                                <small class="text-muted" t-esc="(payments.summary?.inbound_count || 0) + ' payments'"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <h4 class="text-danger" t-esc="formatCurrency(payments.summary?.total_outbound || 0)"/>
+                                <p class="text-muted mb-0">Total Outbound</p>
+                                <small class="text-muted" t-esc="(payments.summary?.outbound_count || 0) + ' payments'"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <h4 t-att-class="(payments.summary?.net_cash_flow || 0) >= 0 ? 'text-success' : 'text-danger'" t-esc="formatCurrency(payments.summary?.net_cash_flow || 0)"/>
+                                <p class="text-muted mb-0">Net Cash Flow</p>
+                                <small t-att-class="(payments.summary?.net_cash_flow || 0) >= 0 ? 'text-success' : 'text-danger'" t-esc="(payments.summary?.net_cash_flow || 0) >= 0 ? 'Positive' : 'Negative'"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <h4 class="text-primary" t-esc="formatCurrency(summary.cash_balance || 0)"/>
+                                <p class="text-muted mb-0">Current Cash Position</p>
+                                <small class="text-muted">As of today</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-light border-0">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0">
+                                        <i class="fa fa-chart-line me-2 text-info"/>
+                                        Daily Cash Flow Trends
+                                    </h6>
+                                    <div class="btn-group btn-group-sm">
+                                        <button class="btn btn-outline-secondary">7 Days</button>
+                                        <button class="btn btn-outline-secondary active">30 Days</button>
+                                        <button class="btn btn-outline-secondary">90 Days</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="cashFlowChart" width="400" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-light border-0">
+                                <h6 class="mb-0">
+                                    <i class="fa fa-pie-chart me-2 text-info"/>
+                                    Payment Methods
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="paymentMethodsChart" width="200" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cash Flow Statement -->
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-light border-0">
+                                <h6 class="mb-0">
+                                    <i class="fa fa-file-alt me-2 text-info"/>
+                                    Cash Flow Statement
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4 text-center">
+                                        <h5 t-att-class="(cashFlowStatement.operating_cash_flow || 0) >= 0 ? 'text-success' : 'text-danger'" t-esc="formatCurrency(cashFlowStatement.operating_cash_flow || 0)"/>
+                                        <p class="text-muted mb-0">Operating Activities</p>
+                                    </div>
+                                    <div class="col-md-4 text-center">
+                                        <h5 t-att-class="(cashFlowStatement.investing_cash_flow || 0) >= 0 ? 'text-success' : 'text-danger'" t-esc="formatCurrency(cashFlowStatement.investing_cash_flow || 0)"/>
+                                        <p class="text-muted mb-0">Investing Activities</p>
+                                    </div>
+                                    <div class="col-md-4 text-center">
+                                        <h5 t-att-class="(cashFlowStatement.financing_cash_flow || 0) >= 0 ? 'text-success' : 'text-danger'" t-esc="formatCurrency(cashFlowStatement.financing_cash_flow || 0)"/>
+                                        <p class="text-muted mb-0">Financing Activities</p>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="text-center">
+                                    <h4 t-att-class="(cashFlowStatement.net_cash_flow || 0) >= 0 ? 'text-success' : 'text-danger'" t-esc="formatCurrency(cashFlowStatement.net_cash_flow || 0)"/>
+                                    <p class="text-muted mb-0">Net Cash Flow</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-light border-0">
+                                <h6 class="mb-0">
+                                    <i class="fa fa-clock me-2 text-info"/>
+                                    Recent Payments
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <t t-foreach="payments.recent_payments || []" t-as="payment" t-key="payment.id">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i t-att-class="'fa ' + (payment.payment_type === 'inbound' ? 'fa-arrow-down text-success' : 'fa-arrow-up text-danger') + ' me-2'"/>
+                                        <div class="flex-grow-1">
+                                            <small><strong t-esc="payment.name"/></small>
+                                            <br/>
+                                            <small class="text-muted" t-esc="payment.partner_name"/>
+                                        </div>
+                                        <div class="text-end">
+                                            <small t-att-class="payment.payment_type === 'inbound' ? 'text-success' : 'text-danger'" t-esc="formatCurrency(payment.amount)"/>
+                                            <br/>
+                                            <small class="text-muted" t-esc="formatDate(payment.date)"/>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payments Table -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-light border-0">
+                        <h6 class="mb-0">
+                            <i class="fa fa-credit-card me-2 text-info"/>
+                            Recent Payments
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Payment</th>
+                                        <th>Partner</th>
+                                        <th>Date</th>
+                                        <th>Method</th>
+                                        <th>Amount</th>
+                                        <th>Type</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="payments.recent_payments || []" t-as="payment" t-key="payment.id">
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <i t-att-class="'fa ' + (payment.payment_type === 'inbound' ? 'fa-arrow-down text-success' : 'fa-arrow-up text-danger') + ' me-2'"/>
+                                                    <div>
+                                                        <strong t-esc="payment.name"/>
+                                                        <br/>
+                                                        <small class="text-muted" t-esc="payment.communication"/>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <t t-esc="payment.partner_name"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="formatDate(payment.date)"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="payment.payment_method_name"/>
+                                            </td>
+                                            <td>
+                                                <strong t-att-class="payment.payment_type === 'inbound' ? 'text-success' : 'text-danger'" t-esc="formatCurrency(payment.amount)"/>
+                                            </td>
+                                            <td>
+                                                <span t-att-class="'badge ' + (payment.payment_type === 'inbound' ? 'bg-success' : 'bg-danger')" t-esc="payment.payment_type === 'inbound' ? 'Received' : 'Sent'"/>
+                                            </td>
+                                            <td>
+                                                <span t-att-class="'badge ' + getPaymentStatusClass(payment.state)" t-esc="getPaymentStatusLabel(payment.state)"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </t>
+
+            <!-- Financial Statements View -->
+            <t t-if="state.selectedView === 'financial_statements'">
+                <!-- Summary Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <h4 class="text-primary" t-esc="formatCurrency(financialStatements.profit_loss?.total_revenue || 0)"/>
+                                <p class="text-muted mb-0">Total Revenue</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <h4 class="text-warning" t-esc="formatCurrency(financialStatements.profit_loss?.total_expenses || 0)"/>
+                                <p class="text-muted mb-0">Total Expenses</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <h4 t-att-class="(financialStatements.profit_loss?.net_income || 0) >= 0 ? 'text-success' : 'text-danger'" t-esc="formatCurrency(financialStatements.profit_loss?.net_income || 0)"/>
+                                <p class="text-muted mb-0">Net Income</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Financial Statements -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-light border-0">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0">
+                                        <i class="fa fa-chart-line me-2 text-success"/>
+                                        Profit &amp; Loss Statement
+                                    </h6>
+                                    <button class="btn btn-outline-secondary btn-sm">
+                                        <i class="fa fa-download me-1"/>
+                                        Export
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <!-- Revenue Section -->
+                                <div class="mb-4">
+                                    <h6 class="text-success mb-3">Revenue</h6>
+                                    <div class="d-flex justify-content-between">
+                                        <span>Sales Revenue</span>
+                                        <strong class="text-success" t-esc="formatCurrency(financialStatements.profit_loss?.sales_revenue || 0)"/>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span>Other Revenue</span>
+                                        <strong class="text-success" t-esc="formatCurrency(financialStatements.profit_loss?.other_revenue || 0)"/>
+                                    </div>
+                                    <hr/>
+                                    <div class="d-flex justify-content-between">
+                                        <strong>Total Revenue</strong>
+                                        <strong class="text-success" t-esc="formatCurrency(financialStatements.profit_loss?.total_revenue || 0)"/>
+                                    </div>
+                                </div>
+
+                                <!-- Expenses Section -->
+                                <div class="mb-4">
+                                    <h6 class="text-danger mb-3">Expenses</h6>
+                                    <div class="d-flex justify-content-between">
+                                        <span>Cost of Goods Sold</span>
+                                        <strong class="text-danger" t-esc="formatCurrency(financialStatements.profit_loss?.cogs || 0)"/>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span>Operating Expenses</span>
+                                        <strong class="text-danger" t-esc="formatCurrency(financialStatements.profit_loss?.operating_expenses || 0)"/>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span>Other Expenses</span>
+                                        <strong class="text-danger" t-esc="formatCurrency(financialStatements.profit_loss?.other_expenses || 0)"/>
+                                    </div>
+                                    <hr/>
+                                    <div class="d-flex justify-content-between">
+                                        <strong>Total Expenses</strong>
+                                        <strong class="text-danger" t-esc="formatCurrency(financialStatements.profit_loss?.total_expenses || 0)"/>
+                                    </div>
+                                </div>
+
+                                <!-- Net Income -->
+                                <div class="bg-light p-3 rounded">
+                                    <div class="d-flex justify-content-between">
+                                        <strong>Net Income</strong>
+                                        <strong t-att-class="(financialStatements.profit_loss?.net_income || 0) >= 0 ? 'text-success' : 'text-danger'" t-esc="formatCurrency(financialStatements.profit_loss?.net_income || 0)"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-light border-0">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0">
+                                        <i class="fa fa-balance-scale me-2 text-primary"/>
+                                        Balance Sheet
+                                    </h6>
+                                    <button class="btn btn-outline-secondary btn-sm">
+                                        <i class="fa fa-download me-1"/>
+                                        Export
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <!-- Assets Section -->
+                                <div class="mb-4">
+                                    <h6 class="text-primary mb-3">Assets</h6>
+                                    <div class="d-flex justify-content-between">
+                                        <span>Current Assets</span>
+                                        <strong class="text-primary" t-esc="formatCurrency(financialStatements.balance_sheet?.current_assets || 0)"/>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span>Non-Current Assets</span>
+                                        <strong class="text-primary" t-esc="formatCurrency(financialStatements.balance_sheet?.non_current_assets || 0)"/>
+                                    </div>
+                                    <hr/>
+                                    <div class="d-flex justify-content-between">
+                                        <strong>Total Assets</strong>
+                                        <strong class="text-primary" t-esc="formatCurrency(financialStatements.balance_sheet?.total_assets || 0)"/>
+                                    </div>
+                                </div>
+
+                                <!-- Liabilities Section -->
+                                <div class="mb-4">
+                                    <h6 class="text-warning mb-3">Liabilities</h6>
+                                    <div class="d-flex justify-content-between">
+                                        <span>Current Liabilities</span>
+                                        <strong class="text-warning" t-esc="formatCurrency(financialStatements.balance_sheet?.current_liabilities || 0)"/>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span>Non-Current Liabilities</span>
+                                        <strong class="text-warning" t-esc="formatCurrency(financialStatements.balance_sheet?.non_current_liabilities || 0)"/>
+                                    </div>
+                                    <hr/>
+                                    <div class="d-flex justify-content-between">
+                                        <strong>Total Liabilities</strong>
+                                        <strong class="text-warning" t-esc="formatCurrency(financialStatements.balance_sheet?.total_liabilities || 0)"/>
+                                    </div>
+                                </div>
+
+                                <!-- Equity Section -->
+                                <div class="bg-light p-3 rounded">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Owner's Equity</span>
+                                        <strong class="text-success" t-esc="formatCurrency(financialStatements.balance_sheet?.equity || 0)"/>
+                                    </div>
+                                    <hr class="my-2"/>
+                                    <div class="d-flex justify-content-between">
+                                        <strong>Total Liabilities + Equity</strong>
+                                        <strong class="text-success" t-esc="formatCurrency((financialStatements.balance_sheet?.total_liabilities || 0) + (financialStatements.balance_sheet?.equity || 0))"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+    
+</templates>

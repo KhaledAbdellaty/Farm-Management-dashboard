@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-name="farm_management_dashboard.ReportsTabTemplate" owl="1">
+            <div class="reports-tab">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center p-5">
+                        <i class="fa fa-chart-bar fa-3x text-primary mb-3"/>
+                        <h4>Reports Tab</h4>
+                        <p class="text-muted">Comprehensive reporting and analytics features will be implemented here.</p>
+                        <div class="row mt-4">
+                            <div class="col-md-3">
+                                <div class="text-center">
+                                    <h5 class="text-primary">📊 Daily Reports</h5>
+                                    <p class="text-muted">Operations summary</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-center">
+                                    <h5 class="text-success">📈 Performance</h5>
+                                    <p class="text-muted">Analytics dashboard</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-center">
+                                    <h5 class="text-info">💰 Cost Analysis</h5>
+                                    <p class="text-muted">Financial reports</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-center">
+                                    <h5 class="text-warning">🔧 Custom</h5>
+                                    <p class="text-muted">Report builder</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+</templates>

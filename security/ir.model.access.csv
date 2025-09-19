@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_farm_dashboard_data_owner,Farm Dashboard Data Owner,model_farm_dashboard_data,group_farm_owner,1,1,1,1
+access_farm_dashboard_data_manager,Farm Dashboard Data Manager,model_farm_dashboard_data,group_farm_manager,1,0,0,0
+access_farm_dashboard_data_accountant,Farm Dashboard Data Accountant,model_farm_dashboard_data,group_farm_accountant,1,0,0,0
+access_farm_dashboard_access_owner,Farm Dashboard Access Owner,model_farm_dashboard_access,group_farm_owner,1,1,1,1
+access_farm_dashboard_access_manager,Farm Dashboard Access Manager,model_farm_dashboard_access,group_farm_manager,1,0,0,0
+access_farm_dashboard_access_accountant,Farm Dashboard Access Accountant,model_farm_dashboard_access,group_farm_accountant,1,0,0,0

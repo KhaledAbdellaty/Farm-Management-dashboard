@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-name="farm_management_dashboard.SalesTabTemplate" owl="1">
+            <div class="sales-tab">
+            <!-- Sales Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="mb-0">
+                            <i class="fa fa-shopping-cart me-2 text-success"/>
+                            Sales Management
+                        </h4>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-outline-primary btn-sm" t-on-click="() => this.onToggleFilters()">
+                                <i class="fa fa-filter me-1"/>
+                                Filters
+                            </button>
+                            <div class="btn-group">
+                                <button type="button" 
+                                        t-att-class="'btn btn-sm ' + (state.selectedView === 'overview' ? 'btn-success' : 'btn-outline-secondary')"
+                                        t-on-click="() => this.onChangeView('overview')">
+                                    Overview
+                                </button>
+                                <button type="button" 
+                                        t-att-class="'btn btn-sm ' + (state.selectedView === 'customers' ? 'btn-success' : 'btn-outline-secondary')"
+                                        t-on-click="() => this.onChangeView('customers')">
+                                    Customers
+                                </button>
+                                <button type="button" 
+                                        t-att-class="'btn btn-sm ' + (state.selectedView === 'products' ? 'btn-success' : 'btn-outline-secondary')"
+                                        t-on-click="() => this.onChangeView('products')">
+                                    Products
+                                </button>
+                                <button type="button" 
+                                        t-att-class="'btn btn-sm ' + (state.selectedView === 'pipeline' ? 'btn-success' : 'btn-outline-secondary')"
+                                        t-on-click="() => this.onChangeView('pipeline')">
+                                    Pipeline
+                                </button>
+                                <button type="button" 
+                                        t-att-class="'btn btn-sm ' + (state.selectedView === 'harvest' ? 'btn-success' : 'btn-outline-secondary')"
+                                        t-on-click="() => this.onChangeView('harvest')">
+                                    Harvest Sales
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Overview View -->
+            <t t-if="state.selectedView === 'overview'">
+                <!-- Sales Summary Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="d-flex align-items-center justify-content-center mb-2">
+                                    <div class="stat-icon bg-success text-white rounded-circle me-3">
+                                        <i class="fa fa-shopping-cart"/>
+                                    </div>
+                                    <div class="text-start">
+                                        <h3 class="mb-0" t-esc="formatNumber(salesSummary.total_orders)"/>
+                                        <small class="text-muted">Total Orders</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="d-flex align-items-center justify-content-center mb-2">
+                                    <div class="stat-icon bg-primary text-white rounded-circle me-3">
+                                        <i class="fa fa-dollar-sign"/>
+                                    </div>
+                                    <div class="text-start">
+                                        <h3 class="mb-0" t-esc="formatCurrency(salesSummary.total_revenue)"/>
+                                        <small class="text-muted">Total Revenue</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="d-flex align-items-center justify-content-center mb-2">
+                                    <div class="stat-icon bg-info text-white rounded-circle me-3">
+                                        <i class="fa fa-chart-line"/>
+                                    </div>
+                                    <div class="text-start">
+                                        <h3 class="mb-0" t-esc="formatCurrency(salesSummary.average_order_value)"/>
+                                        <small class="text-muted">Avg Order Value</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="d-flex align-items-center justify-content-center mb-2">
+                                    <div class="stat-icon bg-warning text-white rounded-circle me-3">
+                                        <i class="fa fa-users"/>
+                                    </div>
+                                    <div class="text-start">
+                                        <h3 class="mb-0" t-esc="formatNumber(customerAnalysis.total_customers)"/>
+                                        <small class="text-muted">Total Customers</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-light border-0">
+                                <h6 class="mb-0">
+                                    <i class="fa fa-chart-line me-2 text-success"/>
+                                    Revenue Trends
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="revenueChart" width="400" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-light border-0">
+                                <h6 class="mb-0">
+                                    <i class="fa fa-pie-chart me-2 text-success"/>
+                                    Order Status
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="orderStatusChart" width="200" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top Products Table -->
+                <div class="row">
+                    <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-light border-0">
+                                <h6 class="mb-0">
+                                    <i class="fa fa-star me-2 text-success"/>
+                                    Top Selling Products
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Product</th>
+                                                <th>Quantity Sold</th>
+                                                <th>Revenue</th>
+                                                <th>Market Share</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="salesSummary.top_products || []" t-as="product" t-key="product_index">
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="product-avatar bg-success text-white rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
+                                                                <i class="fa fa-box"/>
+                                                            </div>
+                                                            <div>
+                                                                <strong t-esc="product.name"/>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge bg-info" t-esc="formatNumber(product.quantity)"/>
+                                                    </td>
+                                                    <td>
+                                                        <strong t-esc="formatCurrency(product.revenue)"/>
+                                                    </td>
+                                                    <td>
+                                                        <div class="progress" style="height: 8px;">
+                                                            <div class="progress-bar bg-success" 
+                                                                 t-att-style="'width: ' + (product.revenue / salesSummary.total_revenue * 100) + '%'">
+                                                            </div>
+                                                        </div>
+                                                        <small class="text-muted" t-esc="formatPercentage(product.revenue / salesSummary.total_revenue * 100)"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+
+            <!-- Customers View -->
+            <t t-if="state.selectedView === 'customers'">
+                <div class="row mb-4">
+                            <div class="col-md-4">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-light border-0">
+                                <h6 class="mb-0">
+                                    <i class="fa fa-users me-2 text-primary"/>
+                                    Customer Segments
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="customerSegmentChart" width="200" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-light border-0">
+                                <h6 class="mb-0">
+                                    <i class="fa fa-crown me-2 text-primary"/>
+                                    Top Customers
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Customer</th>
+                                                <th>Type</th>
+                                                <th>Orders</th>
+                                                <th>Revenue</th>
+                                                <th>Last Order</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="customerAnalysis.customers || []" t-as="customer" t-key="customer.id">
+                                                <tr>
+                                                    <td>
+                                                        <div>
+                                                            <strong t-esc="customer.name"/>
+                                                            <br/>
+                                                            <small class="text-muted" t-esc="customer.email"/>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <span t-att-class="'badge ' + getCustomerTypeClass(customer.customer_type)" t-esc="customer.customer_type"/>
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge bg-info" t-esc="customer.total_orders"/>
+                                                    </td>
+                                                    <td>
+                                                        <strong t-esc="formatCurrency(customer.total_revenue)"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="formatDate(customer.last_order_date)"/>
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-outline-primary btn-sm" 
+                                                                t-on-click="() => this.onViewCustomer(customer.id)"
+                                                                title="View Details">
+                                                            <i class="fa fa-eye"/>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+
+            <!-- Products View -->
+            <t t-if="state.selectedView === 'products'">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-light border-0">
+                                <h6 class="mb-0">
+                                    <i class="fa fa-tags me-2 text-warning"/>
+                                    Sales by Category
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="productCategoryChart" width="300" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-light border-0">
+                                <h6 class="mb-0">
+                                    <i class="fa fa-box me-2 text-warning"/>
+                                    Product Performance
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-sm mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Product</th>
+                                                <th>Revenue</th>
+                                                <th>Qty</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="(productAnalysis.products || []).slice(0, 8)" t-as="product" t-key="product.id">
+                                                <tr>
+                                                    <td>
+                                                        <small t-esc="product.name"/>
+                                                    </td>
+                                                    <td>
+                                                        <small t-esc="formatCurrency(product.total_revenue)"/>
+                                                    </td>
+                                                    <td>
+                                                        <small t-esc="formatNumber(product.total_quantity)"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+
+            <!-- Pipeline View -->
+            <t t-if="state.selectedView === 'pipeline'">
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-light border-0">
+                                <h6 class="mb-0">
+                                    <i class="fa fa-funnel-dollar me-2 text-info"/>
+                                    Sales Pipeline
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="pipelineChart" width="400" height="200"></canvas>
+                            </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-light border-0">
+                                <h6 class="mb-0">
+                                    <i class="fa fa-percentage me-2 text-info"/>
+                                    Conversion Rates
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="text-center">
+                                    <h3 class="text-success" t-esc="formatPercentage(salesPipeline.conversion_rates?.quote_to_sale_rate || 0)"/>
+                                    <p class="text-muted mb-0">Quote to Sale</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+
+            <!-- Harvest Sales View -->
+            <t t-if="state.selectedView === 'harvest'">
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-light border-0">
+                                <h6 class="mb-0">
+                                    <i class="fa fa-seedling me-2 text-success"/>
+                                    Harvest Revenue by Crop
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="harvestRevenueChart" width="400" height="200"></canvas>
+                            </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-light border-0">
+                                <h6 class="mb-0">
+                                    <i class="fa fa-chart-pie me-2 text-success"/>
+                                    Harvest Summary
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="text-center mb-3">
+                                    <h4 class="text-success" t-esc="formatCurrency(harvestSales.total_harvest_revenue)"/>
+                                    <p class="text-muted mb-0">Total Revenue</p>
+                                </div>
+                                <div class="text-center">
+                                    <h4 class="text-info" t-esc="harvestSales.crops_sold"/>
+                                    <p class="text-muted mb-0">Crops Sold</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+
+            <!-- Customer Detail Modal -->
+            <t t-if="state.selectedCustomer">
+                <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header bg-primary text-white">
+                                <h5 class="modal-title">
+                                    <i class="fa fa-user me-2"/>
+                                    <t t-esc="state.selectedCustomer.name"/>
+                                </h5>
+                                <button type="button" class="btn-close btn-close-white" 
+                                        t-on-click="() => this.onCloseCustomerDetail()"/>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6>Contact Information</h6>
+                                        <p><strong>Email:</strong> <t t-esc="state.selectedCustomer.email || 'N/A'"/></p>
+                                        <p><strong>Phone:</strong> <t t-esc="state.selectedCustomer.phone || 'N/A'"/></p>
+                                        <p><strong>Type:</strong> 
+                                            <span t-att-class="'badge ' + getCustomerTypeClass(state.selectedCustomer.customer_type)" 
+                                                  t-esc="state.selectedCustomer.customer_type"/>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6>Sales Statistics</h6>
+                                        <p><strong>Total Orders:</strong> <t t-esc="state.selectedCustomer.total_orders"/></p>
+                                        <p><strong>Total Revenue:</strong> <t t-esc="formatCurrency(state.selectedCustomer.total_revenue)"/></p>
+                                        <p><strong>Last Order:</strong> <t t-esc="formatDate(state.selectedCustomer.last_order_date)"/></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" t-on-click="() => this.onCloseCustomerDetail()">
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+            </div>
+        </t>
+</templates>

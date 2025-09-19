@@ -1,0 +1,888 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <!-- Inventory Management Tab Template -->
+    <t t-name="farm_management_dashboard.InventoryTabTemplate" owl="1">
+        <div class="inventory-tab">
+            <!-- Inventory Header with Operations -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="mb-0">
+                            <i class="fa fa-warehouse me-2 text-primary"/>
+                            Inventory Management
+                        </h4>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-outline-primary btn-sm" t-on-click="() => this.onToggleFilters()">
+                                <i class="fa fa-filter me-1"/>
+                                Filters
+                                <span t-if="state.showFilters" class="badge bg-primary ms-1">Active</span>
+                            </button>
+                            <button class="btn btn-outline-secondary btn-sm" t-on-click="() => this.onClearFilters()">
+                                <i class="fa fa-times me-1"/>
+                                Clear
+                            </button>
+                            <div class="btn-group">
+                                <button class="btn btn-success btn-sm" t-on-click="() => this.onCreateReceipt()">
+                                    <i class="fa fa-plus me-1"/>
+                                    Receipt
+                                </button>
+                                <button class="btn btn-warning btn-sm" t-on-click="() => this.onCreateDelivery()">
+                                    <i class="fa fa-truck me-1"/>
+                                    Delivery
+                                </button>
+                                <button class="btn btn-info btn-sm" t-on-click="() => this.onCreateTransfer()">
+                                    <i class="fa fa-exchange-alt me-1"/>
+                                    Transfer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inventory Summary Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3 mb-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="d-flex align-items-center justify-content-center mb-2">
+                                <div class="stat-icon bg-primary text-white rounded-circle me-3">
+                                    <i class="fa fa-boxes"/>
+                                </div>
+                                <div class="text-start">
+                                    <h3 class="mb-0" t-esc="formatNumber(inventorySummary.total_products || 0)"/>
+                                    <small class="text-muted">Total Products</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="d-flex align-items-center justify-content-center mb-2">
+                                <div class="stat-icon bg-success text-white rounded-circle me-3">
+                                    <i class="fa fa-dollar-sign"/>
+                                </div>
+                                <div class="text-start">
+                                    <h3 class="mb-0" t-esc="formatCurrency(inventorySummary.total_value || 0)"/>
+                                    <small class="text-muted">Total Value</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="d-flex align-items-center justify-content-center mb-2">
+                                <div class="stat-icon bg-warning text-white rounded-circle me-3">
+                                    <i class="fa fa-exclamation-triangle"/>
+                                </div>
+                                <div class="text-start">
+                                    <h3 class="mb-0" t-esc="formatNumber(inventorySummary.low_stock_count || 0)"/>
+                                    <small class="text-muted">Low Stock</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="d-flex align-items-center justify-content-center mb-2">
+                                <div class="stat-icon bg-danger text-white rounded-circle me-3">
+                                    <i class="fa fa-times-circle"/>
+                                </div>
+                                <div class="text-start">
+                                    <h3 class="mb-0" t-esc="formatNumber(inventorySummary.out_of_stock_count || 0)"/>
+                                    <small class="text-muted">Out of Stock</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View Navigation Tabs -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <ul class="nav nav-pills nav-fill">
+                        <li class="nav-item">
+                            <a class="nav-link" t-att-class="state.currentView === 'overview' ? 'active' : ''" 
+                               t-on-click="() => this.onChangeView('overview')">
+                                <i class="fa fa-chart-pie me-1"/>
+                                Overview
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" t-att-class="state.currentView === 'receipts' ? 'active' : ''" 
+                               t-on-click="() => this.onChangeView('receipts')">
+                                <i class="fa fa-arrow-down me-1"/>
+                                Receipts
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" t-att-class="state.currentView === 'deliveries' ? 'active' : ''" 
+                               t-on-click="() => this.onChangeView('deliveries')">
+                                <i class="fa fa-arrow-up me-1"/>
+                                Deliveries
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" t-att-class="state.currentView === 'transfers' ? 'active' : ''" 
+                               t-on-click="() => this.onChangeView('transfers')">
+                                <i class="fa fa-exchange-alt me-1"/>
+                                Transfers
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" t-att-class="state.currentView === 'stock' ? 'active' : ''" 
+                               t-on-click="() => this.onChangeView('stock')">
+                                <i class="fa fa-boxes me-1"/>
+                                Stock
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" t-att-class="state.currentView === 'reports' ? 'active' : ''" 
+                               t-on-click="() => this.onChangeView('reports')">
+                                <i class="fa fa-chart-bar me-1"/>
+                                Reports
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Filters Panel -->
+            <div t-if="state.showFilters" class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="mb-0">
+                                <i class="fa fa-filter me-2"/>
+                                Filters
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label">Date Range</label>
+                                    <select class="form-select" t-model="state.filters.date_range">
+                                        <option value="today">Today</option>
+                                        <option value="7_days">Last 7 Days</option>
+                                        <option value="30_days">Last 30 Days</option>
+                                        <option value="90_days">Last 90 Days</option>
+                                        <option value="custom">Custom Range</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label">Status</label>
+                                    <select class="form-select" t-model="state.filters.status">
+                                        <option value="">All Status</option>
+                                        <option value="draft">Draft</option>
+                                        <option value="waiting">Waiting</option>
+                                        <option value="confirmed">Confirmed</option>
+                                        <option value="assigned">Assigned</option>
+                                        <option value="done">Done</option>
+                                        <option value="cancel">Cancelled</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label">Location</label>
+                                    <select class="form-select" t-model="state.filters.location_id">
+                                        <option value="">All Locations</option>
+                                        <t t-foreach="filterOptions.locations" t-as="location" t-key="location.id">
+                                            <option t-att-value="location.id" t-esc="location.name"/>
+                                        </t>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label">Search</label>
+                                    <input type="text" class="form-control" placeholder="Search products..." t-model="state.filters.search"/>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end gap-2">
+                                <button class="btn btn-outline-secondary" t-on-click="() => this.onClearFilters()">
+                                    <i class="fa fa-times me-1"/>
+                                    Clear
+                                </button>
+                                <button class="btn btn-primary" t-on-click="() => this.onApplyFilters()">
+                                    <i class="fa fa-search me-1"/>
+                                    Apply
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="row">
+                <div class="col-12">
+                    <!-- Overview View -->
+                    <div t-if="state.currentView === 'overview'" class="overview-view">
+                        <div class="row">
+                            <!-- Charts -->
+                            <div class="col-md-6 mb-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">
+                                            <i class="fa fa-chart-pie me-2"/>
+                                            Stock Status Distribution
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="chart-container">
+                                            <canvas id="inventorySummaryChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">
+                                            <i class="fa fa-chart-bar me-2"/>
+                                            Inventory Metrics
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="chart-container">
+                                            <canvas id="stockStatusChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Operations -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">
+                                            <i class="fa fa-clock me-2"/>
+                                            Recent Operations
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Type</th>
+                                                        <th>Reference</th>
+                                                        <th>Product</th>
+                                                        <th>Quantity</th>
+                                                        <th>Status</th>
+                                                        <th>Date</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <t t-foreach="recentOperations" t-as="operation" t-key="operation.id">
+                                                        <tr>
+                                                            <td>
+                                                                <span t-att-class="getOperationClass(operation.type)" t-esc="operation.type"/>
+                                                            </td>
+                                                            <td t-esc="operation.reference"/>
+                                                            <td t-esc="operation.product_name"/>
+                                                            <td t-esc="formatNumber(operation.quantity)"/>
+                                                            <td>
+                                                                <span t-att-class="getStatusClass(operation.status)" t-esc="operation.status"/>
+                                                            </td>
+                                                            <td t-esc="formatDate(operation.date)"/>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Receipts View -->
+                    <div t-if="state.currentView === 'receipts'" class="receipts-view">
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">
+                                        <i class="fa fa-arrow-down me-2 text-success"/>
+                                        Stock Receipts
+                                    </h5>
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-outline-primary btn-sm" t-on-click="() => this.onRefreshReceipts()">
+                                            <i class="fa fa-refresh me-1"/>
+                                            Refresh
+                                        </button>
+                                        <button class="btn btn-success btn-sm" t-on-click="() => this.onCreateReceipt()">
+                                            <i class="fa fa-plus me-1"/>
+                                            New Receipt
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Reference</th>
+                                                        <th>Supplier</th>
+                                                        <th>Products</th>
+                                                        <th>Total Amount</th>
+                                                        <th>Status</th>
+                                                        <th>Date</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <t t-foreach="getPaginatedData(receipts, 'receipts')" t-as="receipt" t-key="receipt.id">
+                                                        <tr>
+                                                            <td>
+                                                                <strong t-esc="receipt.reference"/>
+                                                            </td>
+                                                            <td t-esc="receipt.supplier_name"/>
+                                                            <td>
+                                                                <span class="badge bg-info" t-esc="receipt.product_count + ' items'"/>
+                                                            </td>
+                                                            <td t-esc="formatCurrency(receipt.total_amount)"/>
+                                                            <td>
+                                                                <span t-att-class="getStatusClass(receipt.status)" t-esc="receipt.status"/>
+                                                            </td>
+                                                            <td t-esc="formatDate(receipt.date)"/>
+                                                            <td>
+                                                                <div class="btn-group btn-group-sm">
+                                                                    <button class="btn btn-outline-primary" t-on-click="() => this.onViewReceipt(receipt.id)">
+                                                                        <i class="fa fa-eye"/>
+                                                                    </button>
+                                                                    <button class="btn btn-outline-warning" t-on-click="() => this.onEditReceipt(receipt.id)">
+                                                                        <i class="fa fa-edit"/>
+                                                                    </button>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        
+                                        <!-- Pagination for Receipts -->
+                                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                                <div class="d-flex align-items-center gap-3">
+                                                    <span class="text-muted">
+                                                        Showing <t t-esc="receiptsPaginationInfo.start"/> to <t t-esc="receiptsPaginationInfo.end"/> of <t t-esc="receiptsPaginationInfo.total"/> entries
+                                                    </span>
+                                                    <select class="form-select form-select-sm" style="width: auto;" t-on-change="this.onPageSizeChangeReceipts">
+                                                        <option value="5" t-att-selected="receiptsPaginationInfo.pageSize === 5">5 per page</option>
+                                                        <option value="10" t-att-selected="receiptsPaginationInfo.pageSize === 10">10 per page</option>
+                                                        <option value="25" t-att-selected="receiptsPaginationInfo.pageSize === 25">25 per page</option>
+                                                        <option value="50" t-att-selected="receiptsPaginationInfo.pageSize === 50">50 per page</option>
+                                                    </select>
+                                                </div>
+                                                <nav>
+                                                    <ul class="pagination pagination-sm mb-0">
+                                                        <li class="page-item" t-att-class="receiptsPaginationInfo.page === 1 ? 'disabled' : ''">
+                                                            <button class="page-link" t-on-click="this.onPreviousPageReceipts" t-att-disabled="receiptsPaginationInfo.page === 1">
+                                                                <i class="fa fa-chevron-left"/>
+                                                            </button>
+                                                        </li>
+                                                        <li class="page-item active">
+                                                            <span class="page-link" t-esc="receiptsPaginationInfo.page"/>
+                                                        </li>
+                                                        <li class="page-item" t-att-class="receiptsPaginationInfo.page === receiptsPaginationInfo.totalPages ? 'disabled' : ''">
+                                                            <button class="page-link" t-on-click="this.onNextPageReceipts" t-att-disabled="receiptsPaginationInfo.page === receiptsPaginationInfo.totalPages">
+                                                                <i class="fa fa-chevron-right"/>
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </nav>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Deliveries View -->
+                    <div t-if="state.currentView === 'deliveries'" class="deliveries-view">
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">
+                                        <i class="fa fa-arrow-up me-2 text-warning"/>
+                                        Stock Deliveries
+                                    </h5>
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-outline-primary btn-sm" t-on-click="() => this.onRefreshDeliveries()">
+                                            <i class="fa fa-refresh me-1"/>
+                                            Refresh
+                                        </button>
+                                        <button class="btn btn-warning btn-sm" t-on-click="() => this.onCreateDelivery()">
+                                            <i class="fa fa-plus me-1"/>
+                                            New Delivery
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Reference</th>
+                                                        <th>Customer</th>
+                                                        <th>Products</th>
+                                                        <th>Total Amount</th>
+                                                        <th>Status</th>
+                                                        <th>Date</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <t t-foreach="getPaginatedData(deliveries, 'deliveries')" t-as="delivery" t-key="delivery.id">
+                                                        <tr>
+                                                            <td>
+                                                                <strong t-esc="delivery.reference"/>
+                                                            </td>
+                                                            <td t-esc="delivery.customer_name"/>
+                                                            <td>
+                                                                <span class="badge bg-info" t-esc="delivery.product_count + ' items'"/>
+                                                            </td>
+                                                            <td t-esc="formatCurrency(delivery.total_amount)"/>
+                                                            <td>
+                                                                <span t-att-class="getStatusClass(delivery.status)" t-esc="delivery.status"/>
+                                                            </td>
+                                                            <td t-esc="formatDate(delivery.date)"/>
+                                                            <td>
+                                                                <div class="btn-group btn-group-sm">
+                                                                    <button class="btn btn-outline-primary" t-on-click="() => this.onViewDelivery(delivery.id)">
+                                                                        <i class="fa fa-eye"/>
+                                                                    </button>
+                                                                    <button class="btn btn-outline-warning" t-on-click="() => this.onEditDelivery(delivery.id)">
+                                                                        <i class="fa fa-edit"/>
+                                                                    </button>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        
+                                        <!-- Pagination for Deliveries -->
+                                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                                <div class="d-flex align-items-center gap-3">
+                                                    <span class="text-muted">
+                                                        Showing <t t-esc="deliveriesPaginationInfo.start"/> to <t t-esc="deliveriesPaginationInfo.end"/> of <t t-esc="deliveriesPaginationInfo.total"/> entries
+                                                    </span>
+                                                    <select class="form-select form-select-sm" style="width: auto;" t-on-change="this.onPageSizeChangeDeliveries">
+                                                        <option value="5" t-att-selected="deliveriesPaginationInfo.pageSize === 5">5 per page</option>
+                                                        <option value="10" t-att-selected="deliveriesPaginationInfo.pageSize === 10">10 per page</option>
+                                                        <option value="25" t-att-selected="deliveriesPaginationInfo.pageSize === 25">25 per page</option>
+                                                        <option value="50" t-att-selected="deliveriesPaginationInfo.pageSize === 50">50 per page</option>
+                                                    </select>
+                                                </div>
+                                                <nav>
+                                                    <ul class="pagination pagination-sm mb-0">
+                                                        <li class="page-item" t-att-class="deliveriesPaginationInfo.page === 1 ? 'disabled' : ''">
+                                                            <button class="page-link" t-on-click="this.onPreviousPageDeliveries" t-att-disabled="deliveriesPaginationInfo.page === 1">
+                                                                <i class="fa fa-chevron-left"/>
+                                                            </button>
+                                                        </li>
+                                                        <li class="page-item active">
+                                                            <span class="page-link" t-esc="deliveriesPaginationInfo.page"/>
+                                                        </li>
+                                                        <li class="page-item" t-att-class="deliveriesPaginationInfo.page === deliveriesPaginationInfo.totalPages ? 'disabled' : ''">
+                                                            <button class="page-link" t-on-click="this.onNextPageDeliveries" t-att-disabled="deliveriesPaginationInfo.page === deliveriesPaginationInfo.totalPages">
+                                                                <i class="fa fa-chevron-right"/>
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </nav>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Transfers View -->
+                    <div t-if="state.currentView === 'transfers'" class="transfers-view">
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">
+                                        <i class="fa fa-exchange-alt me-2 text-info"/>
+                                        Stock Transfers
+                                    </h5>
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-outline-primary btn-sm" t-on-click="() => this.onRefreshTransfers()">
+                                            <i class="fa fa-refresh me-1"/>
+                                            Refresh
+                                        </button>
+                                        <button class="btn btn-info btn-sm" t-on-click="() => this.onCreateTransfer()">
+                                            <i class="fa fa-plus me-1"/>
+                                            New Transfer
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Reference</th>
+                                                        <th>From Location</th>
+                                                        <th>To Location</th>
+                                                        <th>Products</th>
+                                                        <th>Status</th>
+                                                        <th>Date</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <t t-foreach="getPaginatedData(transfers, 'transfers')" t-as="transfer" t-key="transfer.id">
+                                                        <tr>
+                                                            <td>
+                                                                <strong t-esc="transfer.reference"/>
+                                                            </td>
+                                                            <td t-esc="transfer.from_location"/>
+                                                            <td t-esc="transfer.to_location"/>
+                                                            <td>
+                                                                <span class="badge bg-info" t-esc="transfer.product_count + ' items'"/>
+                                                            </td>
+                                                            <td>
+                                                                <span t-att-class="getStatusClass(transfer.status)" t-esc="transfer.status"/>
+                                                            </td>
+                                                            <td t-esc="formatDate(transfer.date)"/>
+                                                            <td>
+                                                                <div class="btn-group btn-group-sm">
+                                                                    <button class="btn btn-outline-primary" t-on-click="() => this.onViewTransfer(transfer.id)">
+                                                                        <i class="fa fa-eye"/>
+                                                                    </button>
+                                                                    <button class="btn btn-outline-warning" t-on-click="() => this.onEditTransfer(transfer.id)">
+                                                                        <i class="fa fa-edit"/>
+                                                                    </button>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        
+                                        <!-- Pagination for Transfers -->
+                                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                                <div class="d-flex align-items-center gap-3">
+                                                    <span class="text-muted">
+                                                        Showing <t t-esc="transfersPaginationInfo.start"/> to <t t-esc="transfersPaginationInfo.end"/> of <t t-esc="transfersPaginationInfo.total"/> entries
+                                                    </span>
+                                                    <select class="form-select form-select-sm" style="width: auto;" t-on-change="this.onPageSizeChangeTransfers">
+                                                        <option value="5" t-att-selected="transfersPaginationInfo.pageSize === 5">5 per page</option>
+                                                        <option value="10" t-att-selected="transfersPaginationInfo.pageSize === 10">10 per page</option>
+                                                        <option value="25" t-att-selected="transfersPaginationInfo.pageSize === 25">25 per page</option>
+                                                        <option value="50" t-att-selected="transfersPaginationInfo.pageSize === 50">50 per page</option>
+                                                    </select>
+                                                </div>
+                                                <nav>
+                                                    <ul class="pagination pagination-sm mb-0">
+                                                        <li class="page-item" t-att-class="transfersPaginationInfo.page === 1 ? 'disabled' : ''">
+                                                            <button class="page-link" t-on-click="this.onPreviousPageTransfers" t-att-disabled="transfersPaginationInfo.page === 1">
+                                                                <i class="fa fa-chevron-left"/>
+                                                            </button>
+                                                        </li>
+                                                        <li class="page-item active">
+                                                            <span class="page-link" t-esc="transfersPaginationInfo.page"/>
+                                                        </li>
+                                                        <li class="page-item" t-att-class="transfersPaginationInfo.page === transfersPaginationInfo.totalPages ? 'disabled' : ''">
+                                                            <button class="page-link" t-on-click="this.onNextPageTransfers" t-att-disabled="transfersPaginationInfo.page === transfersPaginationInfo.totalPages">
+                                                                <i class="fa fa-chevron-right"/>
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </nav>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stock View -->
+                    <div t-if="state.currentView === 'stock'" class="stock-view">
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">
+                                        <i class="fa fa-boxes me-2 text-primary"/>
+                                        Stock Analysis
+                                    </h5>
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-outline-primary btn-sm" t-on-click="() => this.onRefreshStock()">
+                                            <i class="fa fa-refresh me-1"/>
+                                            Refresh
+                                        </button>
+                                        <button class="btn btn-primary btn-sm" t-on-click="() => this.onStockAdjustment()">
+                                            <i class="fa fa-calculator me-1"/>
+                                            Stock Adjustment
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Stock Charts -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">
+                                            <i class="fa fa-chart-bar me-2"/>
+                                            Top Products by Value
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="chart-container">
+                                            <canvas id="stockAnalysisChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">
+                                            <i class="fa fa-chart-pie me-2"/>
+                                            Stock Status Distribution
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="chart-container">
+                                            <canvas id="stockValueChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Stock Table -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Product</th>
+                                                        <th>Category</th>
+                                                        <th>Available Qty</th>
+                                                        <th>Reserved Qty</th>
+                                                        <th>Unit Price</th>
+                                                        <th>Total Value</th>
+                                                        <th>Status</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <t t-foreach="getPaginatedData(stockAnalysis.items, 'stock')" t-as="item" t-key="item.id">
+                                                        <tr>
+                                                            <td>
+                                                                <strong t-esc="item.name"/>
+                                                            </td>
+                                                            <td t-esc="item.category"/>
+                                                            <td t-esc="formatNumber(item.qty_available)"/>
+                                                            <td t-esc="formatNumber(item.virtual_available - item.qty_available)"/>
+                                                            <td t-esc="formatCurrency(item.standard_price)"/>
+                                                            <td t-esc="formatCurrency(item.total_value)"/>
+                                                            <td>
+                                                                <span t-att-class="getStockStatusClass(item.stock_status)" t-esc="getStockStatusText(item.stock_status)"/>
+                                                            </td>
+                                                            <td>
+                                                                <div class="btn-group btn-group-sm">
+                                                                    <button class="btn btn-outline-primary" t-on-click="() => this.onViewProduct(item.id)">
+                                                                        <i class="fa fa-eye"/>
+                                                                    </button>
+                                                                    <button class="btn btn-outline-warning" t-on-click="() => this.onAdjustStock(item.id)">
+                                                                        <i class="fa fa-edit"/>
+                                                                    </button>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        
+                                        <!-- Pagination for Stock -->
+                                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                                <div class="d-flex align-items-center gap-3">
+                                                    <span class="text-muted">
+                                                        Showing <t t-esc="stockPaginationInfo.start"/> to <t t-esc="stockPaginationInfo.end"/> of <t t-esc="stockPaginationInfo.total"/> entries
+                                                    </span>
+                                                    <select class="form-select form-select-sm" style="width: auto;" t-on-change="this.onPageSizeChangeStock">
+                                                        <option value="5" t-att-selected="stockPaginationInfo.pageSize === 5">5 per page</option>
+                                                        <option value="10" t-att-selected="stockPaginationInfo.pageSize === 10">10 per page</option>
+                                                        <option value="25" t-att-selected="stockPaginationInfo.pageSize === 25">25 per page</option>
+                                                        <option value="50" t-att-selected="stockPaginationInfo.pageSize === 50">50 per page</option>
+                                                    </select>
+                                                </div>
+                                                <nav>
+                                                    <ul class="pagination pagination-sm mb-0">
+                                                        <li class="page-item" t-att-class="stockPaginationInfo.page === 1 ? 'disabled' : ''">
+                                                            <button class="page-link" t-on-click="this.onPreviousPageStock" t-att-disabled="stockPaginationInfo.page === 1">
+                                                                <i class="fa fa-chevron-left"/>
+                                                            </button>
+                                                        </li>
+                                                        <li class="page-item active">
+                                                            <span class="page-link" t-esc="stockPaginationInfo.page"/>
+                                                        </li>
+                                                        <li class="page-item" t-att-class="stockPaginationInfo.page === stockPaginationInfo.totalPages ? 'disabled' : ''">
+                                                            <button class="page-link" t-on-click="this.onNextPageStock" t-att-disabled="stockPaginationInfo.page === stockPaginationInfo.totalPages">
+                                                                <i class="fa fa-chevron-right"/>
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </nav>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reports View -->
+                    <div t-if="state.currentView === 'reports'" class="reports-view">
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="mb-0">
+                                    <i class="fa fa-chart-bar me-2 text-info"/>
+                                    Inventory Reports
+                                </h5>
+                            </div>
+                        </div>
+
+                        <!-- Report Charts -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">
+                                            <i class="fa fa-chart-pie me-2"/>
+                                            Category Analysis
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="chart-container">
+                                            <canvas id="categoryAnalysisChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">
+                                            <i class="fa fa-chart-doughnut me-2"/>
+                                            Category Value
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="chart-container">
+                                            <canvas id="categoryValueChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">
+                                            <i class="fa fa-chart-line me-2"/>
+                                            Stock Movements
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="chart-container">
+                                            <canvas id="stockMovementsChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">
+                                            <i class="fa fa-chart-bar me-2"/>
+                                            Movement Trends
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="chart-container">
+                                            <canvas id="movementTrendsChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">
+                                            <i class="fa fa-chart-doughnut me-2"/>
+                                            Inventory Valuation
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="chart-container">
+                                            <canvas id="inventoryValuationChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">
+                                            <i class="fa fa-chart-bar me-2"/>
+                                            Valuation Trends
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="chart-container">
+                                            <canvas id="valuationTrendsChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

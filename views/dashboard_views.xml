@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 
+    This file is intentionally left minimal since we're using only the client action
+    from dashboard_simple.xml. The dashboard is read-only and doesn't need model-based views.
+    -->
+</odoo>
+
