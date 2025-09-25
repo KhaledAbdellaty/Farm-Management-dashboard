@@ -2,6 +2,7 @@
 
 import { Component, useState, useService } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { SmartButton } from "../common/smart_button";
 
 // Global filter lock to prevent multiple instances from filtering simultaneously
 let globalFilterLock = false;
@@ -9,6 +10,9 @@ let globalFilterTimeout = null;
 
 export class ProjectsTab extends Component {
     static template = "farm_management_dashboard.ProjectsTabTemplate";
+    static components = {
+        SmartButton,
+    };
     static props = {
         data: Object,
         filters: Object,
@@ -25,6 +29,9 @@ export class ProjectsTab extends Component {
             console.warn("Notification service not available");
             this.notification = null;
         }
+        
+        
+        
         
         this.state = useState({
             selectedProject: null,
@@ -131,6 +138,17 @@ export class ProjectsTab extends Component {
 
     get projectsByStage() {
         const projectsData = this.props.data.projects_by_stage || {};
+        console.log('🔧 ProjectsTab: Projects data structure:', projectsData);
+        console.log('🔧 ProjectsTab: Projects data keys:', Object.keys(projectsData));
+        
+        // Log first project details if available
+        const firstStage = Object.keys(projectsData)[0];
+        if (firstStage && projectsData[firstStage] && projectsData[firstStage].length > 0) {
+            console.log('🔧 ProjectsTab: First project details:', projectsData[firstStage][0]);
+            console.log('🔧 ProjectsTab: First project ID:', projectsData[firstStage][0].id);
+            console.log('🔧 ProjectsTab: First project ID type:', typeof projectsData[firstStage][0].id);
+        }
+        
         return Object.entries(projectsData).sort(([stageA], [stageB]) => {
             // Sort stages in logical order
             const stageOrder = {
@@ -147,6 +165,97 @@ export class ProjectsTab extends Component {
 
     get lastUpdated() {
         return this.props.data.last_updated || '';
+    }
+
+    // Quick Actions for Projects Tab
+    get quickActions() {
+        console.log('🔧 Generating quick actions for projects tab');
+        const actions = [
+            { icon: 'fa-plus-circle', label: 'New Project', type: 'primary', size: 'sm', action: 'farm.cultivation.project' },
+            { icon: 'fa-seedling', label: 'Active Projects', type: 'success', size: 'sm', action: 'farm.cultivation.project' },
+            { icon: 'fa-clipboard-list', label: 'Daily Reports', type: 'primary', size: 'sm', action: 'farm.daily.report' },
+            { icon: 'fa-home', label: 'Manage Farms', type: 'secondary', size: 'sm', action: 'farm.farm' },
+            { icon: 'fa-map', label: 'Manage Fields', type: 'secondary', size: 'sm', action: 'farm.field' }
+        ];
+        console.log('🔧 Generated quick actions:', actions);
+        return actions;
+    }
+
+    get smartActions() {
+        const actions = [];
+        
+        // Add smart actions based on project data
+        if (this.props.data?.projects_by_stage) {
+            const stages = this.props.data.projects_by_stage;
+            
+            // Check for projects in planning stage
+            if (stages.planning && stages.planning.length > 0) {
+                actions.push({
+                    icon: 'fa-calendar-check',
+                    label: 'Planning Projects',
+                    type: 'info',
+                    size: 'sm',
+                    badge: stages.planning.length,
+                    action: 'farm.cultivation.project'
+                });
+            }
+            
+            // Check for projects in growing stage
+            if (stages.growing && stages.growing.length > 0) {
+                actions.push({
+                    icon: 'fa-leaf',
+                    label: 'Growing Projects',
+                    type: 'success',
+                    size: 'sm',
+                    badge: stages.growing.length,
+                    action: 'farm.cultivation.project'
+                });
+            }
+            
+            // Check for projects in harvest stage
+            if (stages.harvest && stages.harvest.length > 0) {
+                actions.push({
+                    icon: 'fa-cut',
+                    label: 'Harvest Projects',
+                    type: 'warning',
+                    size: 'sm',
+                    badge: stages.harvest.length,
+                    action: 'farm.cultivation.project'
+                });
+            }
+            
+            // Check for overdue projects (projects past planned end date)
+            const now = new Date();
+            let overdueCount = 0;
+            Object.values(stages).forEach(projects => {
+                if (Array.isArray(projects)) {
+                    projects.forEach(project => {
+                        if (project.planned_end_date && new Date(project.planned_end_date) < now) {
+                            overdueCount++;
+                        }
+                    });
+                }
+            });
+            
+            if (overdueCount > 0) {
+                actions.push({
+                    icon: 'fa-exclamation-triangle',
+                    label: 'Overdue Projects',
+                    type: 'danger',
+                    size: 'sm',
+                    badge: overdueCount,
+                    action: 'farm.cultivation.project',
+                    // Store filter info for custom handling
+                    filterInfo: {
+                        domain: [['planned_end_date', '<', new Date().toISOString().split('T')[0]]],
+                        context: { 'search_default_overdue': 1 }
+                    }
+                });
+            }
+        }
+        
+        console.log('🔧 Generated smart actions:', actions);
+        return actions;
     }
 
     // Filter-related getters
@@ -378,14 +487,62 @@ export class ProjectsTab extends Component {
         this.state.selectedProjectReports = [];
     }
 
-    onEditProject(projectId) {
-        console.log('Edit project:', projectId);
-        // TODO: Implement project edit form
+    onViewProjectDetails(projectId) {
+        console.log('View project details:', projectId);
+        console.log('Project ID type:', typeof projectId);
+        console.log('Project ID value:', projectId);
+        
+        // Debug: Check if projectId is valid
+        if (!projectId || projectId === undefined || projectId === null) {
+            console.error('❌ Project ID is invalid:', projectId);
+            this.showNotification('Invalid project ID', 'error');
+            return;
+        }
+        
+        // Open project form view
+        this.navigateToProject(projectId, 'form');
     }
 
-    onViewReports(projectId) {
-        console.log('View reports for project:', projectId);
-        // TODO: Implement project reports view
+    onEditProject(projectId) {
+        console.log('Edit project:', projectId);
+        console.log('Edit Project ID type:', typeof projectId);
+        console.log('Edit Project ID value:', projectId);
+        
+        // Debug: Check if projectId is valid
+        if (!projectId || projectId === undefined || projectId === null) {
+            console.error('❌ Edit Project ID is invalid:', projectId);
+            this.showNotification('Invalid project ID for editing', 'error');
+            return;
+        }
+        
+        // Open project form view in edit mode
+        this.navigateToProject(projectId, 'form', { 'default_mode': 'edit' });
+    }
+
+    onViewProjectReports(projectId) {
+        console.log('View project reports:', projectId);
+        console.log('Reports Project ID type:', typeof projectId);
+        console.log('Reports Project ID value:', projectId);
+        
+        // Debug: Check if projectId is valid
+        if (!projectId || projectId === undefined || projectId === null) {
+            console.error('❌ Reports Project ID is invalid:', projectId);
+            this.showNotification('Invalid project ID for reports', 'error');
+            return;
+        }
+        
+        // Open daily reports filtered by project
+        this.navigateToProjectReports(projectId);
+    }
+
+    async navigateToProject(projectId, viewMode = 'form', context = {}) {
+        console.log('🔧 ProjectsTab: Project navigation requested:', projectId, viewMode);
+        this.showNotification(`Project ${projectId} - ${viewMode} view`, 'info');
+    }
+
+    async navigateToProjectReports(projectId) {
+        console.log('🔧 ProjectsTab: Reports navigation requested:', projectId);
+        this.showNotification(`Project ${projectId} reports`, 'info');
     }
 
     onCreateProject() {

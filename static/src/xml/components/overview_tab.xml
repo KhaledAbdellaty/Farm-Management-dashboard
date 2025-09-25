@@ -71,6 +71,41 @@
                     </div>
                 </div>
                 
+                <!-- Quick Actions Section -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-transparent border-0">
+                                <h5 class="card-title mb-0">
+                                    <i class="fa fa-bolt me-2 text-primary"/>
+                                    Quick Actions
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <!-- Quick Actions Buttons -->
+                                <div class="d-flex flex-wrap gap-2 mb-3">
+                                    <SmartButton t-foreach="quickActions" t-as="action" t-key="action.label"
+                                                button="action"
+                                                permissions="userPermissions"/>
+                                </div>
+                                
+                                <!-- Smart Actions (Context-Aware) -->
+                                <div t-if="smartActions.length > 0" class="d-flex flex-wrap gap-2">
+                                    <div class="w-100">
+                                        <small class="text-muted">
+                                            <i class="fa fa-magic me-1"/>
+                                            Smart Actions
+                                        </small>
+                                    </div>
+                                    <SmartButton t-foreach="smartActions" t-as="action" t-key="action.label"
+                                                button="action"
+                                                permissions="userPermissions"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
                 <!-- Main Content Row -->
                 <div class="row">
                     

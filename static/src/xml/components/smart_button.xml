@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <!-- Smart Button Template -->
+    <t t-name="farm_management_dashboard.SmartButtonTemplate" owl="1">
+        <button t-if="isVisible and props.button"
+                t-att-class="buttonClasses"
+                t-on-click="onButtonClick"
+                t-att-disabled="!isEnabled"
+                t-att-title="props.button.tooltip or props.button.label">
+            
+            <!-- Loading Spinner -->
+            <span t-if="props.loading" class="spinner-border spinner-border-sm me-2" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </span>
+            
+            <!-- Button Icon -->
+            <i t-if="props.button.icon" t-att-class="props.button.icon + ' me-1'"/>
+            
+            <!-- Button Label -->
+            <span t-if="props.button.label" t-esc="props.button.label"/>
+            
+            <!-- Button Badge -->
+            <span t-if="props.button.badge" class="badge bg-light text-dark ms-1" t-esc="props.button.badge"/>
+        </button>
+    </t>
+</templates>

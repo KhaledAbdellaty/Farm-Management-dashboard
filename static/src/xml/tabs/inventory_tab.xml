@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <!-- Inventory Management Tab Template -->
     <t t-name="farm_management_dashboard.InventoryTabTemplate" owl="1">
-        <div class="inventory-tab">
+            <div class="inventory-tab">
             <!-- Inventory Header with Operations -->
             <div class="row mb-4">
                 <div class="col-12">
@@ -34,6 +34,44 @@
                                     <i class="fa fa-exchange-alt me-1"/>
                                     Transfer
                                 </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions Section -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <h6 class="card-title mb-3">
+                                <i class="fa fa-bolt me-2 text-primary"/>
+                                Quick Actions
+                            </h6>
+                            <div class="d-flex flex-wrap gap-2">
+                                <t t-foreach="quickActions" t-as="action" t-key="action.label">
+                                    <SmartButton button="action" context="{}" permissions="userPermissions"/>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Smart Actions Section -->
+            <div class="row mb-4" t-if="smartActions.length > 0">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <h6 class="card-title mb-3">
+                                <i class="fa fa-magic me-2 text-info"/>
+                                Smart Actions
+                            </h6>
+                            <div class="d-flex flex-wrap gap-2">
+                                <t t-foreach="smartActions" t-as="action" t-key="action.label">
+                                    <SmartButton button="action" context="{}" permissions="userPermissions"/>
+                                </t>
                             </div>
                         </div>
                     </div>
@@ -88,7 +126,7 @@
                     </div>
                 </div>
                 <div class="col-md-3 mb-3">
-                    <div class="card border-0 shadow-sm">
+                <div class="card border-0 shadow-sm">
                         <div class="card-body text-center">
                             <div class="d-flex align-items-center justify-content-center mb-2">
                                 <div class="stat-icon bg-danger text-white rounded-circle me-3">
@@ -878,11 +916,11 @@
                                         </div>
                                     </div>
                                 </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </t>
+        </t>
 </templates>

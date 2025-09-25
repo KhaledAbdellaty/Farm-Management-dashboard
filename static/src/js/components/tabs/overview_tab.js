@@ -2,9 +2,13 @@
 
 import { Component, onMounted, onWillUnmount } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { SmartButton } from "../common/smart_button";
 
 export class OverviewTab extends Component {
     static template = "farm_management_dashboard.OverviewTabTemplate";
+    static components = {
+        SmartButton,
+    };
     static props = {
         data: Object,
         filters: Object,
@@ -238,5 +242,99 @@ export class OverviewTab extends Component {
             }
         });
         this.charts = {};
+    }
+    
+    // Quick Actions for Overview Tab
+    get quickActions() {
+        console.log('🔧 Generating quick actions for overview tab');
+        const actions = [
+            // Farm Management Navigation
+            {
+                icon: 'fa-home',
+                label: 'Manage Farms',
+                type: 'primary',
+                size: 'sm',
+                action: 'farm.farm'
+            },
+            {
+                icon: 'fa-map',
+                label: 'Manage Fields',
+                type: 'secondary',
+                size: 'sm',
+                action: 'farm.field'
+            },
+            
+            // Cultivation Operations
+            {
+                icon: 'fa-project-diagram',
+                label: 'Active Projects',
+                type: 'success',
+                size: 'sm',
+                action: 'farm.cultivation.project'
+            },
+            {
+                icon: 'fa-clipboard-list',
+                label: "Today's Reports",
+                type: 'warning',
+                size: 'sm',
+                action: 'farm.daily.report'
+            },
+            
+            // Quick Create Actions
+            {
+                icon: 'fa-plus-circle',
+                label: 'New Farm',
+                type: 'primary',
+                size: 'sm',
+                action: 'farm.farm'
+            },
+            {
+                icon: 'fa-plus-circle',
+                label: 'New Project',
+                type: 'success',
+                size: 'sm',
+                action: 'farm.cultivation.project'
+            },
+            {
+                icon: 'fa-plus-circle',
+                label: 'New Daily Report',
+                type: 'warning',
+                size: 'sm',
+                action: 'farm.daily.report'
+            }
+        ];
+        console.log('🔧 Generated quick actions:', actions);
+        return actions;
+    }
+    
+    // Smart Actions based on data context
+    get smartActions() {
+        const actions = [];
+        
+        // Low Stock Alerts
+        if (this.props.data?.low_stock_items?.length > 0) {
+            actions.push({
+                icon: 'fa-exclamation-triangle',
+                label: 'Low Stock Alerts',
+                type: 'danger',
+                size: 'sm',
+                badge: this.props.data.low_stock_items.length,
+                action: 'stock.quant'
+            });
+        }
+        
+        // Overdue Projects
+        if (this.props.data?.overdue_projects?.length > 0) {
+            actions.push({
+                icon: 'fa-clock',
+                label: 'Overdue Projects',
+                type: 'warning',
+                size: 'sm',
+                badge: this.props.data.overdue_projects.length,
+                action: 'farm.cultivation.project'
+            });
+        }
+        
+        return actions;
     }
 }

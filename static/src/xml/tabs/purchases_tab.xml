@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates xml:space="preserve">
     <t t-name="farm_management_dashboard.PurchasesTabTemplate" owl="1">
-        <div class="purchases-tab">
+            <div class="purchases-tab">
             <!-- Header with Navigation -->
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div class="d-flex align-items-center">
@@ -422,7 +422,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                            <div class="col-md-4">
                         <div class="card border-0 shadow-sm">
                             <div class="card-header bg-transparent border-0">
                                 <h5 class="mb-0">Performance Metrics</h5>
@@ -533,9 +533,9 @@
                                 <h2 class="text-success" t-esc="formatCurrency(costAnalysis.budget_target || 0)"/>
                                 <p class="text-muted mb-0">Budget Target</p>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
                         <div class="card border-0 shadow-sm">
                             <div class="card-body text-center">
                                 <h2 t-att-class="'text-' + (costAnalysis.budget_variance >= 0 ? 'success' : 'danger')" 
@@ -572,11 +572,11 @@
                                     <h4 t-esc="formatPercentage(costAnalysis.budget_utilization || 0)"/>
                                     <small class="text-muted">Budget Used</small>
                                 </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </t>
+        </t>
 </templates>

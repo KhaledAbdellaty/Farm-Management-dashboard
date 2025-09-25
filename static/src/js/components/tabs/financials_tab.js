@@ -3,9 +3,13 @@
 import { Component, useState, onMounted, onWillUnmount } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
+import { SmartButton } from "../common/smart_button";
 
 export class FinancialsTab extends Component {
     static template = "farm_management_dashboard.FinancialsTabTemplate";
+    static components = {
+        SmartButton,
+    };
     static props = {
         data: Object,
         filters: Object,
@@ -94,6 +98,84 @@ export class FinancialsTab extends Component {
     
     get summary() {
         return this.props.data.summary || {};
+    }
+    
+    // Quick Actions for Financials Tab
+    get quickActions() {
+        console.log('🔧 Generating quick actions for financials tab');
+        const actions = [
+            { icon: 'fa-plus-circle', label: 'New Invoice', type: 'primary', size: 'sm', action: 'account.move', permission: 'can_create_invoices' },
+            { icon: 'fa-receipt', label: 'New Bill', type: 'success', size: 'sm', action: 'account.move', permission: 'can_create_bills' },
+            { icon: 'fa-credit-card', label: 'New Payment', type: 'primary', size: 'sm', action: 'account.payment', permission: 'can_create_payments' },
+            { icon: 'fa-chart-line', label: 'Financial Reports', type: 'secondary', size: 'sm', action: 'account.move', permission: 'can_view_financials' },
+            { icon: 'fa-calculator', label: 'Budget Planning', type: 'secondary', size: 'sm', action: 'account.analytic.account', permission: 'can_view_financials' }
+        ];
+        console.log('🔧 Generated quick actions:', actions);
+        return actions;
+    }
+
+    get smartActions() {
+        const actions = [];
+        
+        // Add smart actions based on financial data
+        if (this.props.data?.financial_alerts && Array.isArray(this.props.data.financial_alerts)) {
+            const alerts = this.props.data.financial_alerts;
+            if (alerts.length > 0) {
+                actions.push({
+                    icon: 'fa-exclamation-triangle',
+                    label: 'Financial Alerts',
+                    type: 'warning',
+                    size: 'sm',
+                    action: 'account.move',
+                    permission: 'can_view_financials',
+                    filterInfo: {
+                        domain: [['state', 'in', ['draft', 'posted']]],
+                        context: { 'search_default_alerts': 1 }
+                    }
+                });
+            }
+        }
+        
+        // Check for overdue invoices
+        if (this.props.data?.aged_analysis && Array.isArray(this.props.data.aged_analysis)) {
+            const overdueInvoices = this.props.data.aged_analysis.filter(item => item.overdue_amount > 0);
+            if (overdueInvoices.length > 0) {
+                actions.push({
+                    icon: 'fa-clock',
+                    label: 'Overdue Invoices',
+                    type: 'danger',
+                    size: 'sm',
+                    action: 'account.move',
+                    permission: 'can_view_financials',
+                    filterInfo: {
+                        domain: [['invoice_date_due', '<', new Date().toISOString().split('T')[0]]],
+                        context: { 'search_default_overdue': 1 }
+                    }
+                });
+            }
+        }
+        
+        // Check for high-value transactions
+        if (this.props.data?.financial_kpis) {
+            const kpis = this.props.data.financial_kpis;
+            if (kpis.total_revenue > 10000) {
+                actions.push({
+                    icon: 'fa-dollar-sign',
+                    label: 'High Value Transactions',
+                    type: 'success',
+                    size: 'sm',
+                    action: 'account.move',
+                    permission: 'can_view_financials',
+                    filterInfo: {
+                        domain: [['amount_total', '>', 1000]],
+                        context: { 'search_default_high_value': 1 }
+                    }
+                });
+            }
+        }
+        
+        console.log('🔧 Generated smart actions:', actions);
+        return actions;
     }
     
     // ===== VIEW METHODS =====
