@@ -179,7 +179,7 @@ export class FarmDashboardMain extends Component {
                     'get_user_permissions',
                     []
                 );
-                
+                console.log('Fetched user permissions:', permissions);
                 // Check if we got demo user - if so, override with real user
                 if (permissions && permissions.role === 'demo_user') {
                     console.warn('Received demo_user permissions, overriding with real user permissions');
