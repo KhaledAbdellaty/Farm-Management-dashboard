@@ -222,19 +222,8 @@ export class FarmDashboardMain extends Component {
             console.log('User permissions role:', this.state.userPermissions?.role);
             console.log('User permissions type:', typeof this.state.userPermissions);
             
-            // Force override if still demo user
-            if (this.state.userPermissions && this.state.userPermissions.role === 'demo_user') {
-                console.warn('Still got demo_user after initialization, forcing real user override');
-                await this.forceRealUserOverride();
-            }
+
             
-            // Final check - if still demo user, force to real user
-            if (this.state.userPermissions && this.state.userPermissions.role === 'demo_user') {
-                console.error('CRITICAL: Still demo_user after all attempts, forcing to real_user');
-                this.state.userPermissions.role = 'real_user';
-                this.state.userPermissions.user_name = 'Dashboard User';
-                console.log('✅ Forced role change to real_user:', this.state.userPermissions);
-            }
             
         } catch (error) {
             console.error('❌ Failed to initialize dashboard:', error);

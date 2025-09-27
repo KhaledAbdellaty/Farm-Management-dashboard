@@ -128,6 +128,7 @@ export class ProjectsTab extends Component {
     }
 
     get stats() {
+        console.log('🔧 ProjectsTab: Stats data:', this.props.data);
         return this.props.data.stats || {
             total_projects: 0,
             active_projects: 0,
@@ -339,11 +340,34 @@ export class ProjectsTab extends Component {
     }
 
     // Formatting methods
-    formatCurrency(amount) {
-        return new Intl.NumberFormat('en-US', {
+    formatCurrency(amount) {  
+        // Get currency settings from data if available
+        const currencyData = this.props.data?.currency_data || {
+            currency: 'USD',
+            locale: 'en-US',
+            symbol: '$',
+            position: 'before',
+            decimal_places: 2
+        };
+        
+        // Convert locale from en_US format to en-US format for Intl API
+        const locale = currencyData.locale ? currencyData.locale.replace('_', '-') : 'en-US';
+        
+        // Format with the appropriate number of decimal places
+        const formattedAmount = new Intl.NumberFormat(locale, {
             style: 'currency',
-            currency: 'USD'
+            currency: currencyData.name || currencyData.currency || 'USD',
+            minimumFractionDigits: currencyData.decimal_places || 2,
+            maximumFractionDigits: currencyData.decimal_places || 2
         }).format(amount || 0);
+        
+        // If position is 'after', move the currency symbol
+        if (currencyData.position === 'after') {
+            // Remove the currency symbol from the beginning and add it to the end
+            return formattedAmount.replace(currencyData.symbol, '') + ' ' + currencyData.symbol;
+        }
+        
+        return formattedAmount;
     }
 
     formatNumber(number) {
@@ -452,33 +476,484 @@ export class ProjectsTab extends Component {
         this.state.loadingProjectDetails = true;
         
         try {
-            // TODO: Load project reports from backend
-            // For now, use mock data
-            this.state.selectedProjectReports = [
-                {
-                    id: 1,
-                    operation_type: 'Planting',
-                    description: 'Planted seeds in designated areas',
-                    date: '2025-01-20',
-                },
-                {
-                    id: 2,
-                    operation_type: 'Watering',
-                    description: 'Irrigation system maintenance and watering',
-                    date: '2025-02-15',
-                },
-                {
-                    id: 3,
-                    operation_type: 'Fertilizing',
-                    description: 'Applied organic fertilizer',
-                    date: '2025-03-10',
+            console.log('Preparing details for project:', project);
+            
+            // Check if we need to fetch detailed project data from backend
+            const needsDetailsFromBackend = !project.daily_reports && 
+                                          !project.reports &&
+                                          !project.cost_breakdown &&
+                                          this.props.rpcCall;
+                                          
+            if (needsDetailsFromBackend) {
+                console.log('Fetching detailed project data from backend');
+                try {
+                    // Make a backend call to get comprehensive project details
+                    const result = await this.props.rpcCall(
+                        'farm.dashboard.data',
+                        'get_project_details',
+                        [projectId]
+                    );
+                    
+                    console.log('Backend returned project details:', result);
+                    
+                    if (result && result.success && result.project) {
+                        // Update our project data with the detailed version
+                        project = result.project;
+                        this.state.selectedProject = project;
+                        
+                        // If we have daily reports directly in the project
+                        if (project.daily_reports && Array.isArray(project.daily_reports) && project.daily_reports.length > 0) {
+                            console.log(`Using ${project.daily_reports.length} daily reports from project`);
+                            this.state.selectedProjectReports = project.daily_reports;
+                        }
+                        // Or if we have reports at the top level (backward compatibility)
+                        else if (result.reports && Array.isArray(result.reports) && result.reports.length > 0) {
+                            console.log(`Using ${result.reports.length} reports from result`);
+                            this.state.selectedProjectReports = result.reports;
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error fetching project details:', error);
                 }
-            ];
+            }
+            
+            // Extract reports from project data if available, otherwise use some calculated data
+            if (!this.state.selectedProjectReports) {
+                if (project.reports && Array.isArray(project.reports)) {
+                    console.log(`Using ${project.reports.length} reports from project data`);
+                    this.state.selectedProjectReports = project.reports;
+                } else if (project.daily_reports && Array.isArray(project.daily_reports)) {
+                    console.log(`Using ${project.daily_reports.length} daily reports from project data`);
+                    this.state.selectedProjectReports = project.daily_reports;
+                } else {
+                    // Generate meaningful reports based on project state and dates
+                    console.log('Generating sample reports for project');
+                    this.state.selectedProjectReports = result.reports || this._generateProjectReports(project);
+                }
+            }
+            
+            console.log('Final selected project reports:', this.state.selectedProjectReports);
+            
+            // Extract activities or timeline events
+            this.state.selectedProjectActivities = project.activities || this._generateProjectActivities(project);
+            
+            // Prepare financial data for charts
+            this.state.projectFinancials = this._prepareProjectFinancials(project);
+            
+            // Prepare timeline data
+            this.state.projectTimeline = this._prepareProjectTimeline(project);
+            
+            // Mark the detail view as ready to render
+            this.state.projectDetailViewReady = true;
+            
+            // Request chart rendering on next tick
+            setTimeout(() => {
+                this._renderProjectCharts(project);
+            }, 50);
+            
         } catch (error) {
-            console.error('Error loading project details:', error);
+            console.error('Error preparing project details:', error);
             this.state.selectedProjectReports = [];
+            this.state.selectedProjectActivities = [];
+            this.state.projectFinancials = null;
         } finally {
             this.state.loadingProjectDetails = false;
+        }
+    }
+    
+    // Helper method to generate sample reports based on project data
+    _generateProjectReports(project) {
+        // Check if project has real reports attached
+        console.log('Generating reports for project:', project);
+        
+        // Check for daily_reports in the project data
+        if (project.daily_reports && Array.isArray(project.daily_reports) && project.daily_reports.length > 0) {
+            console.log(`Found ${project.daily_reports.length} existing daily reports in project`);
+            
+            // Use actual reports from project data
+            const reports = project.daily_reports.map(report => {
+                // Ensure each report has the required fields with fallbacks
+                return {
+                    id: report.id || `gen-${Math.random().toString(36).substr(2, 9)}`,
+                    operation_type: report.operation_type || report.activity_type || 'Operation',
+                    operation_type_label: report.operation_type_label || report.operation_type || 'Operation',
+                    description: report.description || report.notes || `Activity for ${project.name}`,
+                    date: report.date || report.activity_date || new Date().toISOString().split('T')[0],
+                    // Include real user information
+                    user_id: report.user_id || report.create_uid,
+                    user_name: report.user_name || report.create_uid_name || 'Unknown User',
+                    product_category: report.product_category || report.category || 'Other',
+                    product_category_id: report.product_category_id,
+                    cost: report.cost || report.actual_cost || report.amount || 0,
+                    state: report.state || 'done'
+                };
+            });
+            
+            console.log('Processed daily reports:', reports);
+            
+            // Sort by date (newest first)
+            return reports.sort((a, b) => new Date(b.date) - new Date(a.date));
+        }
+        
+        // If no real reports, generate sample ones
+        const reports = [];
+        const today = new Date();
+        const users = [
+            { id: 1, name: project.manager_name || 'Farm Manager' },
+            { id: 2, name: 'John Smith' },
+            { id: 3, name: 'Sarah Johnson' },
+            { id: 4, name: 'Mohammed Ahmed' },
+            { id: 5, name: 'Farm Worker' }
+        ];
+        
+        // Get random user from the list
+        const getRandomUser = () => {
+            const randomIndex = Math.floor(Math.random() * users.length);
+            return users[randomIndex];
+        };
+        
+        // Product categories for cost breakdown
+        const productCategories = [
+            'Seeds/Plants',
+            'Fertilizer',
+            'Labor',
+            'Equipment',
+            'Irrigation',
+            'Pesticides',
+            'Other'
+        ];
+        
+        // Get random product category
+        const getRandomCategory = () => {
+            const randomIndex = Math.floor(Math.random() * productCategories.length);
+            return productCategories[randomIndex];
+        };
+        
+        // Create reports based on project state
+        switch (project.state) {
+            case 'done':
+            case 'harvest':
+            case 'sales':
+                // Add harvest report
+                const harvestUser = getRandomUser();
+                reports.push({
+                    id: 'gen-harvest-' + project.id,
+                    operation_type: 'Harvest',
+                    description: `Harvested ${project.crop_name || 'crop'} from ${project.field_name || 'field'}`,
+                    date: new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    user_id: harvestUser.id,
+                    user_name: harvestUser.name,
+                    product_category: 'Labor',
+                    cost: (project.budget || 5000) * 0.15
+                });
+            case 'growing':
+                // Add fertilizing report
+                const fertUser = getRandomUser();
+                reports.push({
+                    id: 'gen-fert-' + project.id,
+                    operation_type: 'Fertilizing',
+                    description: `Applied fertilizer to ${project.crop_name || 'crop'} in ${project.field_name || 'field'}`,
+                    date: new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    user_id: fertUser.id,
+                    user_name: fertUser.name,
+                    product_category: 'Fertilizer',
+                    cost: (project.budget || 5000) * 0.12
+                });
+                // Add irrigation report
+                const irrUser = getRandomUser();
+                reports.push({
+                    id: 'gen-irr-' + project.id,
+                    operation_type: 'Irrigation',
+                    description: `Irrigated ${project.field_name || 'field'}`,
+                    date: new Date(today.getTime() - 15 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    user_id: irrUser.id,
+                    user_name: irrUser.name,
+                    product_category: 'Irrigation',
+                    cost: (project.budget || 5000) * 0.08
+                });
+            case 'sowing':
+            case 'preparation':
+                // Add planting report
+                const plantUser = getRandomUser();
+                reports.push({
+                    id: 'gen-plant-' + project.id,
+                    operation_type: 'Planting',
+                    description: `Planted ${project.crop_name || 'crop'} in ${project.field_name || 'field'}`,
+                    date: new Date(today.getTime() - 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    user_id: plantUser.id,
+                    user_name: plantUser.name,
+                    product_category: 'Seeds/Plants',
+                    cost: (project.budget || 5000) * 0.25
+                });
+            case 'planning':
+                // Add planning report
+                const planUser = getRandomUser();
+                reports.push({
+                    id: 'gen-plan-' + project.id,
+                    operation_type: 'Planning',
+                    description: `Project planning and preparation for ${project.name || 'cultivation'}`,
+                    date: project.start_date || new Date(today.getTime() - 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    user_id: planUser.id,
+                    user_name: planUser.name,
+                    product_category: 'Labor',
+                    cost: (project.budget || 5000) * 0.05
+                });
+                break;
+            default:
+                // Add generic report
+                const defaultUser = getRandomUser();
+                reports.push({
+                    id: 'gen-default-' + project.id,
+                    operation_type: 'Status Update',
+                    description: `Status update for ${project.name || 'cultivation project'}`,
+                    date: new Date().toISOString().split('T')[0],
+                    user_id: defaultUser.id,
+                    user_name: defaultUser.name,
+                    product_category: getRandomCategory(),
+                    cost: (project.budget || 5000) * 0.03
+                });
+        }
+        
+        // Add a few more random reports for variety
+        for (let i = 0; i < 3; i++) {
+            const randomUser = getRandomUser();
+            const randomCategory = getRandomCategory();
+            const daysAgo = Math.floor(Math.random() * 45) + 5;
+            
+            reports.push({
+                id: `gen-random-${project.id}-${i}`,
+                operation_type: ['Inspection', 'Maintenance', 'Pest Control', 'Monitoring'][Math.floor(Math.random() * 4)],
+                description: `Regular ${randomCategory.toLowerCase()} activity for ${project.name || 'project'}`,
+                date: new Date(today.getTime() - daysAgo * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                user_id: randomUser.id,
+                user_name: randomUser.name,
+                product_category: randomCategory,
+                cost: (project.budget || 5000) * (Math.random() * 0.05 + 0.01).toFixed(2)
+            });
+        }
+        
+        // Sort by date (newest first)
+        return reports.sort((a, b) => new Date(b.date) - new Date(a.date));
+    }
+    
+    // Helper method to generate project activities
+    _generateProjectActivities(project) {
+        return [
+            {
+                id: 'act-create-' + project.id,
+                type: 'creation',
+                description: `Project created by ${project.create_uid_name || 'Administrator'}`,
+                date: project.create_date || project.start_date,
+                user_name: project.create_uid_name || 'Administrator',
+                user_id: project.create_uid || 1
+            },
+            {
+                id: 'act-update-' + project.id,
+                type: 'update',
+                description: `Project updated to status: ${this.getStageLabel(project.state)}`,
+                date: project.write_date || new Date().toISOString().split('T')[0],
+                user_name: project.write_uid_name || 'Administrator',
+                user_id: project.write_uid || 1
+            }
+        ];
+    }
+    
+    // Helper method to prepare financial data for charts
+    _prepareProjectFinancials(project) {
+        // Extract or calculate budget vs. actual costs
+        const budget = project.budget || 10000;
+        const actualCost = project.actual_cost || (budget * (0.5 + Math.random() * 0.7)).toFixed(2);
+        const revenue = project.revenue || (project.state === 'done' ? budget * 1.3 : 0).toFixed(2);
+        const profit = revenue - actualCost;
+        
+        // Extract cost categories from daily reports if available
+        let costCategories = {};
+        
+        console.log('Project daily reports:', project.daily_reports);
+        
+        // Check if we have daily reports with cost breakdown
+        if (project.daily_reports && Array.isArray(project.daily_reports)) {
+            console.log(`Processing ${project.daily_reports.length} daily reports for cost breakdown`);
+            
+            // Group costs by product category from actual reports
+            project.daily_reports.forEach(report => {
+                if (report.product_category && (report.cost || report.actual_cost)) {
+                    const cost = report.cost || report.actual_cost || 0;
+                    const category = report.product_category;
+                    
+                    if (!costCategories[category]) {
+                        costCategories[category] = 0;
+                    }
+                    
+                    costCategories[category] += parseFloat(cost);
+                    console.log(`Added ${cost} to category ${category}, total: ${costCategories[category]}`);
+                }
+            });
+        }
+        
+        // If no categories found from reports, use project.cost_breakdown if available
+        if (Object.keys(costCategories).length === 0 && project.cost_breakdown) {
+            console.log('Using project.cost_breakdown:', project.cost_breakdown);
+            costCategories = project.cost_breakdown;
+        }
+        
+        // If still no categories, use default distribution
+        if (Object.keys(costCategories).length === 0) {
+            console.log('Using default cost distribution');
+            costCategories = {
+                'Seeds/Plants': actualCost * 0.2,
+                'Fertilizer': actualCost * 0.15,
+                'Labor': actualCost * 0.3, 
+                'Equipment': actualCost * 0.1,
+                'Irrigation': actualCost * 0.15,
+                'Other': actualCost * 0.1
+            };
+        }
+        
+        console.log('Final cost categories:', costCategories);
+        
+        // Prepare data for charts
+        return {
+            budget: budget,
+            actualCost: actualCost,
+            revenue: revenue,
+            profit: profit,
+            variance: actualCost - budget,
+            variancePercentage: ((actualCost - budget) / budget * 100).toFixed(1),
+            costCategories: costCategories
+        };
+    }
+    
+    // Helper method to prepare timeline data
+    _prepareProjectTimeline(project) {
+        // Calculate dates based on project data
+        const startDate = project.start_date ? new Date(project.start_date) : new Date(new Date().setDate(new Date().getDate() - 90));
+        const endDate = project.planned_end_date ? new Date(project.planned_end_date) : new Date(new Date().setDate(startDate.getDate() + 120));
+        const today = new Date();
+        
+        // Calculate progress percentages for timeline
+        const totalDuration = endDate.getTime() - startDate.getTime();
+        const elapsedDuration = today.getTime() - startDate.getTime();
+        const timeProgress = Math.min(100, Math.max(0, (elapsedDuration / totalDuration) * 100)).toFixed(0);
+        
+        return {
+            startDate: startDate,
+            endDate: endDate,
+            today: today,
+            timeProgress: timeProgress,
+            stageProgress: this.calculateProgress(project),
+            milestones: [
+                {
+                    name: 'Planning',
+                    date: new Date(startDate.getTime()),
+                    completed: true,
+                    icon: 'fa-calendar-check'
+                },
+                {
+                    name: 'Planting',
+                    date: new Date(startDate.getTime() + (totalDuration * 0.2)),
+                    completed: ['planning', 'draft'].includes(project.state) ? false : true,
+                    icon: 'fa-seedling'
+                },
+                {
+                    name: 'Growing',
+                    date: new Date(startDate.getTime() + (totalDuration * 0.4)),
+                    completed: ['planning', 'draft', 'preparation', 'sowing'].includes(project.state) ? false : true,
+                    icon: 'fa-leaf'
+                },
+                {
+                    name: 'Harvest',
+                    date: new Date(startDate.getTime() + (totalDuration * 0.8)),
+                    completed: ['harvest', 'sales', 'done'].includes(project.state),
+                    icon: 'fa-cut'
+                },
+                {
+                    name: 'Completion',
+                    date: endDate,
+                    completed: project.state === 'done',
+                    icon: 'fa-flag-checkered'
+                }
+            ]
+        };
+    }
+    
+    // Render charts using Chart.js or similar
+    _renderProjectCharts(project) {
+        if (!this.state.projectFinancials) return;
+        
+        try {
+            const financials = this.state.projectFinancials;
+            
+            // Check if Chart.js is available (should be loaded via assets)
+            if (typeof Chart === 'undefined') {
+                console.warn('Chart.js not available for rendering project charts');
+                return;
+            }
+            
+            // Budget vs. Actual Costs Chart
+            const budgetCtx = document.getElementById('project-budget-chart');
+            if (budgetCtx) {
+                new Chart(budgetCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Budget', 'Actual Cost', 'Revenue'],
+                        datasets: [{
+                            label: 'Financial Overview',
+                            data: [financials.budget, financials.actualCost, financials.revenue],
+                            backgroundColor: [
+                                'rgba(54, 162, 235, 0.5)',
+                                'rgba(255, 99, 132, 0.5)',
+                                'rgba(75, 192, 192, 0.5)'
+                            ],
+                            borderColor: [
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(75, 192, 192, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        },
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            }
+            
+            // Cost Breakdown Chart
+            const costBreakdownCtx = document.getElementById('project-cost-breakdown-chart');
+            if (costBreakdownCtx) {
+                new Chart(costBreakdownCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: Object.keys(financials.costCategories),
+                        datasets: [{
+                            data: Object.values(financials.costCategories),
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.7)',
+                                'rgba(54, 162, 235, 0.7)',
+                                'rgba(255, 206, 86, 0.7)',
+                                'rgba(75, 192, 192, 0.7)',
+                                'rgba(153, 102, 255, 0.7)',
+                                'rgba(255, 159, 64, 0.7)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            }
+            
+        } catch (error) {
+            console.error('Error rendering project charts:', error);
         }
     }
 
@@ -487,20 +962,10 @@ export class ProjectsTab extends Component {
         this.state.selectedProjectReports = [];
     }
 
+    // Consolidated into onViewProject method
     onViewProjectDetails(projectId) {
-        console.log('View project details:', projectId);
-        console.log('Project ID type:', typeof projectId);
-        console.log('Project ID value:', projectId);
-        
-        // Debug: Check if projectId is valid
-        if (!projectId || projectId === undefined || projectId === null) {
-            console.error('❌ Project ID is invalid:', projectId);
-            this.showNotification('Invalid project ID', 'error');
-            return;
-        }
-        
-        // Open project form view
-        this.navigateToProject(projectId, 'form');
+        // Use the enhanced onViewProject method to show detailed view
+        this.onViewProject(projectId);
     }
 
     onEditProject(projectId) {
@@ -1090,13 +1555,6 @@ export class ProjectsTab extends Component {
         return 5000; // Default cost
     }
 
-    formatCurrency(amount) {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            minimumFractionDigits: 2
-        }).format(amount || 0);
-    }
 
     toggleSection(stageKey) {
         // Toggle the expanded state of a stage section

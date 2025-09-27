@@ -442,6 +442,527 @@
                     </div>
                 </div>
             </t>
+
+            <!-- Project Detail Modal -->
+            <t t-if="selectedProject">
+                <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5); z-index: 1050;">
+                    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header bg-primary text-white">
+                                <h5 class="modal-title d-flex align-items-center">
+                                    <i class="fa fa-seedling me-2"/>
+                                    <span t-esc="selectedProject.name"/>
+                                    <small class="ms-2 fw-normal" t-esc="'(' + selectedProject.code + ')'"/>
+                                </h5>
+                                <div class="d-flex align-items-center">
+                                    <span class="badge bg-light text-dark me-2">
+                                        <t t-esc="getStageLabel(selectedProject.state)"/>
+                                    </span>
+                                    <button type="button" class="btn-close btn-close-white" 
+                                            t-on-click="() => this.onCloseProjectDetail()"/>
+                                </div>
+                            </div>
+                            <div class="modal-body p-0">
+                                <!-- Project Overview Cards -->
+                                <div class="row g-0 border-bottom pb-3">
+                                    <div class="col-md-9">
+                                        <div class="p-3">
+                                            <h6 class="fw-bold mb-3">Project Overview</h6>
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <div class="card border-0 shadow-sm h-100">
+                                                        <div class="card-body">
+                                                            <h6 class="card-title mb-3">
+                                                                <i class="fa fa-info-circle text-primary me-2"/>
+                                                                Basic Information
+                                                            </h6>
+                                                            <table class="table table-sm">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <th>Farm:</th>
+                                                                        <td t-esc="selectedProject.farm_name"/>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Field:</th>
+                                                                        <td>
+                                                                            <t t-esc="selectedProject.field_name"/> 
+                                                                            (<t t-esc="formatNumber(selectedProject.field_area)"/> 
+                                                                            <t t-esc="selectedProject.area_unit"/>)
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Crop:</th>
+                                                                        <td t-esc="selectedProject.crop_name"/>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Status:</th>
+                                                                        <td>
+                                                                            <span t-att-class="'badge bg-' + getStageColor(selectedProject.state)">
+                                                                                <t t-esc="getStageLabel(selectedProject.state)"/>
+                                                                            </span>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Manager:</th>
+                                                                        <td t-esc="selectedProject.manager_name || 'Not assigned'"/>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="card border-0 shadow-sm h-100">
+                                                        <div class="card-body">
+                                                            <h6 class="card-title mb-3">
+                                                                <i class="fa fa-calendar text-primary me-2"/>
+                                                                Timeline
+                                                            </h6>
+                                                            <table class="table table-sm">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <th>Start Date:</th>
+                                                                        <td t-esc="formatDate(selectedProject.start_date)"/>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Planned End:</th>
+                                                                        <td t-esc="formatDate(selectedProject.planned_end_date)"/>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Days Running:</th>
+                                                                        <td t-esc="selectedProject.days_running || 'N/A'"/>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Days Remaining:</th>
+                                                                        <td t-esc="selectedProject.days_remaining || 'N/A'"/>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Progress:</th>
+                                                                        <td>
+                                                                            <div class="progress" style="height: 6px;">
+                                                                                <div class="progress-bar bg-success" 
+                                                                                     t-att-style="'width: ' + calculateProgress(selectedProject) + '%'"
+                                                                                     t-att-aria-valuenow="calculateProgress(selectedProject)"
+                                                                                     aria-valuemin="0" aria-valuemax="100">
+                                                                                </div>
+                                                                            </div>
+                                                                            <small class="mt-1 d-block" t-esc="calculateProgress(selectedProject) + '%'"/>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 border-start">
+                                        <div class="p-3">
+                                            <h6 class="fw-bold mb-3">Financial Summary</h6>
+                                            <div class="financial-summary">
+                                                <div class="d-flex justify-content-between mb-2">
+                                                    <span>Budget:</span>
+                                                    <strong t-esc="formatCurrency(selectedProject.budget || 0)"/>
+                                                </div>
+                                                <div class="d-flex justify-content-between mb-2">
+                                                    <span>Actual Cost:</span>
+                                                    <strong t-esc="formatCurrency(selectedProject.actual_cost || 0)"/>
+                                                </div>
+                                                <hr class="my-2"/>
+                                                <div class="d-flex justify-content-between mb-2">
+                                                    <span>Revenue:</span>
+                                                    <strong t-esc="formatCurrency(selectedProject.revenue || 0)"/>
+                                                </div>
+                                                <div class="d-flex justify-content-between mb-2">
+                                                    <span>Profit/Loss:</span>
+                                                    <t t-set="profit" t-value="(selectedProject.revenue || 0) - (selectedProject.actual_cost || 0)"/>
+                                                    <strong t-att-class="profit &gt;= 0 ? 'text-success' : 'text-danger'" t-esc="formatCurrency(profit)"/>
+                                                </div>
+                                                <hr class="my-2"/>
+                                                <div class="d-flex justify-content-between">
+                                                    <span>Budget Variance:</span>
+                                                    <t t-set="variance" t-value="(selectedProject.actual_cost || 0) - (selectedProject.budget || 0)"/>
+                                                    <t t-set="variancePercent" t-value="selectedProject.budget ? (variance / selectedProject.budget * 100).toFixed(1) : 0"/>
+                                                    <t t-set="varianceFormatted" t-value="formatCurrency(variance) + ' (' + variancePercent + '%)'"/>
+                                                    <strong t-att-class="variance &lt;= 0 ? 'text-success' : 'text-danger'" t-esc="varianceFormatted"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Tabs for Project Details -->
+                                <div class="project-detail-tabs mt-3 px-3">
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" id="dashboard-tab" data-bs-toggle="tab" 
+                                                    data-bs-target="#dashboard" type="button" role="tab" 
+                                                    aria-controls="dashboard" aria-selected="true">
+                                                <i class="fa fa-chart-line me-1"/>
+                                                Dashboard
+                                            </button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="reports-tab" data-bs-toggle="tab" 
+                                                    data-bs-target="#reports" type="button" role="tab" 
+                                                    aria-controls="reports" aria-selected="false">
+                                                <i class="fa fa-clipboard-list me-1"/>
+                                                Reports
+                                            </button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="timeline-tab" data-bs-toggle="tab" 
+                                                    data-bs-target="#timeline" type="button" role="tab" 
+                                                    aria-controls="timeline" aria-selected="false">
+                                                <i class="fa fa-clock me-1"/>
+                                                Timeline
+                                            </button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="activities-tab" data-bs-toggle="tab" 
+                                                    data-bs-target="#activities" type="button" role="tab" 
+                                                    aria-controls="activities" aria-selected="false">
+                                                <i class="fa fa-history me-1"/>
+                                                Activities
+                                            </button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="notes-tab" data-bs-toggle="tab" 
+                                                    data-bs-target="#notes" type="button" role="tab" 
+                                                    aria-controls="notes" aria-selected="false">
+                                                <i class="fa fa-sticky-note me-1"/>
+                                                Notes
+                                            </button>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content p-3 border border-top-0 rounded-bottom bg-white">
+                                        <!-- Dashboard Tab -->
+                                        <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+                                            <div class="row g-3">
+                                                <!-- Budget vs. Actual Chart -->
+                                                <div class="col-md-7">
+                                                    <div class="card border-0 shadow-sm">
+                                                        <div class="card-header bg-transparent">
+                                                            <h6 class="card-title mb-0">
+                                                                <i class="fa fa-chart-bar text-primary me-2"/>
+                                                                Budget vs. Actual Cost
+                                                            </h6>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <canvas id="project-budget-chart" height="200"></canvas>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- Cost Breakdown Chart -->
+                                                <div class="col-md-5">
+                                                    <div class="card border-0 shadow-sm">
+                                                        <div class="card-header bg-transparent">
+                                                            <h6 class="card-title mb-0">
+                                                                <i class="fa fa-pie-chart text-primary me-2"/>
+                                                                Cost Breakdown
+                                                            </h6>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <canvas id="project-cost-breakdown-chart" height="200"></canvas>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- Key Metrics -->
+                                                <div class="col-md-12">
+                                                    <div class="card border-0 shadow-sm">
+                                                        <div class="card-header bg-transparent">
+                                                            <h6 class="card-title mb-0">
+                                                                <i class="fa fa-tachometer-alt text-primary me-2"/>
+                                                                Key Metrics
+                                                            </h6>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <div class="metric-card p-3 border rounded text-center">
+                                                                        <div class="metric-icon bg-success text-white rounded-circle mb-2">
+                                                                            <i class="fa fa-percentage"/>
+                                                                        </div>
+                                                                        <h3 t-esc="calculateProgress(selectedProject) + '%'"/>
+                                                                        <small class="text-muted">Completion Rate</small>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <div class="metric-card p-3 border rounded text-center">
+                                                                        <div class="metric-icon bg-primary text-white rounded-circle mb-2">
+                                                                            <i class="fa fa-coins"/>
+                                                                        </div>
+                                                                        <h3 t-esc="selectedProject.actual_cost ? formatCurrency(selectedProject.actual_cost) : '$0'"/>
+                                                                        <small class="text-muted">Total Spent</small>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <div class="metric-card p-3 border rounded text-center">
+                                                                        <div class="metric-icon bg-warning text-white rounded-circle mb-2">
+                                                                            <i class="fa fa-balance-scale"/>
+                                                                        </div>
+                                                                        <t t-set="variance" t-value="(selectedProject.actual_cost || 0) - (selectedProject.budget || 0)"/>
+                                                                        <t t-set="varianceClass" t-value="variance &lt;= 0 ? 'text-success' : 'text-danger'"/>
+                                                                        <h3 t-att-class="varianceClass" t-esc="formatCurrency(variance)"/>
+                                                                        <small class="text-muted">Budget Variance</small>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <div class="metric-card p-3 border rounded text-center">
+                                                                        <div class="metric-icon bg-info text-white rounded-circle mb-2">
+                                                                            <i class="fa fa-calendar-alt"/>
+                                                                        </div>
+                                                                        <h3 t-esc="selectedProject.days_remaining || 'N/A'"/>
+                                                                        <small class="text-muted">Days Remaining</small>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Reports Tab -->
+                                        <div class="tab-pane fade" id="reports" role="tabpanel" aria-labelledby="reports-tab">
+                                            <div class="row g-3">
+                                                <div class="col-12">
+                                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                                        <h6 class="mb-0">Recent Reports</h6>
+                                                        <button class="btn btn-sm btn-primary">
+                                                            <i class="fa fa-plus me-1"/>
+                                                            Add Report
+                                                        </button>
+                                                    </div>
+                                                    <div class="table-responsive">
+                                                        <table class="table table-hover">
+                                                            <thead class="table-light">
+                                                                <tr>
+                                                                    <th>Date</th>
+                                                                    <th>Operation</th>
+                                                                    <th>irrigation_duration</th>
+                                                                    <th>Reported By</th>
+                                                                    <th>Actual Cost</th>
+                                                                    <th>Actions</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <t t-if="selectedProjectReports.length">
+                                                                    <t t-foreach="selectedProjectReports" t-as="report" t-key="report.id">
+                                                                        <tr>
+                                                                            <td t-esc="formatDate(report.date)"/>
+                                                                            <td>
+                                                                                <span t-att-class="'badge bg-' + (
+                                                                                    report.operation_type === 'Harvest' ? 'warning' :
+                                                                                    report.operation_type === 'Planting' ? 'success' :
+                                                                                    report.operation_type === 'Fertilizing' ? 'info' :
+                                                                                    report.operation_type === 'Irrigation' ? 'primary' : 'secondary'
+                                                                                )">
+                                                                                    <t t-esc="report.operation_type"/>
+                                                                                </span>
+                                                                            </td>
+                                                                            <td t-esc="report.irrigation_duration"/>
+                                                                            <td t-esc="report.reported_by || 'System'"/>
+                                                                            <td t-esc="formatCurrency(report.actual_cost || 0)"/>
+                                                                            <td>
+                                                                                <div class="btn-group btn-group-sm">
+                                                                                    <button class="btn btn-outline-primary" title="View">
+                                                                                        <i class="fa fa-eye"/>
+                                                                                    </button>
+                                                                                    <button class="btn btn-outline-secondary" title="Edit">
+                                                                                        <i class="fa fa-edit"/>
+                                                                                    </button>
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </t>
+                                                                </t>
+                                                                <tr t-if="!selectedProjectReports.length">
+                                                                    <td colspan="5" class="text-center py-3">
+                                                                        <i class="fa fa-clipboard-list fa-2x text-muted mb-2"/>
+                                                                        <p class="text-muted">No reports available for this project</p>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Timeline Tab -->
+                                        <div class="tab-pane fade" id="timeline" role="tabpanel" aria-labelledby="timeline-tab">
+                                            <div class="project-timeline">
+                                                <div class="timeline-header d-flex justify-content-between align-items-center mb-4">
+                                                    <h6 class="mb-0">Project Timeline</h6>
+                                                    <span class="badge bg-primary">
+                                                        <t t-esc="formatDate(selectedProject.start_date)"/> - 
+                                                        <t t-esc="formatDate(selectedProject.planned_end_date)"/>
+                                                    </span>
+                                                </div>
+                                                
+                                                <!-- Timeline visualization -->
+                                                <div class="timeline-progress mb-4">
+                                                    <div class="progress" style="height: 20px;">
+                                                        <div class="progress-bar bg-success" 
+                                                             t-att-style="'width: ' + calculateProgress(selectedProject) + '%'"
+                                                             t-att-aria-valuenow="calculateProgress(selectedProject)"
+                                                             aria-valuemin="0" aria-valuemax="100">
+                                                             <t t-esc="calculateProgress(selectedProject) + '%'"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex justify-content-between mt-1">
+                                                        <small class="text-muted" t-esc="formatDate(selectedProject.start_date)"/>
+                                                        <small class="text-muted">Today</small>
+                                                        <small class="text-muted" t-esc="formatDate(selectedProject.planned_end_date)"/>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Timeline milestones -->
+                                                <div class="timeline-milestones">
+                                                    <div class="milestone-track position-relative py-4">
+                                                        <!-- Generated dynamically from project state -->
+                                                        <div class="milestone-item d-flex align-items-start mb-3">
+                                                            <div class="milestone-icon me-3 bg-success text-white">
+                                                                <i class="fa fa-flag"/>
+                                                            </div>
+                                                            <div class="milestone-content">
+                                                                <h6 class="mb-1">Project Start</h6>
+                                                                <p class="text-muted mb-1" t-esc="formatDate(selectedProject.start_date)"/>
+                                                                <p class="mb-0">Project initiated with status: Planning</p>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="milestone-item d-flex align-items-start mb-3">
+                                                            <div class="milestone-icon me-3 bg-primary text-white">
+                                                                <i class="fa fa-seedling"/>
+                                                            </div>
+                                                            <div class="milestone-content">
+                                                                <h6 class="mb-1">Planting Phase</h6>
+                                                                <p class="text-muted mb-1">
+                                                                    <t t-if="selectedProject.planting_date" t-esc="formatDate(selectedProject.planting_date)"/>
+                                                                    <t t-else="">Estimated</t>
+                                                                </p>
+                                                                <p class="mb-0">Crop planting and initial growth monitoring</p>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="milestone-item d-flex align-items-start mb-3">
+                                                            <div class="milestone-icon me-3 bg-warning text-white">
+                                                                <i class="fa fa-cut"/>
+                                                            </div>
+                                                            <div class="milestone-content">
+                                                                <h6 class="mb-1">Harvest Phase</h6>
+                                                                <p class="text-muted mb-1">
+                                                                    <t t-if="selectedProject.harvest_date" t-esc="formatDate(selectedProject.harvest_date)"/>
+                                                                    <t t-else="">Planned</t>
+                                                                </p>
+                                                                <p class="mb-0">Crop harvesting and yield measurement</p>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="milestone-item d-flex align-items-start">
+                                                            <div t-att-class="'milestone-icon me-3 ' + (selectedProject.state === 'done' ? 'bg-success' : 'bg-secondary') + ' text-white'">
+                                                                <i t-att-class="selectedProject.state === 'done' ? 'fa fa-check' : 'fa fa-hourglass-half'"/>
+                                                            </div>
+                                                            <div class="milestone-content">
+                                                                <h6 class="mb-1">Project Completion</h6>
+                                                                <p class="text-muted mb-1" t-esc="formatDate(selectedProject.planned_end_date)"/>
+                                                                <p class="mb-0">
+                                                                    <t t-if="selectedProject.state === 'done'">
+                                                                        Project successfully completed
+                                                                    </t>
+                                                                    <t t-else="">
+                                                                        Expected project completion date
+                                                                    </t>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Activities Tab -->
+                                        <div class="tab-pane fade" id="activities" role="tabpanel" aria-labelledby="activities-tab">
+                                            <div class="activities-feed">
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <h6 class="mb-0">Project Activities</h6>
+                                                </div>
+                                                
+                                                <div class="activity-timeline position-relative">
+                                                    <t t-if="state.selectedProjectActivities &amp;&amp; state.selectedProjectActivities.length">
+                                                        <t t-foreach="state.selectedProjectActivities" t-as="activity" t-key="activity.id">
+                                                            <div class="activity-item d-flex mb-3">
+                                                                <div t-att-class="'activity-icon me-3 ' + (
+                                                                    activity.type === 'creation' ? 'bg-success' :
+                                                                    activity.type === 'update' ? 'bg-info' :
+                                                                    activity.type === 'report' ? 'bg-primary' :
+                                                                    'bg-secondary'
+                                                                ) + ' text-white'">
+                                                                    <i t-att-class="
+                                                                        activity.type === 'creation' ? 'fa fa-plus' :
+                                                                        activity.type === 'update' ? 'fa fa-edit' :
+                                                                        activity.type === 'report' ? 'fa fa-clipboard' :
+                                                                        'fa fa-clock'
+                                                                    "/>
+                                                                </div>
+                                                                <div class="activity-content">
+                                                                    <div class="d-flex justify-content-between">
+                                                                        <h6 class="mb-1" t-esc="activity.description"/>
+                                                                        <small class="text-muted" t-esc="formatDate(activity.date)"/>
+                                                                    </div>
+                                                                    <p class="mb-0 text-muted">
+                                                                        By: <t t-esc="activity.user_name"/>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </t>
+                                                    </t>
+                                                    <div t-if="!state.selectedProjectActivities || !state.selectedProjectActivities.length" class="text-center py-4">
+                                                        <i class="fa fa-history fa-2x text-muted mb-2"/>
+                                                        <p class="text-muted">No activities recorded for this project</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Notes Tab -->
+                                        <div class="tab-pane fade" id="notes" role="tabpanel" aria-labelledby="notes-tab">
+                                            <div class="project-notes">
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <h6 class="mb-0">Project Notes</h6>
+                                                    <button class="btn btn-sm btn-primary">
+                                                        <i class="fa fa-plus me-1"/>
+                                                        Add Note
+                                                    </button>
+                                                </div>
+                                                
+                                                <div class="card border-0 shadow-sm">
+                                                    <div class="card-body">
+                                                        <p class="text-muted" t-esc="selectedProject.description || 'No description available for this project.'"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" t-on-click="() => this.onCloseProjectDetail()">
+                                    <i class="fa fa-times me-1"/>
+                                    Close
+                                </button>
+                                <button type="button" class="btn btn-primary" t-on-click="() => this.onEditProject(selectedProject.id)">
+                                    <i class="fa fa-edit me-1"/>
+                                    Edit Project
+                                </button>
+                                <button type="button" class="btn btn-success" t-on-click="() => this.onViewProjectReports(selectedProject.id)">
+                                    <i class="fa fa-clipboard-list me-1"/>
+                                    View Reports
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
         </div>
     </t>
     

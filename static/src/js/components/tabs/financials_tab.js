@@ -662,13 +662,34 @@ export class FinancialsTab extends Component {
     
     // ===== UTILITY METHODS =====
     
-    formatCurrency(amount) {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
+    formatCurrency(amount) {  
+        // Get currency settings from data if available
+        const currencyData = this.props.data?.currency_data || {
             currency: 'USD',
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
+            locale: 'en-US',
+            symbol: '$',
+            position: 'before',
+            decimal_places: 2
+        };
+        
+        // Convert locale from en_US format to en-US format for Intl API
+        const locale = currencyData.locale ? currencyData.locale.replace('_', '-') : 'en-US';
+        
+        // Format with the appropriate number of decimal places
+        const formattedAmount = new Intl.NumberFormat(locale, {
+            style: 'currency',
+            currency: currencyData.name || currencyData.currency || 'USD',
+            minimumFractionDigits: currencyData.decimal_places || 2,
+            maximumFractionDigits: currencyData.decimal_places || 2
         }).format(amount || 0);
+        
+        // If position is 'after', move the currency symbol
+        if (currencyData.position === 'after') {
+            // Remove the currency symbol from the beginning and add it to the end
+            return formattedAmount.replace(currencyData.symbol, '') + ' ' + currencyData.symbol;
+        }
+        
+        return formattedAmount;
     }
     
     formatNumber(number, decimals = 2) {
