@@ -103,6 +103,7 @@
             
             # Styles
             'farm_management_dashboard/static/src/css/dashboard_main.css',
+            'farm_management_dashboard/static/src/css/report_view.css',
         ],
     },
     'images': ['static/description/index.html'],

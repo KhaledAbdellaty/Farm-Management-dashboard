@@ -172,7 +172,7 @@ class FarmDashboardData(models.Model):
             # Calculate statistics (based on all filtered projects, not just displayed)
             stats = {
                 'total_projects': len(projects),
-                'active_projects': len([p for p in projects if p.state in ['growing', 'harvest', 'planning']]),
+                'active_projects': len([p for p in projects if p.state in self._get_active_project_states()]),
                 'total_area': sum(projects.mapped('field_area')),
                 'total_budget': sum(projects.mapped('budget')),
             }
@@ -442,7 +442,8 @@ class FarmDashboardData(models.Model):
                 crop_projects = projects.filtered(lambda p: p.crop_id == crop)
                 
                 # Calculate metrics
-                active_projects = crop_projects.filtered(lambda p: p.state in ['growing', 'harvest'])
+                active_projects = crop_projects.filtered(lambda p: p.state in self._get_active_project_states())
+                _logger.info(f"Crop {crop.name} has {len(crop_projects)} projects, {len(active_projects)} active")
                 completed_projects = crop_projects.filtered(lambda p: p.state == 'done')
                 total_area = sum(crop_projects.mapped('field_area'))
                 total_planned_yield = sum(crop_projects.mapped('planned_yield'))
@@ -455,16 +456,15 @@ class FarmDashboardData(models.Model):
                 # Get BOMs
                 crop_boms = crop.bom_ids.filtered(lambda b: b.active)
                 
-            crop_data.append({
-                'id': crop.id,
-                'name': crop.name,
-                'code': crop.code,
+                crop_data.append({
+                    'id': crop.id,
+                    'name': crop.name,
+                    'code': crop.code,
                     'active': crop.active,
                     'growing_cycle': crop.growing_cycle or 0,
                     'uom_name': crop.uom_id.name if crop.uom_id else 'Unit',
                     'product_name': crop.product_id.name if crop.product_id else None,
                     'image': crop.image,
-                    
                     # Project metrics
                     'total_projects': len(crop_projects),
                     'active_projects': len(active_projects),
@@ -472,7 +472,6 @@ class FarmDashboardData(models.Model):
                     'total_area': total_area,
                     'total_planned_yield': total_planned_yield,
                     'total_actual_yield': total_actual_yield,
-                    
                     # Financial metrics
                     'total_budget': total_budget,
                     'total_actual_cost': total_actual_cost,
@@ -480,16 +479,16 @@ class FarmDashboardData(models.Model):
                     'profit': profit,
                     'profitability_ratio': (profit / total_revenue * 100) if total_revenue > 0 else 0,
                     'cost_efficiency': (total_budget / total_actual_cost * 100) if total_actual_cost > 0 else 0,
-                    
-                    # Yield metrics
+
+                        # Yield metrics
                     'yield_efficiency': (total_actual_yield / total_planned_yield * 100) if total_planned_yield > 0 else 0,
                     'avg_yield_per_area': (total_actual_yield / total_area) if total_area > 0 else 0,
-                    
-                    # BOMs
+
+                        # BOMs
                     'bom_count': len(crop_boms),
                     'bom_names': [bom.name for bom in crop_boms[:3]],  # Show first 3
-                    
-                    # Recent activity
+
+                        # Recent activity
                     'recent_projects': [{
                         'id': p.id,
                         'name': p.name,
@@ -509,7 +508,7 @@ class FarmDashboardData(models.Model):
                 'crops': crop_data,
                 'summary': {
                     'total_crops': len(all_crops),
-                    'active_crops': len([c for c in crop_data if c['active_projects'] > 0]),
+                    'active_projects': sum(c['active_projects'] for c in crop_data),
                     'total_cultivation_area': sum(c['total_area'] for c in crop_data),
                     'total_projects': sum(c['total_projects'] for c in crop_data),
                     'total_revenue': sum(c['total_revenue'] for c in crop_data),
@@ -5178,7 +5177,7 @@ class FarmDashboardData(models.Model):
         if not project.start_date:
             return 0
         
-        end_date = project.actual_end_date if project.state == 'done' else fields.Date.today()
+        end_date = project.actual_end_date if project.state == 'done' and project.actual_end_date else project.planned_end_date
         if end_date:
             return (end_date - project.start_date).days
         

@@ -72,7 +72,7 @@
                         <div class="card-body text-center">
                             <div class="d-flex align-items-center justify-content-center mb-2">
                                 <div class="stat-icon bg-primary text-white rounded-circle me-3">
-                                    <i class="fa fa-seedling"/>
+                                    <i class="fa fa-leaf"/>
                                 </div>
                                 <div class="text-start">
                                     <h3 class="mb-0" t-esc="stats.total_projects"/>
@@ -87,7 +87,7 @@
                         <div class="card-body text-center">
                             <div class="d-flex align-items-center justify-content-center mb-2">
                                 <div class="stat-icon bg-success text-white rounded-circle me-3">
-                                    <i class="fa fa-play"/>
+                                    <i class="fa fa-check"/>
                                 </div>
                                 <div class="text-start">
                                     <h3 class="mb-0" t-esc="stats.active_projects"/>
@@ -102,7 +102,7 @@
                         <div class="card-body text-center">
                             <div class="d-flex align-items-center justify-content-center mb-2">
                                 <div class="stat-icon bg-warning text-white rounded-circle me-3">
-                                    <i class="fa fa-chart-area"/>
+                                    <i class="fa fa-area-chart"/>
                                 </div>
                                 <div class="text-start">
                                     <h3 class="mb-0" t-esc="formatNumber(stats.total_area)"/>
@@ -117,7 +117,7 @@
                         <div class="card-body text-center">
                             <div class="d-flex align-items-center justify-content-center mb-2">
                                 <div class="stat-icon bg-info text-white rounded-circle me-3">
-                                    <i class="fa fa-dollar-sign"/>
+                                    <i class="fa fa-balance-scale"/>
                                 </div>
                                 <div class="text-start">
                                     <h3 class="mb-0" t-esc="formatCurrency(stats.total_budget)"/>
@@ -181,9 +181,6 @@
                                                     <tr>
                                                         <td>
                                                             <div class="d-flex align-items-center">
-                                                                <div class="project-avatar bg-primary text-white rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                                                    <i class="fa fa-seedling"/>
-                                                                </div>
                                                                 <div>
                                                                     <h6 class="mb-0" t-esc="project.name"/>
                                                                     <small class="text-muted" t-esc="project.code"/>
@@ -242,7 +239,7 @@
                                                 </button>
                                                 <button class="btn btn-outline-info" title="Reports"
                                                         t-on-click="() => this.onViewProjectReports(project.id)">
-                                                    <i class="fa fa-chart-line"/>
+                                                    <i class="fa fa-clipboard"/>
                                                 </button>
                                             </div>
                                                         </td>
@@ -269,7 +266,7 @@
                 <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
                     <div class="modal-dialog modal-lg modal-dialog-scrollable">
                         <div class="modal-content">
-                            <div class="modal-header bg-success text-white">
+                            <div class="modal-header bg-primary text-white">
                                 <h5 class="modal-title">
                                     <i class="fa fa-plus me-2"/>
                                     Create New Project
@@ -454,13 +451,9 @@
                                     <span t-esc="selectedProject.name"/>
                                     <small class="ms-2 fw-normal" t-esc="'(' + selectedProject.code + ')'"/>
                                 </h5>
-                                <div class="d-flex align-items-center">
-                                    <span class="badge bg-light text-dark me-2">
-                                        <t t-esc="getStageLabel(selectedProject.state)"/>
-                                    </span>
-                                    <button type="button" class="btn-close btn-close-white" 
+                  
+                                <button type="button" class="btn-close btn-close-white" 
                                             t-on-click="() => this.onCloseProjectDetail()"/>
-                                </div>
                             </div>
                             <div class="modal-body p-0">
                                 <!-- Project Overview Cards -->
@@ -946,17 +939,18 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-outline-secondary" t-on-click="() => this.onCloseProjectDetail()">
-                                    <i class="fa fa-times me-1"/>
-                                    Close
+                            <button type="button" class="btn btn-success ms-2" t-on-click="() => this.onViewProjectReports(selectedProject.id)">
+                                    <i class="fa fa-clipboard me-1"/>
+                                    View Reports
                                 </button>
-                                <button type="button" class="btn btn-primary" t-on-click="() => this.onEditProject(selectedProject.id)">
+                                
+                                <button type="button" class="btn btn-primary ms-2" t-on-click="() => this.onEditProject(selectedProject.id)">
                                     <i class="fa fa-edit me-1"/>
                                     Edit Project
                                 </button>
-                                <button type="button" class="btn btn-success" t-on-click="() => this.onViewProjectReports(selectedProject.id)">
-                                    <i class="fa fa-clipboard-list me-1"/>
-                                    View Reports
+                                <button type="button" class="btn btn-outline-secondary ms-2" t-on-click="() => this.onCloseProjectDetail()">
+                                    <i class="fa fa-times me-1"/>
+                                    Close
                                 </button>
                             </div>
                         </div>

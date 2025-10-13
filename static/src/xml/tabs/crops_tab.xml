@@ -102,10 +102,10 @@
                         <div class="card-body text-center">
                             <div class="d-flex align-items-center justify-content-center mb-2">
                                 <div class="stat-icon bg-primary text-white rounded-circle me-3">
-                                    <i class="fa fa-seedling"/>
+                                    <i class="fa fa-check"/>
                                 </div>
                                 <div class="text-start">
-                                    <h3 class="mb-0" t-esc="summary.total_projects || 0"/>
+                                    <h3 class="mb-0" t-esc="summary.active_projects || 0"/>
                                     <small class="text-muted">Active Projects</small>
                                 </div>
                             </div>
@@ -117,7 +117,7 @@
                         <div class="card-body text-center">
                             <div class="d-flex align-items-center justify-content-center mb-2">
                                 <div class="stat-icon bg-warning text-white rounded-circle me-3">
-                                    <i class="fa fa-chart-area"/>
+                                    <i class="fa fa-area-chart"/>
                                 </div>
                                 <div class="text-start">
                                     <h3 class="mb-0" t-esc="formatNumber(summary.total_cultivation_area || 0)"/>
@@ -132,7 +132,7 @@
                         <div class="card-body text-center">
                             <div class="d-flex align-items-center justify-content-center mb-2">
                                 <div class="stat-icon bg-info text-white rounded-circle me-3">
-                                    <i class="fa fa-dollar-sign"/>
+                                    <i class="fa fa-line-chart"/>
                                 </div>
                                 <div class="text-start">
                                     <h3 class="mb-0" t-esc="formatCurrency(summary.total_revenue || 0)"/>

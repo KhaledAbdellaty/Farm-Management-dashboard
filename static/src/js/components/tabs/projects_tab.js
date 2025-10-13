@@ -584,8 +584,13 @@ export class ProjectsTab extends Component {
                     user_name: report.user_name || report.create_uid_name || 'Unknown User',
                     product_category: report.product_category || report.category || 'Other',
                     product_category_id: report.product_category_id,
+                    product_id: report.product_id,
+                    product_name: report.product_name,
                     cost: report.cost || report.actual_cost || report.amount || 0,
-                    state: report.state || 'done'
+                    quantity: report.quantity,
+                    unit_of_measure: report.unit_of_measure,
+                    state: report.state || 'done',
+                    notes: report.notes
                 };
             });
             
@@ -824,6 +829,33 @@ export class ProjectsTab extends Component {
         };
     }
     
+    // Helper method to update reports UI
+    _updateReportsUI() {
+        if (!this.state.selectedProject || !this.state.selectedProjectReports) {
+            return;
+        }
+        
+        // If we're in the expanded reports view, update some UI elements
+        if (this.state.viewingReportsDetail) {
+            // Make sure the reports tab is active
+            const reportsTab = document.getElementById('reports-tab');
+            if (reportsTab) {
+                reportsTab.click();
+            }
+            
+            // Add expanded class to reports section
+            const reportsSection = document.querySelector('.project-reports-section');
+            if (reportsSection) {
+                reportsSection.classList.add('expanded-reports');
+            }
+        }
+        
+        // Render cost category chart
+        setTimeout(() => {
+            this._renderProjectCharts(this.state.selectedProject);
+        }, 100);
+    }
+    
     // Helper method to prepare timeline data
     _prepareProjectTimeline(project) {
         // Calculate dates based on project data
@@ -925,6 +957,68 @@ export class ProjectsTab extends Component {
                 });
             }
             
+            // Cost Categories Chart (for reports tab)
+            const costCategoryCtx = document.getElementById('project-cost-category-chart');
+            if (costCategoryCtx && financials.costCategories) {
+                const categories = Object.keys(financials.costCategories);
+                const costValues = Object.values(financials.costCategories);
+                
+                // Generate colors for each category
+                const backgroundColors = [
+                    'rgba(54, 162, 235, 0.7)',   // Blue
+                    'rgba(255, 99, 132, 0.7)',   // Red
+                    'rgba(75, 192, 192, 0.7)',   // Green
+                    'rgba(255, 159, 64, 0.7)',   // Orange
+                    'rgba(153, 102, 255, 0.7)',  // Purple
+                    'rgba(255, 205, 86, 0.7)',   // Yellow
+                    'rgba(201, 203, 207, 0.7)'   // Grey
+                ];
+                
+                // Ensure we have enough colors for all categories
+                while (backgroundColors.length < categories.length) {
+                    backgroundColors.push(...backgroundColors);
+                }
+                
+                new Chart(costCategoryCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: categories,
+                        datasets: [{
+                            data: costValues,
+                            backgroundColor: backgroundColors.slice(0, categories.length),
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                                labels: {
+                                    boxWidth: 12,
+                                    padding: 10
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: (context) => {
+                                        const value = context.raw;
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = ((value / total) * 100).toFixed(1);
+                                        const formattedValue = new Intl.NumberFormat('en-US', {
+                                            style: 'currency',
+                                            currency: 'USD'
+                                        }).format(value);
+                                        return `${context.label}: ${formattedValue} (${percentage}%)`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
             // Cost Breakdown Chart
             const costBreakdownCtx = document.getElementById('project-cost-breakdown-chart');
             if (costBreakdownCtx) {
@@ -984,7 +1078,7 @@ export class ProjectsTab extends Component {
         this.navigateToProject(projectId, 'form', { 'default_mode': 'edit' });
     }
 
-    onViewProjectReports(projectId) {
+    async onViewProjectReports(projectId) {
         console.log('View project reports:', projectId);
         console.log('Reports Project ID type:', typeof projectId);
         console.log('Reports Project ID value:', projectId);
@@ -996,8 +1090,98 @@ export class ProjectsTab extends Component {
             return;
         }
         
-        // Open daily reports filtered by project
-        this.navigateToProjectReports(projectId);
+        // Check if we have rpcCall available to fetch reports from backend
+        if (this.props.rpcCall) {
+            try {
+                // Show loading state
+                this.showNotification('Loading project reports...', 'info');
+                
+                // Call backend to get detailed project reports
+                const result = await this.props.rpcCall(
+                    'farm.dashboard.data',
+                    'get_project_reports',
+                    [projectId]
+                );
+                
+                if (result && result.success && result.reports) {
+                    console.log('Fetched project reports:', result.reports);
+                    
+                    // Find the project and update its reports
+                    let project = null;
+                    for (const [stage, projects] of this.projectsByStage) {
+                        project = projects.find(p => p.id === projectId);
+                        if (project) break;
+                    }
+                    
+                    if (project) {
+                        // Update reports in the project data
+                        project.daily_reports = result.reports;
+                        this.state.selectedProjectReports = result.reports;
+                        
+                        // If the project is currently selected, refresh the view
+                        if (this.state.selectedProject && this.state.selectedProject.id === projectId) {
+                            this.state.projectFinancials = this._prepareProjectFinancials(project);
+                            
+                            // Re-render charts
+                            setTimeout(() => {
+                                this._renderProjectCharts(project);
+                            }, 50);
+                        }
+                    }
+                    
+                    // Open view showing the reports in a modal or expanded view
+                    this.openProjectReportsView(projectId, result.reports);
+                } else {
+                    // If backend call failed, use existing reports or navigate to standard view
+                    console.warn('Failed to fetch project reports from backend:', result);
+                    this.navigateToProjectReports(projectId);
+                }
+            } catch (error) {
+                console.error('Error fetching project reports:', error);
+                this.showNotification('Error loading project reports', 'error');
+                this.navigateToProjectReports(projectId);
+            }
+        } else {
+            // Fallback to standard navigation if RPC is not available
+            this.navigateToProjectReports(projectId);
+        }
+    }
+    
+    // Helper method to open a comprehensive reports view in the dashboard
+    openProjectReportsView(projectId, reports) {
+        // Find the project
+        let project = null;
+        for (const [stage, projects] of this.projectsByStage) {
+            project = projects.find(p => p.id === projectId);
+            if (project) break;
+        }
+        
+        if (!project) {
+            console.error('Project not found for reports view:', projectId);
+            return;
+        }
+        
+        // Set state to show detailed reports view
+        this.state.selectedProject = project;
+        this.state.selectedProjectReports = reports;
+        this.state.viewingReportsDetail = true;
+        this.state.projectDetailViewReady = true;
+        
+        // Enhance the view by showing only the reports section
+        document.querySelectorAll('.project-details-section').forEach(section => {
+            if (section.classList.contains('project-reports-section')) {
+                section.style.display = 'block';
+                section.classList.add('expanded-reports');
+            } else {
+                section.style.display = 'none';
+            }
+        });
+        
+        // Focus on the reports section
+        const reportsSection = document.querySelector('.project-reports-section');
+        if (reportsSection) {
+            reportsSection.scrollIntoView({ behavior: 'smooth' });
+        }
     }
 
     async navigateToProject(projectId, viewMode = 'form', context = {}) {

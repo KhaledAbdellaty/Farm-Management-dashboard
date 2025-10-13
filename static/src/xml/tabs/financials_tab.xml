@@ -123,7 +123,7 @@
                         <div class="card-body text-center">
                             <div class="d-flex align-items-center justify-content-center mb-2">
                                 <div t-att-class="'stat-icon text-white rounded-circle me-3 ' + (summary.net_income >= 0 ? 'bg-success' : 'bg-danger')">
-                                    <i class="fa fa-chart-line"/>
+                                    <i class="fa fa-line-chart"/>
                                 </div>
                                 <div class="text-start">
                                     <h3 t-att-class="summary.net_income >= 0 ? 'text-success mb-0' : 'text-danger mb-0'" t-esc="formatCurrency(summary.net_income)"/>
