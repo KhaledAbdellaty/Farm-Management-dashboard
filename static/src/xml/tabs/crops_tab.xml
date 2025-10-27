@@ -82,60 +82,60 @@
 
             <!-- Summary Cards -->
             <div class="row mb-4">
-                <div class="col-md-3 mb-3">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body text-center">
-                            <div class="d-flex align-items-center justify-content-center mb-2">
-                                <div class="stat-icon bg-success text-white rounded-circle me-3">
+                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 mb-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body p-3">
+                            <div class="d-flex align-items-center">
+                                <div class="stat-icon bg-success text-white rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; min-width: 48px;">
                                     <i class="fa fa-leaf"/>
                                 </div>
-                                <div class="text-start">
-                                    <h3 class="mb-0" t-esc="summary.total_crops || 0"/>
+                                <div class="flex-grow-1">
+                                    <h4 class="mb-1" t-esc="summary.total_crops || 0"/>
                                     <small class="text-muted">Total Crops</small>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body text-center">
-                            <div class="d-flex align-items-center justify-content-center mb-2">
-                                <div class="stat-icon bg-primary text-white rounded-circle me-3">
+                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 mb-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body p-3">
+                            <div class="d-flex align-items-center">
+                                <div class="stat-icon bg-primary text-white rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; min-width: 48px;">
                                     <i class="fa fa-check"/>
                                 </div>
-                                <div class="text-start">
-                                    <h3 class="mb-0" t-esc="summary.active_projects || 0"/>
+                                <div class="flex-grow-1">
+                                    <h4 class="mb-1" t-esc="summary.active_projects || 0"/>
                                     <small class="text-muted">Active Projects</small>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body text-center">
-                            <div class="d-flex align-items-center justify-content-center mb-2">
-                                <div class="stat-icon bg-warning text-white rounded-circle me-3">
-                                    <i class="fa fa-area-chart"/>
+                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 mb-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body p-3">
+                            <div class="d-flex align-items-center">
+                                <div class="stat-icon bg-warning text-white rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; min-width: 48px;">
+                                    <i class="fa fa-bar-chart"/>
                                 </div>
-                                <div class="text-start">
-                                    <h3 class="mb-0" t-esc="formatNumber(summary.total_cultivation_area || 0)"/>
+                                <div class="flex-grow-1">
+                                    <h4 class="mb-1" t-esc="formatNumber(summary.total_cultivation_area || 0)"/>
                                     <small class="text-muted">Total Area (Ha)</small>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body text-center">
-                            <div class="d-flex align-items-center justify-content-center mb-2">
-                                <div class="stat-icon bg-info text-white rounded-circle me-3">
+                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 mb-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body p-3">
+                            <div class="d-flex align-items-center">
+                                <div class="stat-icon bg-info text-white rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; min-width: 48px;">
                                     <i class="fa fa-line-chart"/>
                                 </div>
-                                <div class="text-start">
-                                    <h3 class="mb-0" t-esc="formatCurrency(summary.total_revenue || 0)"/>
+                                <div class="flex-grow-1">
+                                    <h4 class="mb-1" t-esc="formatCurrency(summary.total_revenue || 0)"/>
                                     <small class="text-muted">Total Revenue</small>
                                 </div>
                             </div>
@@ -330,7 +330,7 @@
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-light border-0">
                         <h6 class="mb-0">
-                            <i class="fa fa-tachometer-alt me-2 text-success"/>
+                            <i class="fa fa-tachometer me-2 text-success"/>
                             Performance Metrics
                         </h6>
                     </div>

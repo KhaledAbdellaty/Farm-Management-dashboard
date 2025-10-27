@@ -104,77 +104,61 @@
             <div t-if="state.currentView === 'overview'" class="overview-view">
                 <!-- Summary Cards -->
                 <div class="row mb-4">
-                    <div class="col-md-3">
-                        <div class="card border-0 shadow-sm">
-                            <div class="card-body">
+                    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 mb-3">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body p-3">
                                 <div class="d-flex align-items-center">
-                                    <div class="flex-shrink-0">
-                                        <div class="bg-primary bg-opacity-10 rounded-3 p-3">
-                                            <i class="fa fa-shopping-cart fa-2x text-primary"/>
-                                        </div>
+                                    <div class="stat-icon bg-primary text-white rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; min-width: 48px;">
+                                        <i class="fa fa-shopping-cart"/>
                                     </div>
-                                    <div class="flex-grow-1 ms-3">
-                                        <div class="text-start">
-                                            <h3 class="mb-0" t-esc="formatNumber(purchasesSummary.total_orders || 0)"/>
-                                            <small class="text-muted">Total Orders</small>
-                                        </div>
+                                    <div class="flex-grow-1">
+                                        <h4 class="mb-1" t-esc="formatNumber(purchasesSummary.total_orders || 0)"/>
+                                        <small class="text-muted">Total Orders</small>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="card border-0 shadow-sm">
-                            <div class="card-body">
+                    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 mb-3">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body p-3">
                                 <div class="d-flex align-items-center">
-                                    <div class="flex-shrink-0">
-                                        <div class="bg-success bg-opacity-10 rounded-3 p-3">
-                                            <i class="fa fa-dollar-sign fa-2x text-success"/>
-                                        </div>
+                                    <div class="stat-icon bg-success text-white rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; min-width: 48px;">
+                                        <i class="fa fa-dollar"/>
                                     </div>
-                                    <div class="flex-grow-1 ms-3">
-                                        <div class="text-start">
-                                            <h3 class="mb-0" t-esc="formatCurrency(purchasesSummary.total_amount || 0)"/>
-                                            <small class="text-muted">Total Amount</small>
-                                        </div>
+                                    <div class="flex-grow-1">
+                                        <h4 class="mb-1" t-esc="formatCurrency(purchasesSummary.total_amount || 0)"/>
+                                        <small class="text-muted">Total Amount</small>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="card border-0 shadow-sm">
-                            <div class="card-body">
+                    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 mb-3">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body p-3">
                                 <div class="d-flex align-items-center">
-                                    <div class="flex-shrink-0">
-                                        <div class="bg-info bg-opacity-10 rounded-3 p-3">
-                                            <i class="fa fa-users fa-2x text-info"/>
-                                        </div>
+                                    <div class="stat-icon bg-info text-white rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; min-width: 48px;">
+                                        <i class="fa fa-users"/>
                                     </div>
-                                    <div class="flex-grow-1 ms-3">
-                                        <div class="text-start">
-                                            <h3 class="mb-0" t-esc="formatNumber(supplierAnalysis.total_suppliers || 0)"/>
-                                            <small class="text-muted">Active Suppliers</small>
-                                        </div>
+                                    <div class="flex-grow-1">
+                                        <h4 class="mb-1" t-esc="formatNumber(supplierAnalysis.total_suppliers || 0)"/>
+                                        <small class="text-muted">Active Suppliers</small>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="card border-0 shadow-sm">
-                            <div class="card-body">
+                    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 mb-3">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body p-3">
                                 <div class="d-flex align-items-center">
-                                    <div class="flex-shrink-0">
-                                        <div class="bg-warning bg-opacity-10 rounded-3 p-3">
-                                            <i class="fa fa-chart-line fa-2x text-warning"/>
-                                        </div>
+                                    <div class="stat-icon bg-warning text-white rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; min-width: 48px;">
+                                        <i class="fa fa-line-chart"/>
                                     </div>
-                                    <div class="flex-grow-1 ms-3">
-                                        <div class="text-start">
-                                            <h3 class="mb-0" t-esc="formatCurrency(purchasesSummary.average_order_value || 0)"/>
-                                            <small class="text-muted">Avg Order Value</small>
-                                        </div>
+                                    <div class="flex-grow-1">
+                                        <h4 class="mb-1" t-esc="formatCurrency(purchasesSummary.average_order_value || 0)"/>
+                                        <small class="text-muted">Avg Order Value</small>
                                     </div>
                                 </div>
                             </div>

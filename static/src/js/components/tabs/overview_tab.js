@@ -108,7 +108,7 @@ export class OverviewTab extends Component {
         if (value < 0) return 'fa-arrow-down';
         return 'fa-minus';
     }
-    
+
     getAlertClass(type) {
         const alertClasses = {
             'success': 'alert-success',
@@ -118,13 +118,13 @@ export class OverviewTab extends Component {
         };
         return alertClasses[type] || 'alert-info';
     }
-    
+
     getAlertIcon(type) {
         const alertIcons = {
-            'success': 'fa-check-circle',
+            'success': 'fa-check-circle-o',
             'info': 'fa-info-circle',
             'warning': 'fa-exclamation-triangle',
-            'danger': 'fa-times-circle',
+            'danger': 'fa-times-circle-o',
         };
         return alertIcons[type] || 'fa-info-circle';
     }
@@ -181,12 +181,25 @@ export class OverviewTab extends Component {
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    layout: {
+                        padding: {
+                            top: 10,
+                            bottom: 10,
+                            left: 10,
+                            right: 10
+                        }
+                    },
                     plugins: {
                         legend: {
                             position: 'bottom',
                             labels: {
-                                padding: 20,
-                                usePointStyle: true
+                                padding: 15,
+                                usePointStyle: true,
+                                font: {
+                                    size: 12
+                                },
+                                boxWidth: 12,
+                                boxHeight: 12
                             }
                         },
                         tooltip: {
@@ -194,9 +207,14 @@ export class OverviewTab extends Component {
                                 label: function(context) {
                                     const label = context.label || '';
                                     const value = context.parsed || 0;
-                                    return `${label}: ${value} project${value !== 1 ? 's' : ''}`;
+                                    return `${label}: ${value} ${_t('project')}${value !== 1 ? _t('s') : ''}`;
                                 }
                             }
+                        }
+                    },
+                    elements: {
+                        arc: {
+                            borderWidth: 2
                         }
                     }
                 }
@@ -227,9 +245,35 @@ export class OverviewTab extends Component {
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    layout: {
+                        padding: {
+                            top: 10,
+                            bottom: 10,
+                            left: 10,
+                            right: 10
+                        }
+                    },
                     plugins: {
                         legend: {
-                            position: 'top'
+                            position: 'top',
+                            labels: {
+                                padding: 15,
+                                usePointStyle: true,
+                                font: {
+                                    size: 12
+                                },
+                                boxWidth: 12,
+                                boxHeight: 12
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.dataset.label || '';
+                                    const value = context.parsed.y || 0;
+                                    return `${label}: $${value.toLocaleString()}`;
+                                }
+                            }
                         }
                     },
                     scales: {
@@ -238,13 +282,38 @@ export class OverviewTab extends Component {
                             ticks: {
                                 callback: function(value) {
                                     return '$' + value.toLocaleString();
+                                },
+                                font: {
+                                    size: 11
                                 }
+                            },
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: 11
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
                             }
                         }
                     },
                     interaction: {
                         intersect: false,
                         mode: 'index'
+                    },
+                    elements: {
+                        line: {
+                            tension: 0.2
+                        },
+                        point: {
+                            radius: 4,
+                            hoverRadius: 6
+                        }
                     }
                 }
             });
@@ -274,53 +343,53 @@ export class OverviewTab extends Component {
             // Farm Management Navigation
             {
                 icon: 'fa-home',
-                label: 'Manage Farms',
+                label: _t('Manage Farms'),
                 type: 'primary',
                 size: 'sm',
                 action: 'farm.farm'
             },
             {
-                icon: 'fa-map',
-                label: 'Manage Fields',
+                icon: 'fa-globe',
+                label: _t('Manage Fields'),
                 type: 'secondary',
                 size: 'sm',
                 action: 'farm.field'
             },
-            
+
             // Cultivation Operations
             {
-                icon: 'fa-project-diagram',
-                label: 'Active Projects',
+                icon: 'fa-sitemap',
+                label: _t('Active Projects'),
                 type: 'success',
                 size: 'sm',
                 action: 'farm.cultivation.project'
             },
             {
-                icon: 'fa-clipboard-list',
-                label: "Today's Reports",
+                icon: 'fa-list',
+                label: _t("Today's Reports"),
                 type: 'warning',
                 size: 'sm',
                 action: 'farm.daily.report'
             },
-            
+
             // Quick Create Actions
             {
                 icon: 'fa-plus-circle',
-                label: 'New Farm',
+                label: _t('New Farm'),
                 type: 'primary',
                 size: 'sm',
                 action: 'farm.farm'
             },
             {
                 icon: 'fa-plus-circle',
-                label: 'New Project',
+                label: _t('New Project'),
                 type: 'success',
                 size: 'sm',
                 action: 'farm.cultivation.project'
             },
             {
                 icon: 'fa-plus-circle',
-                label: 'New Daily Report',
+                label: _t('New Daily Report'),
                 type: 'warning',
                 size: 'sm',
                 action: 'farm.daily.report'
@@ -333,31 +402,31 @@ export class OverviewTab extends Component {
     // Smart Actions based on data context
     get smartActions() {
         const actions = [];
-        
+
         // Low Stock Alerts
         if (this.props.data?.low_stock_items?.length > 0) {
             actions.push({
                 icon: 'fa-exclamation-triangle',
-                label: 'Low Stock Alerts',
+                label: _t('Low Stock Alerts'),
                 type: 'danger',
                 size: 'sm',
                 badge: this.props.data.low_stock_items.length,
                 action: 'stock.quant'
             });
         }
-        
+
         // Overdue Projects
         if (this.props.data?.overdue_projects?.length > 0) {
             actions.push({
-                icon: 'fa-clock',
-                label: 'Overdue Projects',
+                icon: 'fa-clock-o',
+                label: _t('Overdue Projects'),
                 type: 'warning',
                 size: 'sm',
                 badge: this.props.data.overdue_projects.length,
                 action: 'farm.cultivation.project'
             });
         }
-        
+
         return actions;
     }
 }

@@ -329,13 +329,13 @@ class FarmDashboardData(models.Model):
             'alerts': [
                 {
                     'type': 'info',
-                    'title': 'Demo Mode Active',
-                    'message': 'Dashboard is running with sample data. Create cultivation projects to see real data.'
+                    'title': _('Demo Mode Active'),
+                    'message': _('Dashboard is running with sample data. Create cultivation projects to see real data.')
                 },
                 {
                     'type': 'success',
-                    'title': 'System Status',
-                    'message': 'All systems are operational and ready for farm management.'
+                    'title': _('System Status'),
+                    'message': _('All systems are operational and ready for farm management.')
                 }
             ],
             'charts': {
@@ -536,10 +536,10 @@ class FarmDashboardData(models.Model):
         
         for year in range(current_year - 2, current_year + 2):
             seasons.extend([
-                {'key': f'{year}-spring', 'label': f'Spring {year}'},
-                {'key': f'{year}-summer', 'label': f'Summer {year}'},
-                {'key': f'{year}-autumn', 'label': f'Autumn {year}'},
-                {'key': f'{year}-winter', 'label': f'Winter {year}'},
+                {'key': f'{year}-spring', 'label': _('Spring %(year)s') % {'year': year}},
+                {'key': f'{year}-summer', 'label': _('Summer %(year)s') % {'year': year}},
+                {'key': f'{year}-autumn', 'label': _('Autumn %(year)s') % {'year': year}},
+                {'key': f'{year}-winter', 'label': _('Winter %(year)s') % {'year': year}},
             ])
         
         return seasons
@@ -590,15 +590,15 @@ class FarmDashboardData(models.Model):
             'currency_data': self.__get_currency_data(),
             'crop_performance': {
                 'performance_chart': {
-                    'labels': ['Tomatoes', 'Corn', 'Wheat'],
+                    'labels': [_('Tomatoes'), _('Corn'), _('Wheat')],
                     'datasets': [
                         {
-                            'label': 'Profit per Area',
+                            'label': _('Profit per Area'),
                             'data': [5504, 2297, 1378],
                             'backgroundColor': 'rgba(40, 167, 69, 0.8)',
                         },
                         {
-                            'label': 'Revenue per Area',
+                            'label': _('Revenue per Area'),
                             'data': [11360, 5250, 3187],
                             'backgroundColor': 'rgba(23, 162, 184, 0.8)',
                         }
@@ -1411,18 +1411,22 @@ class FarmDashboardData(models.Model):
             alerts.append({
                 'type': 'negative_cash_flow',
                 'severity': 'high',
-                'title': 'Negative Working Capital',
-                'message': f'Working capital is ${abs(net_cash_flow):,.2f} negative'
+                'title': _('Negative Working Capital'),
+                'message': _("Working capital is $%(amount).2f negative") % {
+                    'amount': abs(net_cash_flow)
+                }
             })
-        
+
         # Aged receivables alerts
         overdue_receivables = aged_analysis.get('receivables', {}).get('90+', 0)
         if overdue_receivables > 10000:  # Threshold
             alerts.append({
                 'type': 'overdue_receivables',
                 'severity': 'medium',
-                'title': 'Overdue Receivables',
-                'message': f'${overdue_receivables:,.2f} in receivables over 90 days'
+                'title': _('Overdue Receivables'),
+                'message': _("$%(amount).2f in receivables over 90 days") % {
+                    'amount': overdue_receivables
+                }
             })
         
         return alerts
@@ -1527,7 +1531,7 @@ class FarmDashboardData(models.Model):
                 {'cost_type': 'other', 'cost_type_name': 'Other', 'total_amount': 8000, 'percentage': 2.7}
             ],
             'monthly_trends': {
-                'labels': ['Apr 2024', 'May 2024', 'Jun 2024', 'Jul 2024', 'Aug 2024', 'Sep 2024'],
+                'labels': [_('Apr 2024'), _('May 2024'), _('Jun 2024'), _('Jul 2024'), _('Aug 2024'), _('Sep 2024')],
                 'budget_data': [45000, 68000, 52000, 48000, 42000, 30000],
                 'actual_cost_data': [47500, 71200, 54800, 49500, 43200, 32300],
                 'revenue_data': [0, 15000, 85000, 125000, 98000, 102000],
@@ -1568,20 +1572,20 @@ class FarmDashboardData(models.Model):
             'financial_alerts': [
                 {
                     'type': 'budget_overrun', 'severity': 'medium',
-                    'title': 'Budget Overrun: Tomato Greenhouse',
-                    'message': 'Project is 11.3% over budget ($11,800.00)',
+                    'title': _('Budget Overrun: Tomato Greenhouse'),
+                    'message': _('Project is 11.3% over budget ($11,800.00)'),
                     'project_id': 3, 'project_name': 'Tomato Greenhouse'
                 },
                 {
                     'type': 'low_profitability', 'severity': 'medium',
-                    'title': 'Low Profitability: Tomato Greenhouse',
-                    'message': 'Profit margin is only 5.1%',
+                    'title': _('Low Profitability: Tomato Greenhouse'),
+                    'message': _('Profit margin is only 5.1%'),
                     'project_id': 3, 'project_name': 'Tomato Greenhouse'
                 },
                 {
                     'type': 'upcoming_revenue', 'severity': 'info',
-                    'title': 'Upcoming Harvests (1 projects)',
-                    'message': 'Expected revenue opportunity in next 30 days',
+                    'title': _('Upcoming Harvests (1 projects)'),
+                    'message': _('Expected revenue opportunity in next 30 days'),
                     'project_id': None, 'project_name': None
                 }
             ],
@@ -2872,7 +2876,7 @@ class FarmDashboardData(models.Model):
             stock_analysis = self._get_stock_analysis(date_from, date_to, filters)
             
             # Get product categories analysis
-            category_analysis = self._get_product_category_analysis(date_from, date_to, filters)
+            category_analysis = self._get_inventory_category_analysis(date_from, date_to, filters)
             
             # Get stock movements
             stock_movements = self._get_stock_movements_analysis(date_from, date_to, filters)
@@ -3017,8 +3021,8 @@ class FarmDashboardData(models.Model):
             return {}
     
     @api.model
-    def _get_product_category_analysis(self, date_from, date_to, filters):
-        """Get product category analysis"""
+    def _get_inventory_category_analysis(self, date_from, date_to, filters):
+        """Get inventory product category analysis"""
         try:
             _logger.info("Getting product category analysis...")
             
@@ -3781,7 +3785,7 @@ class FarmDashboardData(models.Model):
         ])
         
         return {
-            'currency_data': self._get_currency_data(),
+            'currency_data': self.__get_currency_data(),
             'daily_reports_summary': {
                 'total_reports': len(daily_reports),
                 'reports_by_type': daily_reports.read_group([], ['operation_type'], ['operation_type']),
@@ -4055,10 +4059,13 @@ class FarmDashboardData(models.Model):
                         overrun_percent = ((project.actual_cost - project.budget) / project.budget * 100)
                         alerts.append({
                             'type': 'warning',
-                            'title': 'Budget Overrun',
-                            'message': f"Project {project.name} is over budget by {overrun_percent:.1f}%",
-                    'project_id': project.id,
-                })
+                            'title': _('Budget Overrun'),
+                            'message': _("Project %(project_name)s is over budget by %(overrun_percent).1f%%") % {
+                                'project_name': project.name,
+                                'overrun_percent': overrun_percent
+                            },
+                            'project_id': project.id,
+                        })
             
             # Schedule alerts
             today = fields.Date.today()
@@ -4068,16 +4075,22 @@ class FarmDashboardData(models.Model):
                         days_overdue = (today - project.planned_end_date).days
                         alerts.append({
                             'type': 'danger',
-                            'title': 'Project Overdue',
-                            'message': f"Project {project.name} is {days_overdue} days overdue",
+                            'title': _('Project Overdue'),
+                            'message': _("Project %(project_name)s is %(days_overdue)s days overdue") % {
+                                'project_name': project.name,
+                                'days_overdue': days_overdue
+                            },
                             'project_id': project.id,
                         })
                     elif project.planned_end_date <= today + timedelta(days=7) and project.state in ['growing', 'planning']:
                         days_remaining = (project.planned_end_date - today).days
                         alerts.append({
                             'type': 'info',
-                            'title': 'Project Due Soon',
-                            'message': f"Project {project.name} is due in {days_remaining} days",
+                            'title': _('Project Due Soon'),
+                            'message': _("Project %(project_name)s is due in %(days_remaining)s days") % {
+                                'project_name': project.name,
+                                'days_remaining': days_remaining
+                            },
                             'project_id': project.id,
                         })
             
@@ -4087,42 +4100,50 @@ class FarmDashboardData(models.Model):
                 farms = self.env['farm.farm'].search([])
                 farm_fields = self.env['farm.field'].search([])
                 crops = self.env['farm.crop'].search([])
-                
+
                 if farms and farm_fields and crops:
                     alerts.append({
                         'type': 'info',
-                        'title': 'Ready to Start Farming',
-                        'message': f'You have {len(farms)} farms, {len(farm_fields)} fields, and {len(crops)} crops configured. Create your first cultivation project to see live data!',
+                        'title': _('Ready to Start Farming'),
+                        'message': _("You have %(farms_count)s farms, %(fields_count)s fields, and %(crops_count)s crops configured. Create your first cultivation project to see live data!") % {
+                            'farms_count': len(farms),
+                            'fields_count': len(farm_fields),
+                            'crops_count': len(crops)
+                        },
                     })
                 elif farms or farm_fields or crops:
                     missing = []
-                    if not farms: missing.append('farms')
-                    if not farm_fields: missing.append('fields')  
-                    if not crops: missing.append('crops')
+                    if not farms: missing.append(_('farms'))
+                    if not farm_fields: missing.append(_('fields'))
+                    if not crops: missing.append(_('crops'))
                     alerts.append({
                         'type': 'warning',
-                        'title': 'Setup Required',
-                        'message': f'Please configure {", ".join(missing)} before creating cultivation projects.',
+                        'title': _('Setup Required'),
+                        'message': _("Please configure %(missing_items)s before creating cultivation projects.") % {
+                            'missing_items': ", ".join(missing)
+                        },
                     })
                 else:
                     alerts.append({
                         'type': 'info',
-                        'title': 'Welcome to Farm Management',
-                        'message': 'Start by setting up your farms, fields, and crops, then create cultivation projects.',
+                        'title': _('Welcome to Farm Management'),
+                        'message': _('Start by setting up your farms, fields, and crops, then create cultivation projects.'),
                     })
             elif len(projects.filtered(lambda p: p.state in ['growing', 'harvest'])) == 0:
                 alerts.append({
                     'type': 'warning',
-                    'title': 'No Active Cultivation',
-                    'message': 'No projects are currently in growing or harvest stage.',
+                    'title': _('No Active Cultivation'),
+                    'message': _('No projects are currently in growing or harvest stage.'),
                 })
             
             # Success message if no issues
             if not alerts and projects:
                 alerts.append({
                     'type': 'success',
-                    'title': 'All Systems Normal',
-                    'message': f'{len(projects)} projects are running smoothly.',
+                    'title': _('All Systems Normal'),
+                    'message': _("%(projects_count)s projects are running smoothly.") % {
+                        'projects_count': len(projects)
+                    },
                 })
                 
             _logger.info(f"Generated {len(alerts)} real alerts")
@@ -4132,8 +4153,8 @@ class FarmDashboardData(models.Model):
             _logger.error(f"Error generating real alerts: {str(e)}")
             return [{
                 'type': 'info',
-                'title': 'Alert System',
-                'message': 'Alert monitoring is active but encountered an issue.',
+                'title': _('Alert System'),
+                'message': _('Alert monitoring is active but encountered an issue.'),
             }]
         
         # Low stock alerts (if user has inventory access)
@@ -4145,8 +4166,12 @@ class FarmDashboardData(models.Model):
             for product in low_stock_products:
                 alerts.append({
                     'type': 'danger',
-                    'title': 'Low Stock',
-                    'message': f"Product {product.name} is running low ({product.qty_available} {product.uom_id.name} remaining)",
+                    'title': _('Low Stock'),
+                    'message': _("Product %(product_name)s is running low (%(remaining_qty)s %(uom_name)s remaining)") % {
+                        'product_name': product.name,
+                        'remaining_qty': product.qty_available,
+                        'uom_name': product.uom_id.name
+                    },
                     'product_id': product.id,
                 })
         
@@ -4260,12 +4285,12 @@ class FarmDashboardData(models.Model):
                     'labels': [item['crop_name'] for item in performance_data[:8]],  # Top 8 crops
                     'datasets': [
                         {
-                            'label': 'Profit per Area',
+                            'label': _('Profit per Area'),
                             'data': [item['profit_per_area'] for item in performance_data[:8]],
                             'backgroundColor': 'rgba(40, 167, 69, 0.8)',
                         },
                         {
-                            'label': 'Revenue per Area', 
+                            'label': _('Revenue per Area'),
                             'data': [item['revenue_per_area'] for item in performance_data[:8]],
                             'backgroundColor': 'rgba(23, 162, 184, 0.8)',
                         }
@@ -4274,7 +4299,7 @@ class FarmDashboardData(models.Model):
                 'efficiency_chart': {
                     'labels': [item['crop_name'] for item in performance_data[:8]],
                     'datasets': [{
-                        'label': 'Yield Efficiency (%)',
+                        'label': _('Yield Efficiency (%)'),
                         'data': [item['yield_efficiency'] for item in performance_data[:8]],
                         'backgroundColor': 'rgba(255, 193, 7, 0.8)',
                     }]
@@ -4598,8 +4623,13 @@ class FarmDashboardData(models.Model):
                         alerts.append({
                             'type': 'budget_overrun',
                             'severity': 'high' if variance_percentage > 50 else 'medium',
-                            'title': f'Budget Overrun: {project.name}',
-                            'message': f'Project is {variance_percentage:.1f}% over budget (${project.actual_cost - project.budget:,.2f})',
+                            'title': _("Budget Overrun: %(project_name)s") % {
+                                'project_name': project.name
+                            },
+                            'message': _("Project is %(variance).1f%% over budget ($%(overrun_amount).2f)") % {
+                                'variance': variance_percentage,
+                                'overrun_amount': project.actual_cost - project.budget
+                            },
                             'project_id': project.id,
                             'project_name': project.name,
                         })
@@ -4613,8 +4643,12 @@ class FarmDashboardData(models.Model):
                         alerts.append({
                             'type': 'low_profitability',
                             'severity': 'medium' if profit_margin > 0 else 'high',
-                            'title': f'Low Profitability: {project.name}',
-                            'message': f'Profit margin is only {profit_margin:.1f}%',
+                            'title': _("Low Profitability: %(project_name)s") % {
+                                'project_name': project.name
+                            },
+                            'message': _("Profit margin is only %(profit_margin).1f%%") % {
+                                'profit_margin': profit_margin
+                            },
                             'project_id': project.id,
                             'project_name': project.name,
                         })
@@ -4627,25 +4661,30 @@ class FarmDashboardData(models.Model):
                 alerts.append({
                     'type': 'negative_cash_flow',
                     'severity': 'high',
-                    'title': 'Negative Cash Flow',
-                    'message': f'Total costs (${total_costs:,.2f}) exceed total revenue (${total_revenue:,.2f})',
+                    'title': _('Negative Cash Flow'),
+                    'message': _("Total costs ($%(total_costs).2f) exceed total revenue ($%(total_revenue).2f)") % {
+                        'total_costs': total_costs,
+                        'total_revenue': total_revenue
+                    },
                     'project_id': None,
                     'project_name': None,
                 })
-            
+
             # Upcoming harvest alerts (potential revenue)
             upcoming_harvests = projects.filtered(
-                lambda p: p.state in ['growing', 'harvest'] and 
-                p.planned_end_date and 
+                lambda p: p.state in ['growing', 'harvest'] and
+                p.planned_end_date and
                 p.planned_end_date <= fields.Date.today() + timedelta(days=30)
             )
-            
+
             if upcoming_harvests:
                 alerts.append({
                     'type': 'upcoming_revenue',
                     'severity': 'info',
-                    'title': f'Upcoming Harvests ({len(upcoming_harvests)} projects)',
-                    'message': f'Expected revenue opportunity in next 30 days',
+                    'title': _("Upcoming Harvests (%(projects_count)s projects)") % {
+                        'projects_count': len(upcoming_harvests)
+                    },
+                    'message': _('Expected revenue opportunity in next 30 days'),
                     'project_id': None,
                     'project_name': None,
                 })
@@ -4704,13 +4743,13 @@ class FarmDashboardData(models.Model):
             'labels': [datetime.strptime(month, '%Y-%m').strftime('%b %Y') for month in sorted_months],
             'datasets': [
                 {
-                    'label': 'Budget',
+                    'label': _('Budget'),
                     'data': [monthly_costs[month]['budget'] for month in sorted_months],
                     'borderColor': '#007bff',
                     'backgroundColor': 'rgba(0, 123, 255, 0.1)',
                 },
                 {
-                    'label': 'Actual Cost',
+                    'label': _('Actual Cost'),
                     'data': [monthly_costs[month]['actual'] for month in sorted_months],
                     'borderColor': '#dc3545',
                     'backgroundColor': 'rgba(220, 53, 69, 0.1)',
@@ -4753,7 +4792,7 @@ class FarmDashboardData(models.Model):
             'type': 'bar',
             'labels': project_names,
             'datasets': [{
-                'label': 'Profit/Loss',
+                'label': _('Profit/Loss'),
                 'data': profit_data,
                 'backgroundColor': [
                     '#28a745' if profit >= 0 else '#dc3545' for profit in profit_data

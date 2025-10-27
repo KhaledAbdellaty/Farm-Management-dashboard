@@ -172,11 +172,11 @@ export class ProjectsTab extends Component {
     get quickActions() {
         console.log('🔧 Generating quick actions for projects tab');
         const actions = [
-            { icon: 'fa-plus-circle', label: 'New Project', type: 'primary', size: 'sm', action: 'farm.cultivation.project' },
-            { icon: 'fa-seedling', label: 'Active Projects', type: 'success', size: 'sm', action: 'farm.cultivation.project' },
-            { icon: 'fa-clipboard-list', label: 'Daily Reports', type: 'primary', size: 'sm', action: 'farm.daily.report' },
-            { icon: 'fa-home', label: 'Manage Farms', type: 'secondary', size: 'sm', action: 'farm.farm' },
-            { icon: 'fa-map', label: 'Manage Fields', type: 'secondary', size: 'sm', action: 'farm.field' }
+            { icon: 'fa-plus-circle', label: _t('New Project'), type: 'primary', size: 'sm', action: 'farm.cultivation.project' },
+            { icon: 'fa-leaf', label: _t('Active Projects'), type: 'success', size: 'sm', action: 'farm.cultivation.project' },
+            { icon: 'fa-list', label: _t('Daily Reports'), type: 'primary', size: 'sm', action: 'farm.daily.report' },
+            { icon: 'fa-home', label: _t('Manage Farms'), type: 'secondary', size: 'sm', action: 'farm.farm' },
+            { icon: 'fa-globe', label: _t('Manage Fields'), type: 'secondary', size: 'sm', action: 'farm.field' }
         ];
         console.log('🔧 Generated quick actions:', actions);
         return actions;
@@ -192,39 +192,39 @@ export class ProjectsTab extends Component {
             // Check for projects in planning stage
             if (stages.planning && stages.planning.length > 0) {
                 actions.push({
-                    icon: 'fa-calendar-check',
-                    label: 'Planning Projects',
+                    icon: 'fa-calendar',
+                    label: _t('Planning Projects'),
                     type: 'info',
                     size: 'sm',
                     badge: stages.planning.length,
                     action: 'farm.cultivation.project'
                 });
             }
-            
+
             // Check for projects in growing stage
             if (stages.growing && stages.growing.length > 0) {
                 actions.push({
                     icon: 'fa-leaf',
-                    label: 'Growing Projects',
+                    label: _t('Growing Projects'),
                     type: 'success',
                     size: 'sm',
                     badge: stages.growing.length,
                     action: 'farm.cultivation.project'
                 });
             }
-            
+
             // Check for projects in harvest stage
             if (stages.harvest && stages.harvest.length > 0) {
                 actions.push({
-                    icon: 'fa-cut',
-                    label: 'Harvest Projects',
+                    icon: 'fa-scissors',
+                    label: _t('Harvest Projects'),
                     type: 'warning',
                     size: 'sm',
                     badge: stages.harvest.length,
                     action: 'farm.cultivation.project'
                 });
             }
-            
+
             // Check for overdue projects (projects past planned end date)
             const now = new Date();
             let overdueCount = 0;
@@ -237,11 +237,11 @@ export class ProjectsTab extends Component {
                     });
                 }
             });
-            
+
             if (overdueCount > 0) {
                 actions.push({
                     icon: 'fa-exclamation-triangle',
-                    label: 'Overdue Projects',
+                    label: _t('Overdue Projects'),
                     type: 'danger',
                     size: 'sm',
                     badge: overdueCount,
@@ -387,15 +387,15 @@ export class ProjectsTab extends Component {
     // Stage helper methods
     getStageLabel(stage) {
         const stageLabels = {
-            'draft': 'Draft',
-            'planning': 'Planning',
-            'preparation': 'Field Preparation',  // ACTIVE
-            'sowing': 'Planting/Sowing',         // ACTIVE
-            'growing': 'Growing',                // ACTIVE
-            'harvest': 'Harvest',               // ACTIVE
-            'sales': 'Sales',                   // ACTIVE
-            'done': 'Completed',
-            'cancel': 'Cancelled'
+            'draft': _t('Draft'),
+            'planning': _t('Planning'),
+            'preparation': _t('Field Preparation'),  // ACTIVE
+            'sowing': _t('Planting/Sowing'),         // ACTIVE
+            'growing': _t('Growing'),                // ACTIVE
+            'harvest': _t('Harvest'),               // ACTIVE
+            'sales': _t('Sales'),                   // ACTIVE
+            'done': _t('Completed'),
+            'cancel': _t('Cancelled')
         };
         return stageLabels[stage] || stage.charAt(0).toUpperCase() + stage.slice(1);
     }
@@ -575,14 +575,14 @@ export class ProjectsTab extends Component {
                 // Ensure each report has the required fields with fallbacks
                 return {
                     id: report.id || `gen-${Math.random().toString(36).substr(2, 9)}`,
-                    operation_type: report.operation_type || report.activity_type || 'Operation',
-                    operation_type_label: report.operation_type_label || report.operation_type || 'Operation',
-                    description: report.description || report.notes || `Activity for ${project.name}`,
+                    operation_type: report.operation_type || report.activity_type || _t('Operation'),
+                    operation_type_label: report.operation_type_label || report.operation_type || _t('Operation'),
+                    description: report.description || report.notes || _t('Activity for %s', project.name),
                     date: report.date || report.activity_date || new Date().toISOString().split('T')[0],
                     // Include real user information
                     user_id: report.user_id || report.create_uid,
-                    user_name: report.user_name || report.create_uid_name || 'Unknown User',
-                    product_category: report.product_category || report.category || 'Other',
+                    user_name: report.user_name || report.create_uid_name || _t('Unknown User'),
+                    product_category: report.product_category || report.category || _t('Other'),
                     product_category_id: report.product_category_id,
                     product_id: report.product_id,
                     product_name: report.product_name,
@@ -604,11 +604,11 @@ export class ProjectsTab extends Component {
         const reports = [];
         const today = new Date();
         const users = [
-            { id: 1, name: project.manager_name || 'Farm Manager' },
+            { id: 1, name: project.manager_name || _t('Farm Manager') },
             { id: 2, name: 'John Smith' },
             { id: 3, name: 'Sarah Johnson' },
             { id: 4, name: 'Mohammed Ahmed' },
-            { id: 5, name: 'Farm Worker' }
+            { id: 5, name: _t('Farm Worker') }
         ];
         
         // Get random user from the list
@@ -619,13 +619,13 @@ export class ProjectsTab extends Component {
         
         // Product categories for cost breakdown
         const productCategories = [
-            'Seeds/Plants',
-            'Fertilizer',
-            'Labor',
-            'Equipment',
-            'Irrigation',
-            'Pesticides',
-            'Other'
+            _t('Seeds/Plants'),
+            _t('Fertilizer'),
+            _t('Labor'),
+            _t('Equipment'),
+            _t('Irrigation'),
+            _t('Pesticides'),
+            _t('Other')
         ];
         
         // Get random product category
@@ -643,12 +643,12 @@ export class ProjectsTab extends Component {
                 const harvestUser = getRandomUser();
                 reports.push({
                     id: 'gen-harvest-' + project.id,
-                    operation_type: 'Harvest',
+                    operation_type: _t('Harvest'),
                     description: `Harvested ${project.crop_name || 'crop'} from ${project.field_name || 'field'}`,
                     date: new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
                     user_id: harvestUser.id,
                     user_name: harvestUser.name,
-                    product_category: 'Labor',
+                    product_category: _t('Labor'),
                     cost: (project.budget || 5000) * 0.15
                 });
             case 'growing':
@@ -656,24 +656,24 @@ export class ProjectsTab extends Component {
                 const fertUser = getRandomUser();
                 reports.push({
                     id: 'gen-fert-' + project.id,
-                    operation_type: 'Fertilizing',
+                    operation_type: _t('Fertilizing'),
                     description: `Applied fertilizer to ${project.crop_name || 'crop'} in ${project.field_name || 'field'}`,
                     date: new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
                     user_id: fertUser.id,
                     user_name: fertUser.name,
-                    product_category: 'Fertilizer',
+                    product_category: _t('Fertilizer'),
                     cost: (project.budget || 5000) * 0.12
                 });
                 // Add irrigation report
                 const irrUser = getRandomUser();
                 reports.push({
                     id: 'gen-irr-' + project.id,
-                    operation_type: 'Irrigation',
+                    operation_type: _t('Irrigation'),
                     description: `Irrigated ${project.field_name || 'field'}`,
                     date: new Date(today.getTime() - 15 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
                     user_id: irrUser.id,
                     user_name: irrUser.name,
-                    product_category: 'Irrigation',
+                    product_category: _t('Irrigation'),
                     cost: (project.budget || 5000) * 0.08
                 });
             case 'sowing':
@@ -682,12 +682,12 @@ export class ProjectsTab extends Component {
                 const plantUser = getRandomUser();
                 reports.push({
                     id: 'gen-plant-' + project.id,
-                    operation_type: 'Planting',
+                    operation_type: _t('Planting'),
                     description: `Planted ${project.crop_name || 'crop'} in ${project.field_name || 'field'}`,
                     date: new Date(today.getTime() - 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
                     user_id: plantUser.id,
                     user_name: plantUser.name,
-                    product_category: 'Seeds/Plants',
+                    product_category: _t('Seeds/Plants'),
                     cost: (project.budget || 5000) * 0.25
                 });
             case 'planning':
@@ -695,12 +695,12 @@ export class ProjectsTab extends Component {
                 const planUser = getRandomUser();
                 reports.push({
                     id: 'gen-plan-' + project.id,
-                    operation_type: 'Planning',
+                    operation_type: _t('Planning'),
                     description: `Project planning and preparation for ${project.name || 'cultivation'}`,
                     date: project.start_date || new Date(today.getTime() - 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
                     user_id: planUser.id,
                     user_name: planUser.name,
-                    product_category: 'Labor',
+                    product_category: _t('Labor'),
                     cost: (project.budget || 5000) * 0.05
                 });
                 break;
@@ -709,7 +709,7 @@ export class ProjectsTab extends Component {
                 const defaultUser = getRandomUser();
                 reports.push({
                     id: 'gen-default-' + project.id,
-                    operation_type: 'Status Update',
+                    operation_type: _t('Status Update'),
                     description: `Status update for ${project.name || 'cultivation project'}`,
                     date: new Date().toISOString().split('T')[0],
                     user_id: defaultUser.id,
@@ -727,7 +727,7 @@ export class ProjectsTab extends Component {
             
             reports.push({
                 id: `gen-random-${project.id}-${i}`,
-                operation_type: ['Inspection', 'Maintenance', 'Pest Control', 'Monitoring'][Math.floor(Math.random() * 4)],
+                operation_type: [_t('Inspection'), _t('Maintenance'), _t('Pest Control'), _t('Monitoring')][Math.floor(Math.random() * 4)],
                 description: `Regular ${randomCategory.toLowerCase()} activity for ${project.name || 'project'}`,
                 date: new Date(today.getTime() - daysAgo * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
                 user_id: randomUser.id,
@@ -747,9 +747,9 @@ export class ProjectsTab extends Component {
             {
                 id: 'act-create-' + project.id,
                 type: 'creation',
-                description: `Project created by ${project.create_uid_name || 'Administrator'}`,
+                description: `Project created by ${project.create_uid_name || _t('Administrator')}`,
                 date: project.create_date || project.start_date,
-                user_name: project.create_uid_name || 'Administrator',
+                user_name: project.create_uid_name || _t('Administrator'),
                 user_id: project.create_uid || 1
             },
             {
@@ -757,7 +757,7 @@ export class ProjectsTab extends Component {
                 type: 'update',
                 description: `Project updated to status: ${this.getStageLabel(project.state)}`,
                 date: project.write_date || new Date().toISOString().split('T')[0],
-                user_name: project.write_uid_name || 'Administrator',
+                user_name: project.write_uid_name || _t('Administrator'),
                 user_id: project.write_uid || 1
             }
         ];
@@ -876,31 +876,31 @@ export class ProjectsTab extends Component {
             stageProgress: this.calculateProgress(project),
             milestones: [
                 {
-                    name: 'Planning',
+                    name: _t('Planning'),
                     date: new Date(startDate.getTime()),
                     completed: true,
                     icon: 'fa-calendar-check'
                 },
                 {
-                    name: 'Planting',
+                    name: _t('Planting'),
                     date: new Date(startDate.getTime() + (totalDuration * 0.2)),
                     completed: ['planning', 'draft'].includes(project.state) ? false : true,
                     icon: 'fa-seedling'
                 },
                 {
-                    name: 'Growing',
+                    name: _t('Growing'),
                     date: new Date(startDate.getTime() + (totalDuration * 0.4)),
                     completed: ['planning', 'draft', 'preparation', 'sowing'].includes(project.state) ? false : true,
                     icon: 'fa-leaf'
                 },
                 {
-                    name: 'Harvest',
+                    name: _t('Harvest'),
                     date: new Date(startDate.getTime() + (totalDuration * 0.8)),
                     completed: ['harvest', 'sales', 'done'].includes(project.state),
                     icon: 'fa-cut'
                 },
                 {
-                    name: 'Completion',
+                    name: _t('Completion'),
                     date: endDate,
                     completed: project.state === 'done',
                     icon: 'fa-flag-checkered'
@@ -928,9 +928,9 @@ export class ProjectsTab extends Component {
                 new Chart(budgetCtx, {
                     type: 'bar',
                     data: {
-                        labels: ['Budget', 'Actual Cost', 'Revenue'],
+                        labels: [_t('Budget'), _t('Actual Cost'), _t('Revenue')],
                         datasets: [{
-                            label: 'Financial Overview',
+                            label: _t('Financial Overview'),
                             data: [financials.budget, financials.actualCost, financials.revenue],
                             backgroundColor: [
                                 'rgba(54, 162, 235, 0.5)',
@@ -1070,7 +1070,7 @@ export class ProjectsTab extends Component {
         // Debug: Check if projectId is valid
         if (!projectId || projectId === undefined || projectId === null) {
             console.error('❌ Edit Project ID is invalid:', projectId);
-            this.showNotification('Invalid project ID for editing', 'error');
+            this.showNotification(_t('Invalid project ID for editing'), 'error');
             return;
         }
         
@@ -1086,7 +1086,7 @@ export class ProjectsTab extends Component {
         // Debug: Check if projectId is valid
         if (!projectId || projectId === undefined || projectId === null) {
             console.error('❌ Reports Project ID is invalid:', projectId);
-            this.showNotification('Invalid project ID for reports', 'error');
+            this.showNotification(_t('Invalid project ID for reports'), 'error');
             return;
         }
         
@@ -1094,7 +1094,7 @@ export class ProjectsTab extends Component {
         if (this.props.rpcCall) {
             try {
                 // Show loading state
-                this.showNotification('Loading project reports...', 'info');
+                this.showNotification(_t('Loading project reports...'), 'info');
                 
                 // Call backend to get detailed project reports
                 const result = await this.props.rpcCall(
@@ -1138,7 +1138,7 @@ export class ProjectsTab extends Component {
                 }
             } catch (error) {
                 console.error('Error fetching project reports:', error);
-                this.showNotification('Error loading project reports', 'error');
+                this.showNotification(_t('Error loading project reports'), 'error');
                 this.navigateToProjectReports(projectId);
             }
         } else {
@@ -1786,25 +1786,25 @@ export class ProjectsTab extends Component {
         const errors = {};
         
         if (!this.state.newProject.name.trim()) {
-            errors.name = 'Project name is required';
+            errors.name = _t('Project name is required');
         }
         if (!this.state.newProject.farm_id) {
-            errors.farm_id = 'Please select a farm';
+            errors.farm_id = _t('Please select a farm');
         }
         if (!this.state.newProject.field_id) {
-            errors.field_id = 'Please select a field';
+            errors.field_id = _t('Please select a field');
         }
         if (!this.state.newProject.crop_id) {
-            errors.crop_id = 'Please select a crop';
+            errors.crop_id = _t('Please select a crop');
         }
         if (!this.state.newProject.crop_bom_id) {
-            errors.crop_bom_id = 'Please select a crop BOM';
+            errors.crop_bom_id = _t('Please select a crop BOM');
         }
         if (!this.state.newProject.start_date) {
-            errors.start_date = 'Start date is required';
+            errors.start_date = _t('Start date is required');
         }
         if (!this.state.newProject.planned_end_date) {
-            errors.planned_end_date = 'Planned end date is required';
+            errors.planned_end_date = _t('Planned end date is required');
         }
         
         // Validate date logic
@@ -1812,7 +1812,7 @@ export class ProjectsTab extends Component {
             const startDate = new Date(this.state.newProject.start_date);
             const endDate = new Date(this.state.newProject.planned_end_date);
             if (endDate <= startDate) {
-                errors.planned_end_date = 'Planned end date must be after start date';
+                errors.planned_end_date = _t('Planned end date must be after start date');
             }
         }
 
@@ -1820,7 +1820,7 @@ export class ProjectsTab extends Component {
         if (Object.keys(errors).length > 0) {
             this.state.validationErrors = errors;
             console.log('Validation errors found:', errors);
-            this.showNotification('Please fix the validation errors below', 'error');
+            this.showNotification(_t('Please fix the validation errors below'), 'error');
             return;
         }
 
@@ -1849,7 +1849,7 @@ export class ProjectsTab extends Component {
             const result = await this.createProject(projectData);
             
             if (result && result.success) {
-                this.showNotification('Project created successfully!', 'success');
+                this.showNotification(_t('Project created successfully!'), 'success');
                 this.onCloseNewProjectModal();
                 
                 // Refresh the projects data
@@ -1862,7 +1862,7 @@ export class ProjectsTab extends Component {
             
         } catch (error) {
             console.error('Error creating project:', error);
-            this.showNotification(error.message || 'Failed to create project', 'error');
+            this.showNotification(error.message || _t('Failed to create project'), 'error');
         } finally {
             this.state.savingNewProject = false;
         }
@@ -1884,7 +1884,7 @@ export class ProjectsTab extends Component {
                 return result;
             } else {
                 console.error('No rpcCall method available in props');
-                throw new Error('RPC method not available');
+                throw new Error(_t('RPC method not available'));
             }
         } catch (error) {
             console.error('Error in createProject:', error);

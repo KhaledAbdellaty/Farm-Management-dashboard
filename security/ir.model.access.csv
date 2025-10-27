@@ -1,7 +1,13 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_farm_dashboard_data_owner,Farm Dashboard Data Owner,model_farm_dashboard_data,group_farm_owner,1,1,1,1
-access_farm_dashboard_data_manager,Farm Dashboard Data Manager,model_farm_dashboard_data,group_farm_manager,1,0,0,0
-access_farm_dashboard_data_accountant,Farm Dashboard Data Accountant,model_farm_dashboard_data,group_farm_accountant,1,0,0,0
+access_farm_dashboard_data_manager,Farm Dashboard Data Manager,model_farm_dashboard_data,farm_management.group_farm_manager,1,1,0,0
+access_farm_dashboard_data_user,Farm Dashboard Data User,model_farm_dashboard_data,farm_management.group_farm_user,1,0,0,0
 access_farm_dashboard_access_owner,Farm Dashboard Access Owner,model_farm_dashboard_access,group_farm_owner,1,1,1,1
-access_farm_dashboard_access_manager,Farm Dashboard Access Manager,model_farm_dashboard_access,group_farm_manager,1,0,0,0
-access_farm_dashboard_access_accountant,Farm Dashboard Access Accountant,model_farm_dashboard_access,group_farm_accountant,1,0,0,0
+access_farm_dashboard_access_manager,Farm Dashboard Access Manager,model_farm_dashboard_access,farm_management.group_farm_manager,1,1,0,0
+access_farm_dashboard_access_user,Farm Dashboard Access User,model_farm_dashboard_access,farm_management.group_farm_user,1,0,0,0
+access_farm_dashboard_kpi_owner,Farm Dashboard KPI Owner,model_farm_dashboard_kpi,group_farm_owner,1,1,1,1
+access_farm_dashboard_kpi_manager,Farm Dashboard KPI Manager,model_farm_dashboard_kpi,farm_management.group_farm_manager,1,1,0,0
+access_farm_dashboard_kpi_user,Farm Dashboard KPI User,model_farm_dashboard_kpi,farm_management.group_farm_user,1,0,0,0
+access_farm_dashboard_owner,Farm Dashboard Owner,model_farm_dashboard,group_farm_owner,1,1,1,1
+access_farm_dashboard_manager,Farm Dashboard Manager,model_farm_dashboard,farm_management.group_farm_manager,1,1,1,0
+access_farm_dashboard_user,Farm Dashboard User,model_farm_dashboard,farm_management.group_farm_user,1,1,1,0

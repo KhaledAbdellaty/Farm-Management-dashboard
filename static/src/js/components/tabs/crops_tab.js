@@ -116,10 +116,10 @@ export class CropsTab extends Component {
     get quickActions() {
         console.log('🔧 Generating quick actions for crops tab');
         const actions = [
-            { icon: 'fa-plus-circle', label: 'New Crop', type: 'primary', size: 'sm', action: 'farm.crop', permission: 'can_create_crops' },
-            { icon: 'fa-seedling', label: 'Active Crops', type: 'success', size: 'sm', action: 'farm.crop', permission: 'can_view_details' },
-            { icon: 'fa-clipboard-list', label: 'Crop BOMs', type: 'primary', size: 'sm', action: 'farm.crop.bom', permission: 'can_view_details' },
-           
+            { icon: 'fa-plus-circle', label: _t('New Crop'), type: 'primary', size: 'sm', action: 'farm.crop', permission: 'can_create_crops' },
+            { icon: 'fa-leaf', label: _t('Active Crops'), type: 'success', size: 'sm', action: 'farm.crop', permission: 'can_view_details' },
+            { icon: 'fa-list', label: _t('Crop BOMs'), type: 'primary', size: 'sm', action: 'farm.crop.bom', permission: 'can_view_details' },
+
         ];
         console.log('🔧 Generated quick actions:', actions);
         return actions;
@@ -137,7 +137,7 @@ export class CropsTab extends Component {
             if (highYieldCrops.length > 0) {
                 actions.push({
                     icon: 'fa-trophy',
-                    label: 'High Yield Crops',
+                    label: _t('High Yield Crops'),
                     type: 'success',
                     size: 'sm',
                     action: 'farm.crop',
@@ -148,13 +148,13 @@ export class CropsTab extends Component {
                     }
                 });
             }
-            
+
             // Check for seasonal crops
             const seasonalCrops = crops.filter(crop => crop.season);
             if (seasonalCrops.length > 0) {
                 actions.push({
                     icon: 'fa-leaf',
-                    label: 'Seasonal Crops',
+                    label: _t('Seasonal Crops'),
                     type: 'info',
                     size: 'sm',
                     action: 'farm.crop',
@@ -165,13 +165,13 @@ export class CropsTab extends Component {
                     }
                 });
             }
-            
+
             // Check for crops needing attention
             const attentionCrops = crops.filter(crop => crop.health_status === 'warning' || crop.health_status === 'critical');
             if (attentionCrops.length > 0) {
                 actions.push({
                     icon: 'fa-exclamation-triangle',
-                    label: 'Crops Needing Attention',
+                    label: _t('Crops Needing Attention'),
                     type: 'warning',
                     size: 'sm',
                     action: 'farm.crop',
@@ -314,7 +314,7 @@ export class CropsTab extends Component {
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Crop Profitability Analysis'
+                        text: _t('Crop Profitability Analysis')
                     },
                     legend: {
                         position: 'top'
@@ -325,7 +325,7 @@ export class CropsTab extends Component {
                         beginAtZero: true,
                         title: {
                             display: true,
-                            text: 'Amount per Area'
+                            text: _t('Amount per Area')
                         }
                     }
                 }
@@ -355,7 +355,7 @@ export class CropsTab extends Component {
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Yield Efficiency by Crop'
+                        text: _t('Yield Efficiency by Crop')
                     },
                     legend: {
                         position: 'right'
@@ -432,14 +432,14 @@ export class CropsTab extends Component {
     
     getStateName(state) {
         const names = {
-            'draft': 'Planning',
-            'preparation': 'Field Preparation', 
-            'sowing': 'Planting/Sowing',
-            'growing': 'Growing',
-            'harvest': 'Harvest',
-            'sales': 'Sales',
-            'done': 'Completed',
-            'cancel': 'Cancelled'
+            'draft': _t('Planning'),
+            'preparation': _t('Field Preparation'), 
+            'sowing': _t('Planting/Sowing'),
+            'growing': _t('Growing'),
+            'harvest': _t('Harvest'),
+            'sales': _t('Sales'),
+            'done': _t('Completed'),
+            'cancel': _t('Cancelled')
         };
         return names[state] || state;
     }

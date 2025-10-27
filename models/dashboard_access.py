@@ -239,23 +239,23 @@ class FarmDashboardAccess(models.Model):
         accessible_tabs = []
         
         tab_info = [
-            ('overview', '📊 Overview'),
-            ('projects', '🌱 Projects'),
-            ('crops', '🌾 Crops'),
-            ('financials', '💰 Financials'),
-            ('sales', '🛒 Sales'),
-            ('purchases', '📦 Purchases'),
-            ('inventory', '📋 Inventory'),
-            ('reports', '📈 Reports'),
+            ('overview', '🌾', _('Overview')),
+            ('projects', '🚜', _('Projects')),
+            ('crops', '🌱', _('Crops')),
+            ('financials', '💰', _('Financials')),
+            ('sales', '📊', _('Sales')),
+            ('purchases', '🛒', _('Purchases')),
+            ('inventory', '📦', _('Inventory')),
+            ('reports', '📈', _('Reports')),
         ]
         
-        for tab_key, tab_label in tab_info:
+        for tab_key, tab_icon, tab_name in tab_info:
             if permissions['tabs'].get(tab_key, False):
                 accessible_tabs.append({
                     'key': tab_key,
-                    'label': tab_label,
-                    'icon': tab_label.split()[0],  # Extract emoji
-                    'name': tab_label.split()[1]   # Extract name
+                    'label': f"{tab_icon} {tab_name}",
+                    'icon': tab_icon,
+                    'name': tab_name
                 })
         
         return accessible_tabs

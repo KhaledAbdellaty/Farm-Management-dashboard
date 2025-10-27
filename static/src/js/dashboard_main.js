@@ -463,7 +463,7 @@ export class FarmDashboardMain extends Component {
     
     get dashboardTitle() {
         const currentTab = this.state.accessibleTabs.find(tab => tab.key === this.state.activeTab);
-        return currentTab ? `Farm Dashboard - ${currentTab.name}` : 'Farm Dashboard';
+        return currentTab ? `${currentTab.name}` : _t('Farm Dashboard');
     }
     
     // Fallback methods for when RPC calls fail
@@ -509,14 +509,14 @@ export class FarmDashboardMain extends Component {
     
     getDefaultTabs() {
         return [
-            { key: 'overview', name: 'Overview', icon: '🌾' },
-            { key: 'projects', name: 'Projects', icon: '🚜' },
-            { key: 'crops', name: 'Crops', icon: '🌱' },
-            { key: 'financials', name: 'Financials', icon: '💰' },
-            { key: 'sales', name: 'Sales', icon: '📊' },
-            { key: 'purchases', name: 'Purchases', icon: '🛒' },
-            { key: 'inventory', name: 'Inventory', icon: '📦' },
-            { key: 'reports', name: 'Reports', icon: '📈' }
+            { key: 'overview', name: _t('Overview'), icon: '🌾' },
+            { key: 'projects', name: _t('Projects'), icon: '🚜' },
+            { key: 'crops', name: _t('Crops'), icon: '🌱' },
+            { key: 'financials', name: _t('Financials'), icon: '💰' },
+            { key: 'sales', name: _t('Sales'), icon: '📊' },
+            { key: 'purchases', name: _t('Purchases'), icon: '🛒' },
+            { key: 'inventory', name: _t('Inventory'), icon: '📦' },
+            { key: 'reports', name: _t('Reports'), icon: '📈' }
         ];
     }
     

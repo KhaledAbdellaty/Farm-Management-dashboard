@@ -86,7 +86,7 @@ class FarmDashboardData(models.Model):
                     'id': report.id,
                     'operation_type': report.operation_type,
                     'operation_type_label': operation_type_label,
-                    'description': report.description or f"{operation_type_label} operation",
+                    'description': f"{operation_type_label} operation",
                     'date': report.date.isoformat() if report.date else None,
                     'cost': cost,
                     'state': report.state if hasattr(report, 'state') else 'done',

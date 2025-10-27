@@ -2,6 +2,7 @@
 
 import { Component, useState, onMounted, onWillUnmount } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { _t } from "@web/core/l10n/translation";
 import { SmartButton } from "../common/smart_button";
 
 export class InventoryTab extends Component {
@@ -104,11 +105,11 @@ export class InventoryTab extends Component {
     get quickActions() {
         console.log('🔧 Generating quick actions for inventory tab');
         const actions = [
-            { icon: 'fa-plus-circle', label: 'New Product', type: 'primary', size: 'sm', action: 'product.product', permission: 'can_create_products' },
-            { icon: 'fa-boxes', label: 'Stock Operations', type: 'success', size: 'sm', action: 'stock.picking', permission: 'can_access_inventory' },
-            { icon: 'fa-warehouse', label: 'Warehouse Management', type: 'primary', size: 'sm', action: 'stock.warehouse', permission: 'can_access_inventory' },
-            { icon: 'fa-chart-bar', label: 'Inventory Reports', type: 'secondary', size: 'sm', action: 'stock.quant', permission: 'can_view_details' },
-            { icon: 'fa-exclamation-triangle', label: 'Low Stock Alerts', type: 'warning', size: 'sm', action: 'stock.quant', permission: 'can_view_details' }
+            { icon: 'fa-plus-circle', label: _t('New Product'), type: 'primary', size: 'sm', action: 'product.product', permission: 'can_create_products' },
+            { icon: 'fa-cubes', label: _t('Stock Operations'), type: 'success', size: 'sm', action: 'stock.picking', permission: 'can_access_inventory' },
+            { icon: 'fa-building', label: _t('Warehouse Management'), type: 'primary', size: 'sm', action: 'stock.warehouse', permission: 'can_access_inventory' },
+            { icon: 'fa-bar-chart', label: _t('Inventory Reports'), type: 'secondary', size: 'sm', action: 'stock.quant', permission: 'can_view_details' },
+            { icon: 'fa-exclamation-triangle', label: _t('Low Stock Alerts'), type: 'warning', size: 'sm', action: 'stock.quant', permission: 'can_view_details' }
         ];
         console.log('🔧 Generated quick actions:', actions);
         return actions;
@@ -123,7 +124,7 @@ export class InventoryTab extends Component {
             if (lowStockItems.length > 0) {
                 actions.push({
                     icon: 'fa-exclamation-triangle',
-                    label: 'Low Stock Items',
+                    label: _t('Low Stock Items'),
                     type: 'warning',
                     size: 'sm',
                     action: 'stock.quant',
@@ -135,14 +136,14 @@ export class InventoryTab extends Component {
                 });
             }
         }
-        
+
         // Check for high-value inventory
         if (this.props.data?.inventory_valuation && Array.isArray(this.props.data.inventory_valuation)) {
             const highValueItems = this.props.data.inventory_valuation.filter(item => item.value > 1000);
             if (highValueItems.length > 0) {
                 actions.push({
-                    icon: 'fa-dollar-sign',
-                    label: 'High Value Items',
+                    icon: 'fa-dollar',
+                    label: _t('High Value Items'),
                     type: 'success',
                     size: 'sm',
                     action: 'stock.quant',
@@ -154,14 +155,14 @@ export class InventoryTab extends Component {
                 });
             }
         }
-        
+
         // Check for recent stock movements
         if (this.props.data?.recent_operations && Array.isArray(this.props.data.recent_operations)) {
             const recentMovements = this.props.data.recent_operations;
             if (recentMovements.length > 0) {
                 actions.push({
-                    icon: 'fa-exchange-alt',
-                    label: 'Recent Movements',
+                    icon: 'fa-exchange',
+                    label: _t('Recent Movements'),
                     type: 'info',
                     size: 'sm',
                     action: 'stock.move',
@@ -2536,7 +2537,7 @@ export class InventoryTab extends Component {
         this.charts['inventorySummaryChart'] = new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: ['In Stock', 'Low Stock', 'Out of Stock'],
+                labels: [_t('In Stock'), _t('Low Stock'), _t('Out of Stock')],
                 datasets: [{
                     data: [
                         summary.total_products - summary.low_stock_count - summary.out_of_stock_count,
@@ -2573,9 +2574,9 @@ export class InventoryTab extends Component {
         this.charts['stockStatusChart'] = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['Total Products', 'High Value Items', 'Low Stock Items', 'Out of Stock'],
+                labels: [_t('Total Products'), _t('High Value Items'), _t('Low Stock Items'), _t('Out of Stock')],
                 datasets: [{
-                    label: 'Count',
+                    label: _t('Count'),
                     data: [
                         stockAnalysis.total_items || 0,
                         this.inventorySummary.high_value_count || 0,
@@ -2614,7 +2615,7 @@ export class InventoryTab extends Component {
             data: {
                 labels: topItems.map(item => item.name.substring(0, 20) + '...'),
                 datasets: [{
-                    label: 'Stock Value',
+                    label: _t('Stock Value'),
                     data: topItems.map(item => item.total_value || 0),
                     backgroundColor: '#007bff'
                 }]
@@ -2645,7 +2646,7 @@ export class InventoryTab extends Component {
         this.charts['stockValueChart'] = new Chart(ctx, {
             type: 'pie',
             data: {
-                labels: ['In Stock', 'Low Stock', 'Out of Stock'],
+                labels: [_t('In Stock'), _t('Low Stock'), _t('Out of Stock')],
                 datasets: [{
                     data: [
                         distribution.in_stock || 0,
@@ -2697,7 +2698,7 @@ export class InventoryTab extends Component {
                 data: {
                     labels: demoCategories.map(cat => cat.name),
                     datasets: [{
-                        label: 'Product Count',
+                        label: _t('Product Count'),
                         data: demoCategories.map(cat => cat.product_count),
                         backgroundColor: '#007bff'
                     }]
@@ -2722,7 +2723,7 @@ export class InventoryTab extends Component {
             data: {
                 labels: categories.map(cat => cat.name),
                 datasets: [{
-                    label: 'Product Count',
+                    label: _t('Product Count'),
                     data: categories.map(cat => cat.product_count || 0),
                     backgroundColor: '#007bff'
                 }]
@@ -2832,7 +2833,7 @@ export class InventoryTab extends Component {
             data: {
                 labels: recentMovements.map(m => m.product_name),
                 datasets: [{
-                    label: 'Quantity',
+                    label: _t('Quantity'),
                     data: recentMovements.map(m => m.quantity || 0),
                     borderColor: '#007bff',
                     backgroundColor: 'rgba(0, 123, 255, 0.1)',
@@ -2867,11 +2868,11 @@ export class InventoryTab extends Component {
             data: {
                 labels: Object.keys(trends),
                 datasets: [{
-                    label: 'In',
+                    label: _t('In'),
                     data: Object.values(trends).map(t => t.in || 0),
                     backgroundColor: '#28a745'
                 }, {
-                    label: 'Out',
+                    label: _t('Out'),
                     data: Object.values(trends).map(t => t.out || 0),
                     backgroundColor: '#dc3545'
                 }]
@@ -2986,9 +2987,9 @@ export class InventoryTab extends Component {
             this.charts['valuationTrendsChart'] = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['Total Inventory Value'],
+                    labels: [_t('Total Inventory Value')],
                     datasets: [{
-                        label: 'Value',
+                        label: _t('Value'),
                         data: [demoValue],
                         backgroundColor: '#007bff'
                     }]
@@ -3011,9 +3012,9 @@ export class InventoryTab extends Component {
         this.charts['valuationTrendsChart'] = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['Total Inventory Value'],
+                labels: [_t('Total Inventory Value')],
                 datasets: [{
-                    label: 'Value',
+                    label: _t('Value'),
                     data: [totalValue],
                     backgroundColor: '#007bff'
                 }]

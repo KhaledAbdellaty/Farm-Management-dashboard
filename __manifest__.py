@@ -33,7 +33,7 @@
         - Performance optimized with read_group aggregations
     """,
     'category': 'Agriculture',
-    'author': 'Your Company',
+    'author': 'Khaled Abdellaty',
     'website': 'https://www.yourcompany.com',
     'license': 'LGPL-3',
     'depends': [

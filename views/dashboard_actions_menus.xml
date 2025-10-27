@@ -9,9 +9,7 @@
         <field name="target">current</field>
         <field name="context">{}</field>
     </record>
-    
-    <!-- Old dashboard list action removed - using new ORM-based client action -->
-    
+        
     <!-- Dashboard Menu Items -->
     
     <!-- Main Dashboard Menu Item (replaces existing dashboard) -->
@@ -21,14 +19,5 @@
         parent="farm_management.menu_farm_root"
         action="action_farm_management_dashboard_client"
         sequence="1"/>
-    
-    <!-- Old dashboard management menu removed -->
-    <!-- Alternative Dashboard Menu Item (if needed) -->
-    <menuitem
-        id="menu_farm_dashboard_alternative"
-        name="Advanced Dashboard"
-        parent="farm_management.menu_farm_root"
-        action="action_farm_management_dashboard_client"
-        sequence="2"/>
     
 </odoo>
