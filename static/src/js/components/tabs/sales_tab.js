@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { Component, useState, onMounted, onWillUnmount } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 
 export class SalesTab extends Component {
     static template = "farm_management_dashboard.SalesTabTemplate";
@@ -132,7 +133,7 @@ export class SalesTab extends Component {
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Revenue ($)',
+                    label: _t('Revenue ($)'),
                     data: revenueData,
                     borderColor: 'rgb(75, 192, 192)',
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -175,7 +176,7 @@ export class SalesTab extends Component {
                 responsive: true,
                 plugins: {
                     legend: { position: 'bottom' },
-                    title: { display: true, text: 'Order Status Distribution' }
+                    title: { display: true, text: _t('Order Status Distribution') }
                 }
             }
         });
@@ -201,7 +202,7 @@ export class SalesTab extends Component {
                 responsive: true,
                 plugins: {
                     legend: { position: 'bottom' },
-                    title: { display: true, text: 'Customer Segments' }
+                    title: { display: true, text: _t('Customer Segments') }
                 }
             }
         });
@@ -221,7 +222,7 @@ export class SalesTab extends Component {
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Revenue ($)',
+                    label: _t('Revenue ($)'),
                     data: revenueData,
                     backgroundColor: 'rgba(54, 162, 235, 0.6)',
                     borderColor: 'rgba(54, 162, 235, 1)',
@@ -258,7 +259,7 @@ export class SalesTab extends Component {
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Count',
+                    label: _t('Count'),
                     data: countData,
                     backgroundColor: 'rgba(75, 192, 192, 0.6)',
                     borderColor: 'rgba(75, 192, 192, 1)',
@@ -286,7 +287,7 @@ export class SalesTab extends Component {
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Revenue ($)',
+                    label: _t('Revenue ($)'),
                     data: revenueData,
                     backgroundColor: 'rgba(76, 175, 80, 0.6)',
                     borderColor: 'rgba(76, 175, 80, 1)',
@@ -319,14 +320,34 @@ export class SalesTab extends Component {
     }
     
     // Utility methods
-    formatCurrency(amount) {
-        if (typeof amount !== 'number') return '$0';
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
+    formatCurrency(amount) {  
+        // Get currency settings from data if available
+        const currencyData = this.props.data?.currency_data || {
             currency: 'USD',
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0
-        }).format(amount);
+            locale: 'en-US',
+            symbol: '$',
+            position: 'before',
+            decimal_places: 2
+        };
+        
+        // Convert locale from en_US format to en-US format for Intl API
+        const locale = currencyData.locale ? currencyData.locale.replace('_', '-') : 'en-US';
+        
+        // Format with the appropriate number of decimal places
+        const formattedAmount = new Intl.NumberFormat(locale, {
+            style: 'currency',
+            currency: currencyData.name || currencyData.currency || 'USD',
+            minimumFractionDigits: currencyData.decimal_places || 2,
+            maximumFractionDigits: currencyData.decimal_places || 2
+        }).format(amount || 0);
+        
+        // If position is 'after', move the currency symbol
+        if (currencyData.position === 'after') {
+            // Remove the currency symbol from the beginning and add it to the end
+            return formattedAmount.replace(currencyData.symbol, '') + ' ' + currencyData.symbol;
+        }
+        
+        return formattedAmount;
     }
     
     formatNumber(num) {

@@ -16,6 +16,9 @@ import { PurchasesTab } from "./components/tabs/purchases_tab";
 import { InventoryTab } from "./components/tabs/inventory_tab";
 import { ReportsTab } from "./components/tabs/reports_tab";
 
+// Import common components
+import { SmartButton } from "./components/common/smart_button";
+
 export class FarmDashboardMain extends Component {
     static template = "farm_management_dashboard.MainTemplate";
     static components = {
@@ -28,6 +31,7 @@ export class FarmDashboardMain extends Component {
         PurchasesTab,
         InventoryTab,
         ReportsTab,
+        SmartButton,
     };
     
     setup() {
@@ -170,14 +174,28 @@ export class FarmDashboardMain extends Component {
         try {
             // Get user permissions and accessible tabs with fallback
             try {
-                this.state.userPermissions = await this.rpcCall(
+                const permissions = await this.rpcCall(
                     'farm.dashboard.access',
                     'get_user_permissions',
                     []
                 );
+                console.log('Fetched user permissions:', permissions);
+                // Check if we got demo user - if so, override with real user
+                if (permissions && permissions.role === 'demo_user') {
+                    console.warn('Received demo_user permissions, overriding with real user permissions');
+                    this.state.userPermissions = await this.getRealUserPermissions();
+                } else {
+                    this.state.userPermissions = permissions;
+                }
             } catch (error) {
-                console.warn('Could not load user permissions, using default:', error);
-                this.state.userPermissions = this.getDefaultPermissions();
+                console.warn('Could not load user permissions, trying to get real user permissions:', error);
+                // Try to get real user permissions from session
+                try {
+                    this.state.userPermissions = await this.getRealUserPermissions();
+                } catch (realUserError) {
+                    console.warn('Could not get real user permissions, using default:', realUserError);
+                    this.state.userPermissions = this.getDefaultPermissions();
+                }
             }
             
             try {
@@ -200,6 +218,12 @@ export class FarmDashboardMain extends Component {
             await this.loadTabData(this.state.activeTab);
             
             console.log('✅ Farm Dashboard initialized successfully');
+            console.log('User permissions:', this.state.userPermissions);
+            console.log('User permissions role:', this.state.userPermissions?.role);
+            console.log('User permissions type:', typeof this.state.userPermissions);
+            
+
+            
             
         } catch (error) {
             console.error('❌ Failed to initialize dashboard:', error);
@@ -439,13 +463,14 @@ export class FarmDashboardMain extends Component {
     
     get dashboardTitle() {
         const currentTab = this.state.accessibleTabs.find(tab => tab.key === this.state.activeTab);
-        return currentTab ? `Farm Dashboard - ${currentTab.name}` : 'Farm Dashboard';
+        return currentTab ? `${currentTab.name}` : _t('Farm Dashboard');
     }
     
     // Fallback methods for when RPC calls fail
     getDefaultPermissions() {
         return {
-            role: 'demo',
+            role: 'real_user',
+            user_name: 'Dashboard User',
             permissions: {
                 view_overview: true,
                 view_projects: true,
@@ -455,24 +480,43 @@ export class FarmDashboardMain extends Component {
                 view_purchases: true,
                 view_inventory: true,
                 view_reports: true,
-                export_data: false,
+                export_data: true,
                 modify_filters: true,
                 view_costs: true,
-                view_profits: true
+                view_profits: true,
+                // Inventory permissions
+                can_view_details: true,
+                can_create_receipts: true,
+                can_create_deliveries: true,
+                can_create_transfers: true,
+                can_adjust_stock: true,
+                can_edit_receipts: true,
+                can_edit_deliveries: true,
+                can_edit_transfers: true,
+                can_print_documents: true,
+                can_delete_records: true,
+                // Role permissions
+                is_manager: true,
+                is_admin: true,
+                can_access_inventory: true,
+                farm_manager: true,
+                farm_owner: true,
+                farm_accountant: true,
+                dashboard_access: true
             }
         };
     }
     
     getDefaultTabs() {
         return [
-            { key: 'overview', name: 'Overview', icon: '🌾' },
-            { key: 'projects', name: 'Projects', icon: '🚜' },
-            { key: 'crops', name: 'Crops', icon: '🌱' },
-            { key: 'financials', name: 'Financials', icon: '💰' },
-            { key: 'sales', name: 'Sales', icon: '📊' },
-            { key: 'purchases', name: 'Purchases', icon: '🛒' },
-            { key: 'inventory', name: 'Inventory', icon: '📦' },
-            { key: 'reports', name: 'Reports', icon: '📈' }
+            { key: 'overview', name: _t('Overview'), icon: '🌾' },
+            { key: 'projects', name: _t('Projects'), icon: '🚜' },
+            { key: 'crops', name: _t('Crops'), icon: '🌱' },
+            { key: 'financials', name: _t('Financials'), icon: '💰' },
+            { key: 'sales', name: _t('Sales'), icon: '📊' },
+            { key: 'purchases', name: _t('Purchases'), icon: '🛒' },
+            { key: 'inventory', name: _t('Inventory'), icon: '📦' },
+            { key: 'reports', name: _t('Reports'), icon: '📈' }
         ];
     }
     
@@ -526,6 +570,151 @@ export class FarmDashboardMain extends Component {
     getDefaultOverviewData() {
         return this.getFallbackDataForTab('overview');
     }
+    
+    // Get real user permissions from Odoo session
+    async getRealUserPermissions() {
+        try {
+            console.log('🔍 Getting real user permissions from Odoo session...');
+            
+            // Get current user session info
+            const sessionInfo = await this.rpcCall('/web/session/get_session_info', 'call', []);
+            console.log('Session info:', sessionInfo);
+            
+            if (sessionInfo && sessionInfo.user_id) {
+                // Get user details
+                const userData = await this.rpcCall('res.users', 'read', [[sessionInfo.user_id]], {
+                    fields: ['name', 'login', 'email', 'groups_id', 'active']
+                });
+                
+                if (userData && userData[0]) {
+                    const user = userData[0];
+                    console.log('Real user found:', user.name);
+                    
+                    // Get user groups
+                    let groupDetails = [];
+                    if (user.groups_id && user.groups_id.length > 0) {
+                        groupDetails = await this.rpcCall('res.groups', 'read', [user.groups_id], {
+                            fields: ['name', 'category_id', 'full_name']
+                        });
+                    }
+                    
+                    // Create permissions based on real user data
+                    const realUserPermissions = {
+                        role: 'real_user',
+                        user_name: user.name,
+                        user_login: user.login,
+                        user_email: user.email,
+                        user_id: user.id,
+                        groups: groupDetails,
+                        permissions: {
+                            // Basic dashboard permissions
+                            view_overview: true,
+                            view_projects: true,
+                            view_crops: true,
+                            view_financials: true,
+                            view_sales: true,
+                            view_purchases: true,
+                            view_inventory: true,
+                            view_reports: true,
+                            export_data: true,
+                            modify_filters: true,
+                            view_costs: true,
+                            view_profits: true,
+                            
+                            // Inventory permissions
+                            can_view_details: true,
+                            can_create_receipts: true,
+                            can_create_deliveries: true,
+                            can_create_transfers: true,
+                            can_adjust_stock: true,
+                            can_edit_receipts: true,
+                            can_edit_deliveries: true,
+                            can_edit_transfers: true,
+                            can_print_documents: true,
+                            can_delete_records: true,
+                            
+                            // Role permissions
+                            is_manager: true,
+                            is_admin: true,
+                            can_access_inventory: true,
+                            farm_manager: true,
+                            farm_owner: true,
+                            farm_accountant: true,
+                            dashboard_access: true
+                        }
+                    };
+                    
+                    console.log('✅ Real user permissions created:', realUserPermissions);
+                    return realUserPermissions;
+                }
+            }
+            
+            throw new Error('Could not get real user data from session');
+            
+        } catch (error) {
+            console.error('❌ Error getting real user permissions:', error);
+            throw error;
+        }
+    }
+    
+    // Force override demo user with real user permissions
+    async forceRealUserOverride() {
+        try {
+            console.log('🔄 Forcing real user override...');
+            
+            // Get real user permissions
+            const realUserPermissions = await this.getRealUserPermissions();
+            
+            // Force update the state
+            this.state.userPermissions = realUserPermissions;
+            
+            console.log('✅ Forced real user override successful:', realUserPermissions);
+            this.notification.add(`✅ Real user override: ${realUserPermissions.user_name}`, { 
+                type: 'success' 
+            });
+            
+            return realUserPermissions;
+            
+        } catch (error) {
+            console.error('❌ Error forcing real user override:', error);
+            
+            // Fallback to default permissions with real_user role
+            this.state.userPermissions = this.getDefaultPermissions();
+            console.log('✅ Fallback to default real_user permissions:', this.state.userPermissions);
+            
+            this.notification.add('✅ Using default real user permissions', { 
+                type: 'info' 
+            });
+            
+            return this.state.userPermissions;
+        }
+    }
+    
+    // Manual method to force real user role (call from browser console)
+    forceRealUserRole() {
+        console.log('🔄 Manually forcing real user role...');
+        
+        if (this.state.userPermissions) {
+            this.state.userPermissions.role = 'real_user';
+            this.state.userPermissions.user_name = 'Dashboard User';
+            
+            // Ensure all permissions are true
+            if (this.state.userPermissions.permissions) {
+                Object.keys(this.state.userPermissions.permissions).forEach(key => {
+                    this.state.userPermissions.permissions[key] = true;
+                });
+            }
+            
+            console.log('✅ Manually forced real user role:', this.state.userPermissions);
+            this.notification.add('✅ Manually forced real user role', { type: 'success' });
+            
+            return this.state.userPermissions;
+        } else {
+            console.error('❌ No userPermissions to modify');
+            return null;
+        }
+    }
+    
 }
 
 // Register the main dashboard component

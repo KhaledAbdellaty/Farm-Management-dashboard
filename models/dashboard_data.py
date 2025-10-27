@@ -11,6 +11,21 @@ class FarmDashboardData(models.Model):
     _description = 'Farm Dashboard Data Aggregation'
     _auto = False  # No database table - computed model
     
+
+    def __get_currency_data(self):
+        """Get currency information for the active company"""
+        company = self.env.company
+        company_currency = company.currency_id
+        currency_data = {
+            'id': company_currency.id,
+            'name': company_currency.name,
+            'symbol': company_currency.symbol,
+            'position': company_currency.position,
+            'decimal_places': company_currency.decimal_places,
+            'locale': company.partner_id.lang or self.env.user.lang,
+        }
+        return currency_data
+
     @api.model
     def get_dashboard_data(self, filters=None, tab=None):
         """Main method to get dashboard data for specific tab"""
@@ -100,6 +115,7 @@ class FarmDashboardData(models.Model):
             charts = self._get_overview_charts(projects, user_role)
             
             return {
+                'currency_data': self.__get_currency_data(),
                 'kpis': kpis,
                 'recent_activities': activities,
                 'alerts': alerts,
@@ -156,7 +172,7 @@ class FarmDashboardData(models.Model):
             # Calculate statistics (based on all filtered projects, not just displayed)
             stats = {
                 'total_projects': len(projects),
-                'active_projects': len([p for p in projects if p.state in ['growing', 'harvest', 'planning']]),
+                'active_projects': len([p for p in projects if p.state in self._get_active_project_states()]),
                 'total_area': sum(projects.mapped('field_area')),
                 'total_budget': sum(projects.mapped('budget')),
             }
@@ -240,8 +256,11 @@ class FarmDashboardData(models.Model):
             _logger.info(f"Available fields for dropdown: {[(f['id'], f['name'], f['farm_id']) for f in available_fields]}")
             _logger.info(f"Available crops for dropdown: {[(c['id'], c['name']) for c in available_crops]}")
             _logger.info(f"Available crop BOMs for dropdown: {[(b['id'], b['name'], b['crop_id']) for b in available_crop_boms]}")
-            
+            # Get currency information for monetary values
+            # Get currency information for the active company
+       
             return {
+                'currency_data': self.__get_currency_data(),
                 'stats': stats,
                 'projects_by_stage': projects_by_stage,
                 'available_farms': available_farms,
@@ -310,13 +329,13 @@ class FarmDashboardData(models.Model):
             'alerts': [
                 {
                     'type': 'info',
-                    'title': 'Demo Mode Active',
-                    'message': 'Dashboard is running with sample data. Create cultivation projects to see real data.'
+                    'title': _('Demo Mode Active'),
+                    'message': _('Dashboard is running with sample data. Create cultivation projects to see real data.')
                 },
                 {
                     'type': 'success',
-                    'title': 'System Status',
-                    'message': 'All systems are operational and ready for farm management.'
+                    'title': _('System Status'),
+                    'message': _('All systems are operational and ready for farm management.')
                 }
             ],
             'charts': {
@@ -338,91 +357,6 @@ class FarmDashboardData(models.Model):
             'last_updated': fields.Datetime.now().isoformat(),
         }
     
-    @api.model
-    def create_sample_cultivation_projects(self):
-        """Create sample cultivation projects for testing dashboard functionality"""
-        try:
-            # Check if we already have projects
-            existing_projects = self.env['farm.cultivation.project'].search([])
-            if existing_projects:
-                return {
-                    'success': False,
-                    'message': f'Already have {len(existing_projects)} cultivation projects. Delete them first if you want to recreate sample data.'
-                }
-            
-            # Get or create farms
-            farms = self.env['farm.farm'].search([])
-            if not farms:
-                farm = self.env['farm.farm'].create({
-                    'name': 'Main Farm',
-                    'code': 'MF001',
-                    'description': 'Primary farming location'
-                })
-                farms = farm
-            
-            # Get or create fields  
-            fields_records = self.env['farm.field'].search([])
-            if not fields_records:
-                field = self.env['farm.field'].create({
-                    'name': 'Field A',
-                    'code': 'FA001',
-                    'farm_id': farms[0].id,
-                    'area': 25.5,
-                    'area_unit': 'hectare',
-                    'state': 'available'
-                })
-                fields_records = field
-            
-            # Get or create crops
-            crops = self.env['farm.crop'].search([])
-            if not crops:
-                crop = self.env['farm.crop'].create({
-                    'name': 'Wheat',
-                    'code': 'WHT001',
-                    'crop_type': 'grain',
-                    'growing_season': 'winter'
-                })
-                crops = crop
-            
-            # Create sample cultivation projects
-            projects_data = [
-                {
-                    'name': 'Wheat Cultivation 2025',
-                    'farm_id': farms[0].id,
-                    'field_id': fields_records[0].id,
-                    'crop_id': crops[0].id,
-                    'start_date': fields.Date.today() - timedelta(days=30),
-                    'planned_end_date': fields.Date.today() + timedelta(days=90),
-                    'state': 'growing',
-                },
-                {
-                    'name': 'Corn Project Spring',
-                    'farm_id': farms[0].id,
-                    'field_id': fields_records[0].id,
-                    'crop_id': crops[0].id,
-                    'start_date': fields.Date.today() - timedelta(days=60),
-                    'planned_end_date': fields.Date.today() + timedelta(days=60),
-                    'state': 'harvest',
-                }
-            ]
-            
-            created_projects = []
-            for data in projects_data:
-                project = self.env['farm.cultivation.project'].create(data)
-                created_projects.append(project)
-            
-            return {
-                'success': True,
-                'message': f'Created {len(created_projects)} sample cultivation projects successfully!',
-                'project_names': [p.name for p in created_projects]
-            }
-            
-        except Exception as e:
-            _logger.error(f"Error creating sample projects: {str(e)}")
-            return {
-                'success': False,
-                'message': f'Error creating sample projects: {str(e)}'
-            }
 
     @api.model
     def get_project_details(self, project_id):
@@ -443,9 +377,10 @@ class FarmDashboardData(models.Model):
                     reports.append({
                         'id': report.id,
                         'operation_type': dict(report._fields['operation_type'].selection).get(report.operation_type, report.operation_type),
-                        'description': report.description or f"{report.operation_type} operation",
+                        'irrigation_duration': report.irrigation_duration,
                         'date': report.date.isoformat() if report.date else None,
                         'actual_cost': report.actual_cost or 0,
+                        'reported_by': report.user_id.name if report.user_id else 'N/A',
                         'state': report.state,
                     })
             
@@ -507,7 +442,8 @@ class FarmDashboardData(models.Model):
                 crop_projects = projects.filtered(lambda p: p.crop_id == crop)
                 
                 # Calculate metrics
-                active_projects = crop_projects.filtered(lambda p: p.state in ['growing', 'harvest'])
+                active_projects = crop_projects.filtered(lambda p: p.state in self._get_active_project_states())
+                _logger.info(f"Crop {crop.name} has {len(crop_projects)} projects, {len(active_projects)} active")
                 completed_projects = crop_projects.filtered(lambda p: p.state == 'done')
                 total_area = sum(crop_projects.mapped('field_area'))
                 total_planned_yield = sum(crop_projects.mapped('planned_yield'))
@@ -520,16 +456,15 @@ class FarmDashboardData(models.Model):
                 # Get BOMs
                 crop_boms = crop.bom_ids.filtered(lambda b: b.active)
                 
-            crop_data.append({
-                'id': crop.id,
-                'name': crop.name,
-                'code': crop.code,
+                crop_data.append({
+                    'id': crop.id,
+                    'name': crop.name,
+                    'code': crop.code,
                     'active': crop.active,
                     'growing_cycle': crop.growing_cycle or 0,
                     'uom_name': crop.uom_id.name if crop.uom_id else 'Unit',
                     'product_name': crop.product_id.name if crop.product_id else None,
                     'image': crop.image,
-                    
                     # Project metrics
                     'total_projects': len(crop_projects),
                     'active_projects': len(active_projects),
@@ -537,7 +472,6 @@ class FarmDashboardData(models.Model):
                     'total_area': total_area,
                     'total_planned_yield': total_planned_yield,
                     'total_actual_yield': total_actual_yield,
-                    
                     # Financial metrics
                     'total_budget': total_budget,
                     'total_actual_cost': total_actual_cost,
@@ -545,16 +479,16 @@ class FarmDashboardData(models.Model):
                     'profit': profit,
                     'profitability_ratio': (profit / total_revenue * 100) if total_revenue > 0 else 0,
                     'cost_efficiency': (total_budget / total_actual_cost * 100) if total_actual_cost > 0 else 0,
-                    
-                    # Yield metrics
+
+                        # Yield metrics
                     'yield_efficiency': (total_actual_yield / total_planned_yield * 100) if total_planned_yield > 0 else 0,
                     'avg_yield_per_area': (total_actual_yield / total_area) if total_area > 0 else 0,
-                    
-                    # BOMs
+
+                        # BOMs
                     'bom_count': len(crop_boms),
                     'bom_names': [bom.name for bom in crop_boms[:3]],  # Show first 3
-                    
-                    # Recent activity
+
+                        # Recent activity
                     'recent_projects': [{
                         'id': p.id,
                         'name': p.name,
@@ -570,10 +504,11 @@ class FarmDashboardData(models.Model):
             crop_data.sort(key=lambda x: x['total_area'], reverse=True)
             
             return {
+                'currency_data': self.__get_currency_data(),
                 'crops': crop_data,
                 'summary': {
                     'total_crops': len(all_crops),
-                    'active_crops': len([c for c in crop_data if c['active_projects'] > 0]),
+                    'active_projects': sum(c['active_projects'] for c in crop_data),
                     'total_cultivation_area': sum(c['total_area'] for c in crop_data),
                     'total_projects': sum(c['total_projects'] for c in crop_data),
                     'total_revenue': sum(c['total_revenue'] for c in crop_data),
@@ -601,10 +536,10 @@ class FarmDashboardData(models.Model):
         
         for year in range(current_year - 2, current_year + 2):
             seasons.extend([
-                {'key': f'{year}-spring', 'label': f'Spring {year}'},
-                {'key': f'{year}-summer', 'label': f'Summer {year}'},
-                {'key': f'{year}-autumn', 'label': f'Autumn {year}'},
-                {'key': f'{year}-winter', 'label': f'Winter {year}'},
+                {'key': f'{year}-spring', 'label': _('Spring %(year)s') % {'year': year}},
+                {'key': f'{year}-summer', 'label': _('Summer %(year)s') % {'year': year}},
+                {'key': f'{year}-autumn', 'label': _('Autumn %(year)s') % {'year': year}},
+                {'key': f'{year}-winter', 'label': _('Winter %(year)s') % {'year': year}},
             ])
         
         return seasons
@@ -652,17 +587,18 @@ class FarmDashboardData(models.Model):
                 'total_crops': 3, 'active_crops': 3, 'total_cultivation_area': 90.0,
                 'total_projects': 18, 'total_revenue': 455000, 'total_profit': 205000,
             },
+            'currency_data': self.__get_currency_data(),
             'crop_performance': {
                 'performance_chart': {
-                    'labels': ['Tomatoes', 'Corn', 'Wheat'],
+                    'labels': [_('Tomatoes'), _('Corn'), _('Wheat')],
                     'datasets': [
                         {
-                            'label': 'Profit per Area',
+                            'label': _('Profit per Area'),
                             'data': [5504, 2297, 1378],
                             'backgroundColor': 'rgba(40, 167, 69, 0.8)',
                         },
                         {
-                            'label': 'Revenue per Area',
+                            'label': _('Revenue per Area'),
                             'data': [11360, 5250, 3187],
                             'backgroundColor': 'rgba(23, 162, 184, 0.8)',
                         }
@@ -765,226 +701,7 @@ class FarmDashboardData(models.Model):
                 'error': f'Failed to create crop: {str(e)}'
             }
     
-    @api.model
-    def _get_demo_overview_data(self):
-        """Return demo overview data when real data is not available"""
-        return {
-            'kpis': {
-                'active_projects': 12,
-                'total_projects': 18,
-                'completed_projects': 6,
-                'total_area': 450.5,
-                'total_budget': 125000,
-                'total_actual_cost': 96500,
-                'total_revenue': 125000,
-                'total_profit': 28500,
-                'budget_variance': -22.8,  # Under budget
-                'profit_margin': 22.8,
-                'completion_rate': 33.3,
-            },
-            'recent_activities': [
-                {
-                    'id': 1,
-                    'description': 'Wheat harvesting completed in Field A',
-                    'date': fields.Date.today().isoformat(),
-                    'farm': 'Main Farm',
-                    'project': 'Wheat Season 2025',
-                    'cost': 5000,
-                    'type': 'harvest'
-                },
-                {
-                    'id': 2,
-                    'description': 'Corn planting started in Field B',
-                    'date': (fields.Date.today() - timedelta(days=1)).isoformat(),
-                    'farm': 'North Farm',
-                    'project': 'Corn Project 2025',
-                    'cost': 3200,
-                    'type': 'planting'
-                },
-                {
-                    'id': 3,
-                    'description': 'Fertilizer application in Field C',
-                    'date': (fields.Date.today() - timedelta(days=2)).isoformat(),
-                    'farm': 'South Farm',
-                    'project': 'Soybean Cultivation',
-                    'cost': 1800,
-                    'type': 'fertilizing'
-                }
-            ],
-            'alerts': [
-                {
-                    'type': 'info',
-                    'title': 'Demo Mode Active',
-                    'message': 'Dashboard is running with sample data. Create cultivation projects to see real data.'
-                },
-                {
-                    'type': 'success',
-                    'title': 'System Status',
-                    'message': 'All systems are operational and ready for farm management.'
-                }
-            ],
-            'charts': {
-                'project_status': {
-                    'planning': 3,
-                    'growing': 8,
-                    'harvest': 4,
-                    'done': 6,
-                    'cancelled': 1
-                },
-                'cost_trends': [
-                    {'month': 'Jan', 'budget': 15000, 'actual': 14200},
-                    {'month': 'Feb', 'budget': 18000, 'actual': 16800},
-                    {'month': 'Mar', 'budget': 22000, 'actual': 21500},
-                ]
-            },
-            'user_role': 'demo_user',
-            'data_source': 'demo',
-            'last_updated': fields.Datetime.now().isoformat(),
-        }
     
-    @api.model
-    def create_sample_cultivation_projects(self):
-        """Create sample cultivation projects for testing dashboard functionality"""
-        try:
-            # Check if we already have projects
-            existing_projects = self.env['farm.cultivation.project'].search([])
-            if existing_projects:
-                return {
-                    'success': False,
-                    'message': f'Already have {len(existing_projects)} cultivation projects. Delete them first if you want to recreate sample data.'
-                }
-            
-            # Get or create farms
-            farms = self.env['farm.farm'].search([])
-            if not farms:
-                farm = self.env['farm.farm'].create({
-                    'name': 'Main Farm',
-                    'code': 'MF001',
-                    'description': 'Primary farming location'
-                })
-                farms = farm
-            
-            # Get or create fields  
-            fields_records = self.env['farm.field'].search([])
-            if not fields_records:
-                field = self.env['farm.field'].create({
-                    'name': 'Field A',
-                    'code': 'FA001',
-                    'farm_id': farms[0].id,
-                    'area': 25.5,
-                    'area_unit': 'hectare',
-                    'state': 'available'
-                })
-                fields_records = field
-            
-            # Get or create crops
-            crops = self.env['farm.crop'].search([])
-            if not crops:
-                crop = self.env['farm.crop'].create({
-                    'name': 'Wheat',
-                    'code': 'WHT001',
-                    'crop_type': 'grain',
-                    'growing_season': 'winter'
-                })
-                crops = crop
-            
-            # Create sample cultivation projects
-            projects_data = [
-                {
-                    'name': 'Wheat Cultivation 2025',
-                    'farm_id': farms[0].id,
-                    'field_id': fields_records[0].id,
-                    'crop_id': crops[0].id,
-                    'start_date': fields.Date.today() - timedelta(days=30),
-                    'planned_end_date': fields.Date.today() + timedelta(days=90),
-                    'state': 'growing',
-                },
-                {
-                    'name': 'Corn Project Spring',
-                    'farm_id': farms[0].id,
-                    'field_id': fields_records[0].id,
-                    'crop_id': crops[0].id,
-                    'start_date': fields.Date.today() - timedelta(days=60),
-                    'planned_end_date': fields.Date.today() + timedelta(days=60),
-                    'state': 'harvest',
-                }
-            ]
-            
-            created_projects = []
-            for data in projects_data:
-                project = self.env['farm.cultivation.project'].create(data)
-                created_projects.append(project)
-            
-            return {
-                'success': True,
-                'message': f'Created {len(created_projects)} sample cultivation projects successfully!',
-                'project_names': [p.name for p in created_projects]
-            }
-            
-        except Exception as e:
-            _logger.error(f"Error creating sample projects: {str(e)}")
-            return {
-                'success': False,
-                'message': f'Error creating sample projects: {str(e)}'
-            }
-
-    @api.model
-    def get_project_details(self, project_id):
-        """Get detailed project information including recent reports"""
-        try:
-            project = self.env['farm.cultivation.project'].browse(project_id)
-            if not project.exists():
-                return {'error': 'Project not found'}
-            
-            # Get recent daily reports for this project
-            reports = []
-            if 'farm.daily.report' in self.env:
-                daily_reports = self.env['farm.daily.report'].search([
-                    ('project_id', '=', project_id)
-                ], limit=10, order='date desc')
-                
-                for report in daily_reports:
-                    reports.append({
-                        'id': report.id,
-                        'operation_type': dict(report._fields['operation_type'].selection).get(report.operation_type, report.operation_type),
-                        'description': report.description or f"{report.operation_type} operation",
-                        'date': report.date.isoformat() if report.date else None,
-                        'actual_cost': report.actual_cost or 0,
-                        'state': report.state,
-                    })
-            
-            # Calculate additional project metrics
-            project_data = {
-                'id': project.id,
-                'name': project.name,
-                'code': project.code,
-                'state': project.state,
-                'farm_name': project.farm_id.name if project.farm_id else 'N/A',
-                'field_name': project.field_id.name if project.field_id else 'N/A',
-                'field_area': project.field_area or 0,
-                'area_unit': project.field_area_unit or 'hectare',
-                'crop_name': project.crop_id.name if project.crop_id else 'N/A',
-                'start_date': project.start_date.isoformat() if project.start_date else None,
-                'planned_end_date': project.planned_end_date.isoformat() if project.planned_end_date else None,
-                'actual_end_date': project.actual_end_date.isoformat() if project.actual_end_date else None,
-                'budget': project.budget or 0,
-                'actual_cost': project.actual_cost or 0,
-                'revenue': project.revenue or 0,
-                'profit': project.profit or 0,
-                'progress_percentage': self._calculate_project_progress(project),
-                'days_remaining': self._calculate_days_remaining(project),
-                'is_overdue': self._is_project_overdue(project),
-            }
-            
-            return {
-                'success': True,
-                'project': project_data,
-                'reports': reports,
-            }
-            
-        except Exception as e:
-            _logger.error(f"Error getting project details for ID {project_id}: {str(e)}")
-            return {'error': str(e)}
     
     @api.model
     def _get_financials_data(self, filters, user_role):
@@ -1033,6 +750,7 @@ class FarmDashboardData(models.Model):
             )
             
             return {
+                'currency_data': self.__get_currency_data(),
                 # Core Financial Data
                 'analytical_accounts': analytical_accounts_data,
                 'invoices_bills': invoices_bills_data,
@@ -1693,18 +1411,22 @@ class FarmDashboardData(models.Model):
             alerts.append({
                 'type': 'negative_cash_flow',
                 'severity': 'high',
-                'title': 'Negative Working Capital',
-                'message': f'Working capital is ${abs(net_cash_flow):,.2f} negative'
+                'title': _('Negative Working Capital'),
+                'message': _("Working capital is $%(amount).2f negative") % {
+                    'amount': abs(net_cash_flow)
+                }
             })
-        
+
         # Aged receivables alerts
         overdue_receivables = aged_analysis.get('receivables', {}).get('90+', 0)
         if overdue_receivables > 10000:  # Threshold
             alerts.append({
                 'type': 'overdue_receivables',
                 'severity': 'medium',
-                'title': 'Overdue Receivables',
-                'message': f'${overdue_receivables:,.2f} in receivables over 90 days'
+                'title': _('Overdue Receivables'),
+                'message': _("$%(amount).2f in receivables over 90 days") % {
+                    'amount': overdue_receivables
+                }
             })
         
         return alerts
@@ -1809,7 +1531,7 @@ class FarmDashboardData(models.Model):
                 {'cost_type': 'other', 'cost_type_name': 'Other', 'total_amount': 8000, 'percentage': 2.7}
             ],
             'monthly_trends': {
-                'labels': ['Apr 2024', 'May 2024', 'Jun 2024', 'Jul 2024', 'Aug 2024', 'Sep 2024'],
+                'labels': [_('Apr 2024'), _('May 2024'), _('Jun 2024'), _('Jul 2024'), _('Aug 2024'), _('Sep 2024')],
                 'budget_data': [45000, 68000, 52000, 48000, 42000, 30000],
                 'actual_cost_data': [47500, 71200, 54800, 49500, 43200, 32300],
                 'revenue_data': [0, 15000, 85000, 125000, 98000, 102000],
@@ -1850,20 +1572,20 @@ class FarmDashboardData(models.Model):
             'financial_alerts': [
                 {
                     'type': 'budget_overrun', 'severity': 'medium',
-                    'title': 'Budget Overrun: Tomato Greenhouse',
-                    'message': 'Project is 11.3% over budget ($11,800.00)',
+                    'title': _('Budget Overrun: Tomato Greenhouse'),
+                    'message': _('Project is 11.3% over budget ($11,800.00)'),
                     'project_id': 3, 'project_name': 'Tomato Greenhouse'
                 },
                 {
                     'type': 'low_profitability', 'severity': 'medium',
-                    'title': 'Low Profitability: Tomato Greenhouse',
-                    'message': 'Profit margin is only 5.1%',
+                    'title': _('Low Profitability: Tomato Greenhouse'),
+                    'message': _('Profit margin is only 5.1%'),
                     'project_id': 3, 'project_name': 'Tomato Greenhouse'
                 },
                 {
                     'type': 'upcoming_revenue', 'severity': 'info',
-                    'title': 'Upcoming Harvests (1 projects)',
-                    'message': 'Expected revenue opportunity in next 30 days',
+                    'title': _('Upcoming Harvests (1 projects)'),
+                    'message': _('Expected revenue opportunity in next 30 days'),
                     'project_id': None, 'project_name': None
                 }
             ],
@@ -1890,226 +1612,8 @@ class FarmDashboardData(models.Model):
             'last_updated': fields.Datetime.now().isoformat(),
         }
     
-    @api.model
-    def _get_demo_overview_data(self):
-        """Return demo overview data when real data is not available"""
-        return {
-            'kpis': {
-                'active_projects': 12,
-                'total_projects': 18,
-                'completed_projects': 6,
-                'total_area': 450.5,
-                'total_budget': 125000,
-                'total_actual_cost': 96500,
-                'total_revenue': 125000,
-                'total_profit': 28500,
-                'budget_variance': -22.8,  # Under budget
-                'profit_margin': 22.8,
-                'completion_rate': 33.3,
-            },
-            'recent_activities': [
-                {
-                    'id': 1,
-                    'description': 'Wheat harvesting completed in Field A',
-                    'date': fields.Date.today().isoformat(),
-                    'farm': 'Main Farm',
-                    'project': 'Wheat Season 2025',
-                    'cost': 5000,
-                    'type': 'harvest'
-                },
-                {
-                    'id': 2,
-                    'description': 'Corn planting started in Field B',
-                    'date': (fields.Date.today() - timedelta(days=1)).isoformat(),
-                    'farm': 'North Farm',
-                    'project': 'Corn Project 2025',
-                    'cost': 3200,
-                    'type': 'planting'
-                },
-                {
-                    'id': 3,
-                    'description': 'Fertilizer application in Field C',
-                    'date': (fields.Date.today() - timedelta(days=2)).isoformat(),
-                    'farm': 'South Farm',
-                    'project': 'Soybean Cultivation',
-                    'cost': 1800,
-                    'type': 'fertilizing'
-                }
-            ],
-            'alerts': [
-                {
-                    'type': 'info',
-                    'title': 'Demo Mode Active',
-                    'message': 'Dashboard is running with sample data. Create cultivation projects to see real data.'
-                },
-                {
-                    'type': 'success',
-                    'title': 'System Status',
-                    'message': 'All systems are operational and ready for farm management.'
-                }
-            ],
-            'charts': {
-                'project_status': {
-                    'planning': 3,
-                    'growing': 8,
-                    'harvest': 4,
-                    'done': 6,
-                    'cancelled': 1
-                },
-                'cost_trends': [
-                    {'month': 'Jan', 'budget': 15000, 'actual': 14200},
-                    {'month': 'Feb', 'budget': 18000, 'actual': 16800},
-                    {'month': 'Mar', 'budget': 22000, 'actual': 21500},
-                ]
-            },
-            'user_role': 'demo_user',
-            'data_source': 'demo',
-            'last_updated': fields.Datetime.now().isoformat(),
-        }
     
-    @api.model
-    def create_sample_cultivation_projects(self):
-        """Create sample cultivation projects for testing dashboard functionality"""
-        try:
-            # Check if we already have projects
-            existing_projects = self.env['farm.cultivation.project'].search([])
-            if existing_projects:
-                return {
-                    'success': False,
-                    'message': f'Already have {len(existing_projects)} cultivation projects. Delete them first if you want to recreate sample data.'
-                }
-            
-            # Get or create farms
-            farms = self.env['farm.farm'].search([])
-            if not farms:
-                farm = self.env['farm.farm'].create({
-                    'name': 'Main Farm',
-                    'code': 'MF001',
-                    'description': 'Primary farming location'
-                })
-                farms = farm
-            
-            # Get or create fields  
-            fields_records = self.env['farm.field'].search([])
-            if not fields_records:
-                field = self.env['farm.field'].create({
-                    'name': 'Field A',
-                    'code': 'FA001',
-                    'farm_id': farms[0].id,
-                    'area': 25.5,
-                    'area_unit': 'hectare',
-                    'state': 'available'
-                })
-                fields_records = field
-            
-            # Get or create crops
-            crops = self.env['farm.crop'].search([])
-            if not crops:
-                crop = self.env['farm.crop'].create({
-                    'name': 'Wheat',
-                    'code': 'WHT001',
-                    'crop_type': 'grain',
-                    'growing_season': 'winter'
-                })
-                crops = crop
-            
-            # Create sample cultivation projects
-            projects_data = [
-                {
-                    'name': 'Wheat Cultivation 2025',
-                    'farm_id': farms[0].id,
-                    'field_id': fields_records[0].id,
-                    'crop_id': crops[0].id,
-                    'start_date': fields.Date.today() - timedelta(days=30),
-                    'planned_end_date': fields.Date.today() + timedelta(days=90),
-                    'state': 'growing',
-                },
-                {
-                    'name': 'Corn Project Spring',
-                    'farm_id': farms[0].id,
-                    'field_id': fields_records[0].id,
-                    'crop_id': crops[0].id,
-                    'start_date': fields.Date.today() - timedelta(days=60),
-                    'planned_end_date': fields.Date.today() + timedelta(days=60),
-                    'state': 'harvest',
-                }
-            ]
-            
-            created_projects = []
-            for data in projects_data:
-                project = self.env['farm.cultivation.project'].create(data)
-                created_projects.append(project)
-            
-            return {
-                'success': True,
-                'message': f'Created {len(created_projects)} sample cultivation projects successfully!',
-                'project_names': [p.name for p in created_projects]
-            }
-            
-        except Exception as e:
-            _logger.error(f"Error creating sample projects: {str(e)}")
-            return {
-                'success': False,
-                'message': f'Error creating sample projects: {str(e)}'
-            }
-
-    @api.model
-    def get_project_details(self, project_id):
-        """Get detailed project information including recent reports"""
-        try:
-            project = self.env['farm.cultivation.project'].browse(project_id)
-            if not project.exists():
-                return {'error': 'Project not found'}
-            
-            # Get recent daily reports for this project
-            reports = []
-            if 'farm.daily.report' in self.env:
-                daily_reports = self.env['farm.daily.report'].search([
-                    ('project_id', '=', project_id)
-                ], limit=10, order='date desc')
-                
-                for report in daily_reports:
-                    reports.append({
-                        'id': report.id,
-                        'operation_type': dict(report._fields['operation_type'].selection).get(report.operation_type, report.operation_type),
-                        'description': report.description or f"{report.operation_type} operation",
-                        'date': report.date.isoformat() if report.date else None,
-                        'actual_cost': report.actual_cost or 0,
-                        'state': report.state,
-                    })
-            
-            # Calculate additional project metrics
-            project_data = {
-                'id': project.id,
-                'name': project.name,
-                'code': project.code,
-                'state': project.state,
-                'farm_name': project.farm_id.name if project.farm_id else 'N/A',
-                'field_name': project.field_id.name if project.field_id else 'N/A',
-                'field_area': project.field_area or 0,
-                'area_unit': project.field_area_unit or 'hectare',
-                'crop_name': project.crop_id.name if project.crop_id else 'N/A',
-                'start_date': project.start_date.isoformat() if project.start_date else None,
-                'planned_end_date': project.planned_end_date.isoformat() if project.planned_end_date else None,
-                'actual_end_date': project.actual_end_date.isoformat() if project.actual_end_date else None,
-                'budget': project.budget or 0,
-                'actual_cost': project.actual_cost or 0,
-                'revenue': project.revenue or 0,
-                'profit': project.profit or 0,
-                'progress_percentage': self._calculate_project_progress(project),
-                'days_remaining': self._calculate_days_remaining(project),
-                'is_overdue': self._is_project_overdue(project),
-            }
-            
-            return {
-                'success': True,
-                'project': project_data,
-                'reports': reports,
-            }
-            
-        except Exception as e:
-            _logger.error(f"Error getting project details for ID {project_id}: {str(e)}")
-            return {'error': str(e)}
+    
     
     @api.model
     def _get_sales_data(self, filters, user_role):
@@ -2164,6 +1668,7 @@ class FarmDashboardData(models.Model):
             sales_performance = self._get_sales_performance_metrics(date_from, date_to, filters)
             
             result = {
+                'currency_data': self.__get_currency_data(),
                 'sales_summary': sales_summary,
                 'customer_analysis': customer_analysis,
                 'product_analysis': product_analysis,
@@ -2666,6 +2171,7 @@ class FarmDashboardData(models.Model):
             if purchases_summary.get('total_orders', 0) > 0:
                 _logger.info(f"Successfully loaded real purchase data: {purchases_summary.get('total_orders', 0)} orders")
                 return {
+                    'currency_data': self.__get_currency_data(),
                     'purchases_summary': purchases_summary,
                     'supplier_analysis': supplier_analysis,
                     'product_purchases_analysis': product_purchases_analysis,
@@ -2883,7 +2389,6 @@ class FarmDashboardData(models.Model):
             'last_updated': fields.Datetime.now().isoformat(),
         }
 
-    # Removed old _get_purchases_data - replaced with comprehensive version above
     
     @api.model
     def _get_supplier_analysis(self, date_from, date_to, filters):
@@ -3125,6 +2630,8 @@ class FarmDashboardData(models.Model):
     def _get_demo_purchases_data(self):
         """Generate demo purchases data"""
         return {
+            'currency_data': self.__get_currency_data(),
+
             'purchases_summary': {
                 'total_orders': 32,
                 'total_amount': 185000,
@@ -3247,82 +2754,6 @@ class FarmDashboardData(models.Model):
             },
         }
 
-    @api.model
-    def _get_demo_overview_data(self):
-        """Return demo overview data when real data is not available"""
-        return {
-            'kpis': {
-                'active_projects': 12,
-                'total_projects': 18,
-                'completed_projects': 6,
-                'total_area': 450.5,
-                'total_budget': 125000,
-                'total_actual_cost': 96500,
-                'total_revenue': 125000,
-                'total_profit': 28500,
-                'budget_variance': -22.8,  # Under budget
-                'profit_margin': 22.8,
-                'completion_rate': 33.3,
-            },
-            'recent_activities': [
-                {
-                    'id': 1,
-                    'description': 'Wheat harvesting completed in Field A',
-                    'date': fields.Date.today().isoformat(),
-                    'farm': 'Main Farm',
-                    'project': 'Wheat Season 2025',
-                    'cost': 5000,
-                    'type': 'harvest'
-                },
-                {
-                    'id': 2,
-                    'description': 'Corn planting started in Field B',
-                    'date': (fields.Date.today() - timedelta(days=1)).isoformat(),
-                    'farm': 'North Farm',
-                    'project': 'Corn Project 2025',
-                    'cost': 3200,
-                    'type': 'planting'
-                },
-                {
-                    'id': 3,
-                    'description': 'Fertilizer application in Field C',
-                    'date': (fields.Date.today() - timedelta(days=2)).isoformat(),
-                    'farm': 'South Farm',
-                    'project': 'Soybean Cultivation',
-                    'cost': 1800,
-                    'type': 'fertilizing'
-                }
-            ],
-            'alerts': [
-                {
-                    'type': 'info',
-                    'title': 'Demo Mode Active',
-                    'message': 'Dashboard is running with sample data. Create cultivation projects to see real data.'
-                },
-                {
-                    'type': 'success',
-                    'title': 'System Status',
-                    'message': 'All systems are operational and ready for farm management.'
-                }
-            ],
-            'charts': {
-                'project_status': {
-                    'planning': 3,
-                    'growing': 8,
-                    'harvest': 4,
-                    'done': 6,
-                    'cancelled': 1
-                },
-                'cost_trends': [
-                    {'month': 'Jan', 'budget': 15000, 'actual': 14200},
-                    {'month': 'Feb', 'budget': 18000, 'actual': 16800},
-                    {'month': 'Mar', 'budget': 22000, 'actual': 21500},
-                ]
-            },
-            'user_role': 'demo_user',
-            'data_source': 'demo',
-            'last_updated': fields.Datetime.now().isoformat(),
-        }
     
     @api.model
     def create_sample_cultivation_projects(self):
@@ -3410,63 +2841,6 @@ class FarmDashboardData(models.Model):
                 'message': f'Error creating sample projects: {str(e)}'
             }
 
-    @api.model
-    def get_project_details(self, project_id):
-        """Get detailed project information including recent reports"""
-        try:
-            project = self.env['farm.cultivation.project'].browse(project_id)
-            if not project.exists():
-                return {'error': 'Project not found'}
-            
-            # Get recent daily reports for this project
-            reports = []
-            if 'farm.daily.report' in self.env:
-                daily_reports = self.env['farm.daily.report'].search([
-                    ('project_id', '=', project_id)
-                ], limit=10, order='date desc')
-                
-                for report in daily_reports:
-                    reports.append({
-                        'id': report.id,
-                        'operation_type': dict(report._fields['operation_type'].selection).get(report.operation_type, report.operation_type),
-                        'description': report.description or f"{report.operation_type} operation",
-                        'date': report.date.isoformat() if report.date else None,
-                        'actual_cost': report.actual_cost or 0,
-                        'state': report.state,
-                    })
-            
-            # Calculate additional project metrics
-            project_data = {
-                'id': project.id,
-                'name': project.name,
-                'code': project.code,
-                'state': project.state,
-                'farm_name': project.farm_id.name if project.farm_id else 'N/A',
-                'field_name': project.field_id.name if project.field_id else 'N/A',
-                'field_area': project.field_area or 0,
-                'area_unit': project.field_area_unit or 'hectare',
-                'crop_name': project.crop_id.name if project.crop_id else 'N/A',
-                'start_date': project.start_date.isoformat() if project.start_date else None,
-                'planned_end_date': project.planned_end_date.isoformat() if project.planned_end_date else None,
-                'actual_end_date': project.actual_end_date.isoformat() if project.actual_end_date else None,
-                'budget': project.budget or 0,
-                'actual_cost': project.actual_cost or 0,
-                'revenue': project.revenue or 0,
-                'profit': project.profit or 0,
-                'progress_percentage': self._calculate_project_progress(project),
-                'days_remaining': self._calculate_days_remaining(project),
-                'is_overdue': self._is_project_overdue(project),
-            }
-            
-            return {
-                'success': True,
-                'project': project_data,
-                'reports': reports,
-            }
-            
-        except Exception as e:
-            _logger.error(f"Error getting project details for ID {project_id}: {str(e)}")
-            return {'error': str(e)}
     
     @api.model
     def _get_inventory_data(self, filters, user_role):
@@ -3502,7 +2876,7 @@ class FarmDashboardData(models.Model):
             stock_analysis = self._get_stock_analysis(date_from, date_to, filters)
             
             # Get product categories analysis
-            category_analysis = self._get_product_category_analysis(date_from, date_to, filters)
+            category_analysis = self._get_inventory_category_analysis(date_from, date_to, filters)
             
             # Get stock movements
             stock_movements = self._get_stock_movements_analysis(date_from, date_to, filters)
@@ -3526,6 +2900,7 @@ class FarmDashboardData(models.Model):
             if inventory_summary.get('total_products', 0) > 0:
                 _logger.info(f"Successfully loaded real inventory data: {inventory_summary.get('total_products', 0)} products")
                 return {
+                    'currency_data': self.__get_currency_data(),
                     'inventory_summary': inventory_summary,
                     'stock_analysis': stock_analysis,
                     'category_analysis': category_analysis,
@@ -3646,8 +3021,8 @@ class FarmDashboardData(models.Model):
             return {}
     
     @api.model
-    def _get_product_category_analysis(self, date_from, date_to, filters):
-        """Get product category analysis"""
+    def _get_inventory_category_analysis(self, date_from, date_to, filters):
+        """Get inventory product category analysis"""
         try:
             _logger.info("Getting product category analysis...")
             
@@ -4397,226 +3772,7 @@ class FarmDashboardData(models.Model):
             ]
         }
     
-    @api.model
-    def _get_demo_overview_data(self):
-        """Return demo overview data when real data is not available"""
-        return {
-            'kpis': {
-                'active_projects': 12,
-                'total_projects': 18,
-                'completed_projects': 6,
-                'total_area': 450.5,
-                'total_budget': 125000,
-                'total_actual_cost': 96500,
-                'total_revenue': 125000,
-                'total_profit': 28500,
-                'budget_variance': -22.8,  # Under budget
-                'profit_margin': 22.8,
-                'completion_rate': 33.3,
-            },
-            'recent_activities': [
-                {
-                    'id': 1,
-                    'description': 'Wheat harvesting completed in Field A',
-                    'date': fields.Date.today().isoformat(),
-                    'farm': 'Main Farm',
-                    'project': 'Wheat Season 2025',
-                    'cost': 5000,
-                    'type': 'harvest'
-                },
-                {
-                    'id': 2,
-                    'description': 'Corn planting started in Field B',
-                    'date': (fields.Date.today() - timedelta(days=1)).isoformat(),
-                    'farm': 'North Farm',
-                    'project': 'Corn Project 2025',
-                    'cost': 3200,
-                    'type': 'planting'
-                },
-                {
-                    'id': 3,
-                    'description': 'Fertilizer application in Field C',
-                    'date': (fields.Date.today() - timedelta(days=2)).isoformat(),
-                    'farm': 'South Farm',
-                    'project': 'Soybean Cultivation',
-                    'cost': 1800,
-                    'type': 'fertilizing'
-                }
-            ],
-            'alerts': [
-                {
-                    'type': 'info',
-                    'title': 'Demo Mode Active',
-                    'message': 'Dashboard is running with sample data. Create cultivation projects to see real data.'
-                },
-                {
-                    'type': 'success',
-                    'title': 'System Status',
-                    'message': 'All systems are operational and ready for farm management.'
-                }
-            ],
-            'charts': {
-                'project_status': {
-                    'planning': 3,
-                    'growing': 8,
-                    'harvest': 4,
-                    'done': 6,
-                    'cancelled': 1
-                },
-                'cost_trends': [
-                    {'month': 'Jan', 'budget': 15000, 'actual': 14200},
-                    {'month': 'Feb', 'budget': 18000, 'actual': 16800},
-                    {'month': 'Mar', 'budget': 22000, 'actual': 21500},
-                ]
-            },
-            'user_role': 'demo_user',
-            'data_source': 'demo',
-            'last_updated': fields.Datetime.now().isoformat(),
-        }
     
-    @api.model
-    def create_sample_cultivation_projects(self):
-        """Create sample cultivation projects for testing dashboard functionality"""
-        try:
-            # Check if we already have projects
-            existing_projects = self.env['farm.cultivation.project'].search([])
-            if existing_projects:
-                return {
-                    'success': False,
-                    'message': f'Already have {len(existing_projects)} cultivation projects. Delete them first if you want to recreate sample data.'
-                }
-            
-            # Get or create farms
-            farms = self.env['farm.farm'].search([])
-            if not farms:
-                farm = self.env['farm.farm'].create({
-                    'name': 'Main Farm',
-                    'code': 'MF001',
-                    'description': 'Primary farming location'
-                })
-                farms = farm
-            
-            # Get or create fields  
-            fields_records = self.env['farm.field'].search([])
-            if not fields_records:
-                field = self.env['farm.field'].create({
-                    'name': 'Field A',
-                    'code': 'FA001',
-                    'farm_id': farms[0].id,
-                    'area': 25.5,
-                    'area_unit': 'hectare',
-                    'state': 'available'
-                })
-                fields_records = field
-            
-            # Get or create crops
-            crops = self.env['farm.crop'].search([])
-            if not crops:
-                crop = self.env['farm.crop'].create({
-                    'name': 'Wheat',
-                    'code': 'WHT001',
-                    'crop_type': 'grain',
-                    'growing_season': 'winter'
-                })
-                crops = crop
-            
-            # Create sample cultivation projects
-            projects_data = [
-                {
-                    'name': 'Wheat Cultivation 2025',
-                    'farm_id': farms[0].id,
-                    'field_id': fields_records[0].id,
-                    'crop_id': crops[0].id,
-                    'start_date': fields.Date.today() - timedelta(days=30),
-                    'planned_end_date': fields.Date.today() + timedelta(days=90),
-                    'state': 'growing',
-                },
-                {
-                    'name': 'Corn Project Spring',
-                    'farm_id': farms[0].id,
-                    'field_id': fields_records[0].id,
-                    'crop_id': crops[0].id,
-                    'start_date': fields.Date.today() - timedelta(days=60),
-                    'planned_end_date': fields.Date.today() + timedelta(days=60),
-                    'state': 'harvest',
-                }
-            ]
-            
-            created_projects = []
-            for data in projects_data:
-                project = self.env['farm.cultivation.project'].create(data)
-                created_projects.append(project)
-            
-            return {
-                'success': True,
-                'message': f'Created {len(created_projects)} sample cultivation projects successfully!',
-                'project_names': [p.name for p in created_projects]
-            }
-            
-        except Exception as e:
-            _logger.error(f"Error creating sample projects: {str(e)}")
-            return {
-                'success': False,
-                'message': f'Error creating sample projects: {str(e)}'
-            }
-
-    @api.model
-    def get_project_details(self, project_id):
-        """Get detailed project information including recent reports"""
-        try:
-            project = self.env['farm.cultivation.project'].browse(project_id)
-            if not project.exists():
-                return {'error': 'Project not found'}
-            
-            # Get recent daily reports for this project
-            reports = []
-            if 'farm.daily.report' in self.env:
-                daily_reports = self.env['farm.daily.report'].search([
-                    ('project_id', '=', project_id)
-                ], limit=10, order='date desc')
-                
-                for report in daily_reports:
-                    reports.append({
-                        'id': report.id,
-                        'operation_type': dict(report._fields['operation_type'].selection).get(report.operation_type, report.operation_type),
-                        'description': report.description or f"{report.operation_type} operation",
-                        'date': report.date.isoformat() if report.date else None,
-                        'actual_cost': report.actual_cost or 0,
-                        'state': report.state,
-                    })
-            
-            # Calculate additional project metrics
-            project_data = {
-                'id': project.id,
-                'name': project.name,
-                'code': project.code,
-                'state': project.state,
-                'farm_name': project.farm_id.name if project.farm_id else 'N/A',
-                'field_name': project.field_id.name if project.field_id else 'N/A',
-                'field_area': project.field_area or 0,
-                'area_unit': project.field_area_unit or 'hectare',
-                'crop_name': project.crop_id.name if project.crop_id else 'N/A',
-                'start_date': project.start_date.isoformat() if project.start_date else None,
-                'planned_end_date': project.planned_end_date.isoformat() if project.planned_end_date else None,
-                'actual_end_date': project.actual_end_date.isoformat() if project.actual_end_date else None,
-                'budget': project.budget or 0,
-                'actual_cost': project.actual_cost or 0,
-                'revenue': project.revenue or 0,
-                'profit': project.profit or 0,
-                'progress_percentage': self._calculate_project_progress(project),
-                'days_remaining': self._calculate_days_remaining(project),
-                'is_overdue': self._is_project_overdue(project),
-            }
-            
-            return {
-                'success': True,
-                'project': project_data,
-                'reports': reports,
-            }
-            
-        except Exception as e:
-            _logger.error(f"Error getting project details for ID {project_id}: {str(e)}")
-            return {'error': str(e)}
     
     @api.model
     def _get_reports_data(self, filters, user_role):
@@ -4629,6 +3785,7 @@ class FarmDashboardData(models.Model):
         ])
         
         return {
+            'currency_data': self.__get_currency_data(),
             'daily_reports_summary': {
                 'total_reports': len(daily_reports),
                 'reports_by_type': daily_reports.read_group([], ['operation_type'], ['operation_type']),
@@ -4641,226 +3798,7 @@ class FarmDashboardData(models.Model):
             'last_updated': fields.Datetime.now().isoformat(),
         }
     
-    @api.model
-    def _get_demo_overview_data(self):
-        """Return demo overview data when real data is not available"""
-        return {
-            'kpis': {
-                'active_projects': 12,
-                'total_projects': 18,
-                'completed_projects': 6,
-                'total_area': 450.5,
-                'total_budget': 125000,
-                'total_actual_cost': 96500,
-                'total_revenue': 125000,
-                'total_profit': 28500,
-                'budget_variance': -22.8,  # Under budget
-                'profit_margin': 22.8,
-                'completion_rate': 33.3,
-            },
-            'recent_activities': [
-                {
-                    'id': 1,
-                    'description': 'Wheat harvesting completed in Field A',
-                    'date': fields.Date.today().isoformat(),
-                    'farm': 'Main Farm',
-                    'project': 'Wheat Season 2025',
-                    'cost': 5000,
-                    'type': 'harvest'
-                },
-                {
-                    'id': 2,
-                    'description': 'Corn planting started in Field B',
-                    'date': (fields.Date.today() - timedelta(days=1)).isoformat(),
-                    'farm': 'North Farm',
-                    'project': 'Corn Project 2025',
-                    'cost': 3200,
-                    'type': 'planting'
-                },
-                {
-                    'id': 3,
-                    'description': 'Fertilizer application in Field C',
-                    'date': (fields.Date.today() - timedelta(days=2)).isoformat(),
-                    'farm': 'South Farm',
-                    'project': 'Soybean Cultivation',
-                    'cost': 1800,
-                    'type': 'fertilizing'
-                }
-            ],
-            'alerts': [
-                {
-                    'type': 'info',
-                    'title': 'Demo Mode Active',
-                    'message': 'Dashboard is running with sample data. Create cultivation projects to see real data.'
-                },
-                {
-                    'type': 'success',
-                    'title': 'System Status',
-                    'message': 'All systems are operational and ready for farm management.'
-                }
-            ],
-            'charts': {
-                'project_status': {
-                    'planning': 3,
-                    'growing': 8,
-                    'harvest': 4,
-                    'done': 6,
-                    'cancelled': 1
-                },
-                'cost_trends': [
-                    {'month': 'Jan', 'budget': 15000, 'actual': 14200},
-                    {'month': 'Feb', 'budget': 18000, 'actual': 16800},
-                    {'month': 'Mar', 'budget': 22000, 'actual': 21500},
-                ]
-            },
-            'user_role': 'demo_user',
-            'data_source': 'demo',
-            'last_updated': fields.Datetime.now().isoformat(),
-        }
     
-    @api.model
-    def create_sample_cultivation_projects(self):
-        """Create sample cultivation projects for testing dashboard functionality"""
-        try:
-            # Check if we already have projects
-            existing_projects = self.env['farm.cultivation.project'].search([])
-            if existing_projects:
-                return {
-                    'success': False,
-                    'message': f'Already have {len(existing_projects)} cultivation projects. Delete them first if you want to recreate sample data.'
-                }
-            
-            # Get or create farms
-            farms = self.env['farm.farm'].search([])
-            if not farms:
-                farm = self.env['farm.farm'].create({
-                    'name': 'Main Farm',
-                    'code': 'MF001',
-                    'description': 'Primary farming location'
-                })
-                farms = farm
-            
-            # Get or create fields  
-            fields_records = self.env['farm.field'].search([])
-            if not fields_records:
-                field = self.env['farm.field'].create({
-                    'name': 'Field A',
-                    'code': 'FA001',
-                    'farm_id': farms[0].id,
-                    'area': 25.5,
-                    'area_unit': 'hectare',
-                    'state': 'available'
-                })
-                fields_records = field
-            
-            # Get or create crops
-            crops = self.env['farm.crop'].search([])
-            if not crops:
-                crop = self.env['farm.crop'].create({
-                    'name': 'Wheat',
-                    'code': 'WHT001',
-                    'crop_type': 'grain',
-                    'growing_season': 'winter'
-                })
-                crops = crop
-            
-            # Create sample cultivation projects
-            projects_data = [
-                {
-                    'name': 'Wheat Cultivation 2025',
-                    'farm_id': farms[0].id,
-                    'field_id': fields_records[0].id,
-                    'crop_id': crops[0].id,
-                    'start_date': fields.Date.today() - timedelta(days=30),
-                    'planned_end_date': fields.Date.today() + timedelta(days=90),
-                    'state': 'growing',
-                },
-                {
-                    'name': 'Corn Project Spring',
-                    'farm_id': farms[0].id,
-                    'field_id': fields_records[0].id,
-                    'crop_id': crops[0].id,
-                    'start_date': fields.Date.today() - timedelta(days=60),
-                    'planned_end_date': fields.Date.today() + timedelta(days=60),
-                    'state': 'harvest',
-                }
-            ]
-            
-            created_projects = []
-            for data in projects_data:
-                project = self.env['farm.cultivation.project'].create(data)
-                created_projects.append(project)
-            
-            return {
-                'success': True,
-                'message': f'Created {len(created_projects)} sample cultivation projects successfully!',
-                'project_names': [p.name for p in created_projects]
-            }
-            
-        except Exception as e:
-            _logger.error(f"Error creating sample projects: {str(e)}")
-            return {
-                'success': False,
-                'message': f'Error creating sample projects: {str(e)}'
-            }
-
-    @api.model
-    def get_project_details(self, project_id):
-        """Get detailed project information including recent reports"""
-        try:
-            project = self.env['farm.cultivation.project'].browse(project_id)
-            if not project.exists():
-                return {'error': 'Project not found'}
-            
-            # Get recent daily reports for this project
-            reports = []
-            if 'farm.daily.report' in self.env:
-                daily_reports = self.env['farm.daily.report'].search([
-                    ('project_id', '=', project_id)
-                ], limit=10, order='date desc')
-                
-                for report in daily_reports:
-                    reports.append({
-                        'id': report.id,
-                        'operation_type': dict(report._fields['operation_type'].selection).get(report.operation_type, report.operation_type),
-                        'description': report.description or f"{report.operation_type} operation",
-                        'date': report.date.isoformat() if report.date else None,
-                        'actual_cost': report.actual_cost or 0,
-                        'state': report.state,
-                    })
-            
-            # Calculate additional project metrics
-            project_data = {
-                'id': project.id,
-                'name': project.name,
-                'code': project.code,
-                'state': project.state,
-                'farm_name': project.farm_id.name if project.farm_id else 'N/A',
-                'field_name': project.field_id.name if project.field_id else 'N/A',
-                'field_area': project.field_area or 0,
-                'area_unit': project.field_area_unit or 'hectare',
-                'crop_name': project.crop_id.name if project.crop_id else 'N/A',
-                'start_date': project.start_date.isoformat() if project.start_date else None,
-                'planned_end_date': project.planned_end_date.isoformat() if project.planned_end_date else None,
-                'actual_end_date': project.actual_end_date.isoformat() if project.actual_end_date else None,
-                'budget': project.budget or 0,
-                'actual_cost': project.actual_cost or 0,
-                'revenue': project.revenue or 0,
-                'profit': project.profit or 0,
-                'progress_percentage': self._calculate_project_progress(project),
-                'days_remaining': self._calculate_days_remaining(project),
-                'is_overdue': self._is_project_overdue(project),
-            }
-            
-            return {
-                'success': True,
-                'project': project_data,
-                'reports': reports,
-            }
-            
-        except Exception as e:
-            _logger.error(f"Error getting project details for ID {project_id}: {str(e)}")
-            return {'error': str(e)}
     
     # Helper methods
     @api.model
@@ -5121,10 +4059,13 @@ class FarmDashboardData(models.Model):
                         overrun_percent = ((project.actual_cost - project.budget) / project.budget * 100)
                         alerts.append({
                             'type': 'warning',
-                            'title': 'Budget Overrun',
-                            'message': f"Project {project.name} is over budget by {overrun_percent:.1f}%",
-                    'project_id': project.id,
-                })
+                            'title': _('Budget Overrun'),
+                            'message': _("Project %(project_name)s is over budget by %(overrun_percent).1f%%") % {
+                                'project_name': project.name,
+                                'overrun_percent': overrun_percent
+                            },
+                            'project_id': project.id,
+                        })
             
             # Schedule alerts
             today = fields.Date.today()
@@ -5134,16 +4075,22 @@ class FarmDashboardData(models.Model):
                         days_overdue = (today - project.planned_end_date).days
                         alerts.append({
                             'type': 'danger',
-                            'title': 'Project Overdue',
-                            'message': f"Project {project.name} is {days_overdue} days overdue",
+                            'title': _('Project Overdue'),
+                            'message': _("Project %(project_name)s is %(days_overdue)s days overdue") % {
+                                'project_name': project.name,
+                                'days_overdue': days_overdue
+                            },
                             'project_id': project.id,
                         })
                     elif project.planned_end_date <= today + timedelta(days=7) and project.state in ['growing', 'planning']:
                         days_remaining = (project.planned_end_date - today).days
                         alerts.append({
                             'type': 'info',
-                            'title': 'Project Due Soon',
-                            'message': f"Project {project.name} is due in {days_remaining} days",
+                            'title': _('Project Due Soon'),
+                            'message': _("Project %(project_name)s is due in %(days_remaining)s days") % {
+                                'project_name': project.name,
+                                'days_remaining': days_remaining
+                            },
                             'project_id': project.id,
                         })
             
@@ -5153,42 +4100,50 @@ class FarmDashboardData(models.Model):
                 farms = self.env['farm.farm'].search([])
                 farm_fields = self.env['farm.field'].search([])
                 crops = self.env['farm.crop'].search([])
-                
+
                 if farms and farm_fields and crops:
                     alerts.append({
                         'type': 'info',
-                        'title': 'Ready to Start Farming',
-                        'message': f'You have {len(farms)} farms, {len(farm_fields)} fields, and {len(crops)} crops configured. Create your first cultivation project to see live data!',
+                        'title': _('Ready to Start Farming'),
+                        'message': _("You have %(farms_count)s farms, %(fields_count)s fields, and %(crops_count)s crops configured. Create your first cultivation project to see live data!") % {
+                            'farms_count': len(farms),
+                            'fields_count': len(farm_fields),
+                            'crops_count': len(crops)
+                        },
                     })
                 elif farms or farm_fields or crops:
                     missing = []
-                    if not farms: missing.append('farms')
-                    if not farm_fields: missing.append('fields')  
-                    if not crops: missing.append('crops')
+                    if not farms: missing.append(_('farms'))
+                    if not farm_fields: missing.append(_('fields'))
+                    if not crops: missing.append(_('crops'))
                     alerts.append({
                         'type': 'warning',
-                        'title': 'Setup Required',
-                        'message': f'Please configure {", ".join(missing)} before creating cultivation projects.',
+                        'title': _('Setup Required'),
+                        'message': _("Please configure %(missing_items)s before creating cultivation projects.") % {
+                            'missing_items': ", ".join(missing)
+                        },
                     })
                 else:
                     alerts.append({
                         'type': 'info',
-                        'title': 'Welcome to Farm Management',
-                        'message': 'Start by setting up your farms, fields, and crops, then create cultivation projects.',
+                        'title': _('Welcome to Farm Management'),
+                        'message': _('Start by setting up your farms, fields, and crops, then create cultivation projects.'),
                     })
             elif len(projects.filtered(lambda p: p.state in ['growing', 'harvest'])) == 0:
                 alerts.append({
                     'type': 'warning',
-                    'title': 'No Active Cultivation',
-                    'message': 'No projects are currently in growing or harvest stage.',
+                    'title': _('No Active Cultivation'),
+                    'message': _('No projects are currently in growing or harvest stage.'),
                 })
             
             # Success message if no issues
             if not alerts and projects:
                 alerts.append({
                     'type': 'success',
-                    'title': 'All Systems Normal',
-                    'message': f'{len(projects)} projects are running smoothly.',
+                    'title': _('All Systems Normal'),
+                    'message': _("%(projects_count)s projects are running smoothly.") % {
+                        'projects_count': len(projects)
+                    },
                 })
                 
             _logger.info(f"Generated {len(alerts)} real alerts")
@@ -5198,8 +4153,8 @@ class FarmDashboardData(models.Model):
             _logger.error(f"Error generating real alerts: {str(e)}")
             return [{
                 'type': 'info',
-                'title': 'Alert System',
-                'message': 'Alert monitoring is active but encountered an issue.',
+                'title': _('Alert System'),
+                'message': _('Alert monitoring is active but encountered an issue.'),
             }]
         
         # Low stock alerts (if user has inventory access)
@@ -5211,8 +4166,12 @@ class FarmDashboardData(models.Model):
             for product in low_stock_products:
                 alerts.append({
                     'type': 'danger',
-                    'title': 'Low Stock',
-                    'message': f"Product {product.name} is running low ({product.qty_available} {product.uom_id.name} remaining)",
+                    'title': _('Low Stock'),
+                    'message': _("Product %(product_name)s is running low (%(remaining_qty)s %(uom_name)s remaining)") % {
+                        'product_name': product.name,
+                        'remaining_qty': product.qty_available,
+                        'uom_name': product.uom_id.name
+                    },
                     'product_id': product.id,
                 })
         
@@ -5326,12 +4285,12 @@ class FarmDashboardData(models.Model):
                     'labels': [item['crop_name'] for item in performance_data[:8]],  # Top 8 crops
                     'datasets': [
                         {
-                            'label': 'Profit per Area',
+                            'label': _('Profit per Area'),
                             'data': [item['profit_per_area'] for item in performance_data[:8]],
                             'backgroundColor': 'rgba(40, 167, 69, 0.8)',
                         },
                         {
-                            'label': 'Revenue per Area', 
+                            'label': _('Revenue per Area'),
                             'data': [item['revenue_per_area'] for item in performance_data[:8]],
                             'backgroundColor': 'rgba(23, 162, 184, 0.8)',
                         }
@@ -5340,7 +4299,7 @@ class FarmDashboardData(models.Model):
                 'efficiency_chart': {
                     'labels': [item['crop_name'] for item in performance_data[:8]],
                     'datasets': [{
-                        'label': 'Yield Efficiency (%)',
+                        'label': _('Yield Efficiency (%)'),
                         'data': [item['yield_efficiency'] for item in performance_data[:8]],
                         'backgroundColor': 'rgba(255, 193, 7, 0.8)',
                     }]
@@ -5664,8 +4623,13 @@ class FarmDashboardData(models.Model):
                         alerts.append({
                             'type': 'budget_overrun',
                             'severity': 'high' if variance_percentage > 50 else 'medium',
-                            'title': f'Budget Overrun: {project.name}',
-                            'message': f'Project is {variance_percentage:.1f}% over budget (${project.actual_cost - project.budget:,.2f})',
+                            'title': _("Budget Overrun: %(project_name)s") % {
+                                'project_name': project.name
+                            },
+                            'message': _("Project is %(variance).1f%% over budget ($%(overrun_amount).2f)") % {
+                                'variance': variance_percentage,
+                                'overrun_amount': project.actual_cost - project.budget
+                            },
                             'project_id': project.id,
                             'project_name': project.name,
                         })
@@ -5679,8 +4643,12 @@ class FarmDashboardData(models.Model):
                         alerts.append({
                             'type': 'low_profitability',
                             'severity': 'medium' if profit_margin > 0 else 'high',
-                            'title': f'Low Profitability: {project.name}',
-                            'message': f'Profit margin is only {profit_margin:.1f}%',
+                            'title': _("Low Profitability: %(project_name)s") % {
+                                'project_name': project.name
+                            },
+                            'message': _("Profit margin is only %(profit_margin).1f%%") % {
+                                'profit_margin': profit_margin
+                            },
                             'project_id': project.id,
                             'project_name': project.name,
                         })
@@ -5693,25 +4661,30 @@ class FarmDashboardData(models.Model):
                 alerts.append({
                     'type': 'negative_cash_flow',
                     'severity': 'high',
-                    'title': 'Negative Cash Flow',
-                    'message': f'Total costs (${total_costs:,.2f}) exceed total revenue (${total_revenue:,.2f})',
+                    'title': _('Negative Cash Flow'),
+                    'message': _("Total costs ($%(total_costs).2f) exceed total revenue ($%(total_revenue).2f)") % {
+                        'total_costs': total_costs,
+                        'total_revenue': total_revenue
+                    },
                     'project_id': None,
                     'project_name': None,
                 })
-            
+
             # Upcoming harvest alerts (potential revenue)
             upcoming_harvests = projects.filtered(
-                lambda p: p.state in ['growing', 'harvest'] and 
-                p.planned_end_date and 
+                lambda p: p.state in ['growing', 'harvest'] and
+                p.planned_end_date and
                 p.planned_end_date <= fields.Date.today() + timedelta(days=30)
             )
-            
+
             if upcoming_harvests:
                 alerts.append({
                     'type': 'upcoming_revenue',
                     'severity': 'info',
-                    'title': f'Upcoming Harvests ({len(upcoming_harvests)} projects)',
-                    'message': f'Expected revenue opportunity in next 30 days',
+                    'title': _("Upcoming Harvests (%(projects_count)s projects)") % {
+                        'projects_count': len(upcoming_harvests)
+                    },
+                    'message': _('Expected revenue opportunity in next 30 days'),
                     'project_id': None,
                     'project_name': None,
                 })
@@ -5770,13 +4743,13 @@ class FarmDashboardData(models.Model):
             'labels': [datetime.strptime(month, '%Y-%m').strftime('%b %Y') for month in sorted_months],
             'datasets': [
                 {
-                    'label': 'Budget',
+                    'label': _('Budget'),
                     'data': [monthly_costs[month]['budget'] for month in sorted_months],
                     'borderColor': '#007bff',
                     'backgroundColor': 'rgba(0, 123, 255, 0.1)',
                 },
                 {
-                    'label': 'Actual Cost',
+                    'label': _('Actual Cost'),
                     'data': [monthly_costs[month]['actual'] for month in sorted_months],
                     'borderColor': '#dc3545',
                     'backgroundColor': 'rgba(220, 53, 69, 0.1)',
@@ -5819,7 +4792,7 @@ class FarmDashboardData(models.Model):
             'type': 'bar',
             'labels': project_names,
             'datasets': [{
-                'label': 'Profit/Loss',
+                'label': _('Profit/Loss'),
                 'data': profit_data,
                 'backgroundColor': [
                     '#28a745' if profit >= 0 else '#dc3545' for profit in profit_data
@@ -6243,7 +5216,7 @@ class FarmDashboardData(models.Model):
         if not project.start_date:
             return 0
         
-        end_date = project.actual_end_date if project.state == 'done' else fields.Date.today()
+        end_date = project.actual_end_date if project.state == 'done' and project.actual_end_date else project.planned_end_date
         if end_date:
             return (end_date - project.start_date).days
         
@@ -6353,227 +5326,5 @@ class FarmDashboardData(models.Model):
             'cancel': []                             # Cancelled (final state)
         }
     
-    # Demo data methods for fallback
-    @api.model
     
-    @api.model
-    def _get_demo_overview_data(self):
-        """Return demo overview data when real data is not available"""
-        return {
-            'kpis': {
-                'active_projects': 12,
-                'total_projects': 18,
-                'completed_projects': 6,
-                'total_area': 450.5,
-                'total_budget': 125000,
-                'total_actual_cost': 96500,
-                'total_revenue': 125000,
-                'total_profit': 28500,
-                'budget_variance': -22.8,  # Under budget
-                'profit_margin': 22.8,
-                'completion_rate': 33.3,
-            },
-            'recent_activities': [
-                {
-                    'id': 1,
-                    'description': 'Wheat harvesting completed in Field A',
-                    'date': fields.Date.today().isoformat(),
-                    'farm': 'Main Farm',
-                    'project': 'Wheat Season 2025',
-                    'cost': 5000,
-                    'type': 'harvest'
-                },
-                {
-                    'id': 2,
-                    'description': 'Corn planting started in Field B',
-                    'date': (fields.Date.today() - timedelta(days=1)).isoformat(),
-                    'farm': 'North Farm',
-                    'project': 'Corn Project 2025',
-                    'cost': 3200,
-                    'type': 'planting'
-                },
-                {
-                    'id': 3,
-                    'description': 'Fertilizer application in Field C',
-                    'date': (fields.Date.today() - timedelta(days=2)).isoformat(),
-                    'farm': 'South Farm',
-                    'project': 'Soybean Cultivation',
-                    'cost': 1800,
-                    'type': 'fertilizing'
-                }
-            ],
-            'alerts': [
-                {
-                    'type': 'info',
-                    'title': 'Demo Mode Active',
-                    'message': 'Dashboard is running with sample data. Create cultivation projects to see real data.'
-                },
-                {
-                    'type': 'success',
-                    'title': 'System Status',
-                    'message': 'All systems are operational and ready for farm management.'
-                }
-            ],
-            'charts': {
-                'project_status': {
-                    'planning': 3,
-                    'growing': 8,
-                    'harvest': 4,
-                    'done': 6,
-                    'cancelled': 1
-                },
-                'cost_trends': [
-                    {'month': 'Jan', 'budget': 15000, 'actual': 14200},
-                    {'month': 'Feb', 'budget': 18000, 'actual': 16800},
-                    {'month': 'Mar', 'budget': 22000, 'actual': 21500},
-                ]
-            },
-            'user_role': 'demo_user',
-            'data_source': 'demo',
-            'last_updated': fields.Datetime.now().isoformat(),
-        }
     
-    @api.model
-    def create_sample_cultivation_projects(self):
-        """Create sample cultivation projects for testing dashboard functionality"""
-        try:
-            # Check if we already have projects
-            existing_projects = self.env['farm.cultivation.project'].search([])
-            if existing_projects:
-                return {
-                    'success': False,
-                    'message': f'Already have {len(existing_projects)} cultivation projects. Delete them first if you want to recreate sample data.'
-                }
-            
-            # Get or create farms
-            farms = self.env['farm.farm'].search([])
-            if not farms:
-                farm = self.env['farm.farm'].create({
-                    'name': 'Main Farm',
-                    'code': 'MF001',
-                    'description': 'Primary farming location'
-                })
-                farms = farm
-            
-            # Get or create fields  
-            fields_records = self.env['farm.field'].search([])
-            if not fields_records:
-                field = self.env['farm.field'].create({
-                    'name': 'Field A',
-                    'code': 'FA001',
-                    'farm_id': farms[0].id,
-                    'area': 25.5,
-                    'area_unit': 'hectare',
-                    'state': 'available'
-                })
-                fields_records = field
-            
-            # Get or create crops
-            crops = self.env['farm.crop'].search([])
-            if not crops:
-                crop = self.env['farm.crop'].create({
-                    'name': 'Wheat',
-                    'code': 'WHT001',
-                    'crop_type': 'grain',
-                    'growing_season': 'winter'
-                })
-                crops = crop
-            
-            # Create sample cultivation projects
-            projects_data = [
-                {
-                    'name': 'Wheat Cultivation 2025',
-                    'farm_id': farms[0].id,
-                    'field_id': fields_records[0].id,
-                    'crop_id': crops[0].id,
-                    'start_date': fields.Date.today() - timedelta(days=30),
-                    'planned_end_date': fields.Date.today() + timedelta(days=90),
-                    'state': 'growing',
-                },
-                {
-                    'name': 'Corn Project Spring',
-                    'farm_id': farms[0].id,
-                    'field_id': fields_records[0].id,
-                    'crop_id': crops[0].id,
-                    'start_date': fields.Date.today() - timedelta(days=60),
-                    'planned_end_date': fields.Date.today() + timedelta(days=60),
-                    'state': 'harvest',
-                }
-            ]
-            
-            created_projects = []
-            for data in projects_data:
-                project = self.env['farm.cultivation.project'].create(data)
-                created_projects.append(project)
-            
-            return {
-                'success': True,
-                'message': f'Created {len(created_projects)} sample cultivation projects successfully!',
-                'project_names': [p.name for p in created_projects]
-            }
-            
-        except Exception as e:
-            _logger.error(f"Error creating sample projects: {str(e)}")
-            return {
-                'success': False,
-                'message': f'Error creating sample projects: {str(e)}'
-            }
-
-    @api.model
-    def get_project_details(self, project_id):
-        """Get detailed project information including recent reports"""
-        try:
-            project = self.env['farm.cultivation.project'].browse(project_id)
-            if not project.exists():
-                return {'error': 'Project not found'}
-            
-            # Get recent daily reports for this project
-            reports = []
-            if 'farm.daily.report' in self.env:
-                daily_reports = self.env['farm.daily.report'].search([
-                    ('project_id', '=', project_id)
-                ], limit=10, order='date desc')
-                
-                for report in daily_reports:
-                    reports.append({
-                        'id': report.id,
-                        'operation_type': dict(report._fields['operation_type'].selection).get(report.operation_type, report.operation_type),
-                        'description': report.description or f"{report.operation_type} operation",
-                        'date': report.date.isoformat() if report.date else None,
-                        'actual_cost': report.actual_cost or 0,
-                        'state': report.state,
-                    })
-            
-            # Calculate additional project metrics
-            project_data = {
-                'id': project.id,
-                'name': project.name,
-                'code': project.code,
-                'state': project.state,
-                'farm_name': project.farm_id.name if project.farm_id else 'N/A',
-                'field_name': project.field_id.name if project.field_id else 'N/A',
-                'field_area': project.field_area or 0,
-                'area_unit': project.field_area_unit or 'hectare',
-                'crop_name': project.crop_id.name if project.crop_id else 'N/A',
-                'start_date': project.start_date.isoformat() if project.start_date else None,
-                'planned_end_date': project.planned_end_date.isoformat() if project.planned_end_date else None,
-                'actual_end_date': project.actual_end_date.isoformat() if project.actual_end_date else None,
-                'budget': project.budget or 0,
-                'actual_cost': project.actual_cost or 0,
-                'revenue': project.revenue or 0,
-                'profit': project.profit or 0,
-                'progress_percentage': self._calculate_project_progress(project),
-                'days_remaining': self._calculate_days_remaining(project),
-                'is_overdue': self._is_project_overdue(project),
-            }
-            
-            return {
-                'success': True,
-                'project': project_data,
-                'reports': reports,
-            }
-            
-        except Exception as e:
-            _logger.error(f"Error getting project details for ID {project_id}: {str(e)}")
-            return {'error': str(e)}
-

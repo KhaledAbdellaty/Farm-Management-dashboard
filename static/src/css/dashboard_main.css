@@ -668,14 +668,6 @@
 }
 
 /* ===== PROJECT DETAIL MODAL STYLES ===== */
-.project-avatar {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-}
 
 .crop-avatar {
     width: 80px;
@@ -1057,3 +1049,138 @@
     width: 100% !important;
 }
 
+/* Project Detail View Styles */
+.project-detail-tabs .nav-link {
+    color: #495057;
+    font-weight: 500;
+    padding: 0.75rem 1rem;
+    border-radius: 0;
+    transition: all 0.2s ease;
+}
+
+.project-detail-tabs .nav-link:hover {
+    background-color: rgba(40, 167, 69, 0.05);
+}
+
+.project-detail-tabs .nav-link.active {
+    color: #28a745;
+    border-color: #dee2e6 #dee2e6 #fff;
+    border-bottom: 2px solid #28a745;
+    background-color: transparent;
+}
+
+/* Project Financial Summary */
+.financial-summary {
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 0.5rem;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+}
+
+.financial-summary .d-flex {
+    font-size: 0.95rem;
+}
+
+.financial-summary strong {
+    font-weight: 600;
+}
+
+/* Timeline Milestone Styles */
+.milestone-track {
+    position: relative;
+    padding-left: 2rem;
+}
+
+.milestone-track::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #dee2e6;
+}
+
+.milestone-item {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.milestone-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    box-shadow: 0 0 0 4px rgba(255,255,255,1);
+    z-index: 2;
+}
+
+.milestone-content h6 {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+/* Activity Timeline */
+.activity-timeline {
+    position: relative;
+    padding-left: 2rem;
+}
+
+.activity-timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e9ecef;
+}
+
+.activity-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    box-shadow: 0 0 0 4px rgba(255,255,255,1);
+    z-index: 2;
+}
+
+/* Metric Cards */
+.metric-card {
+    transition: all 0.2s ease;
+}
+
+.metric-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.metric-icon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+
+/* Timeline Progress Bar */
+.timeline-progress .progress {
+    height: 12px;
+    border-radius: 6px;
+    overflow: hidden;
+    background-color: #e9ecef;
+}
+
+.timeline-progress .progress-bar {
+    background-image: linear-gradient(to right, #28a745, #20c997);
+    transition: width 1s ease;
+}

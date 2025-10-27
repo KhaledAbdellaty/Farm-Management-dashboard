@@ -1,5 +1,7 @@
 from odoo import fields, models, api, _
+import logging
 
+_logger = logging.getLogger(__name__)
 
 class FarmDashboardAccess(models.Model):
     _name = 'farm.dashboard.access'
@@ -32,13 +34,14 @@ class FarmDashboardAccess(models.Model):
     active = fields.Boolean('Active', default=True)
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
     
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         """Set default permissions based on role"""
-        if 'role' in vals:
-            role_permissions = self._get_role_permissions(vals['role'])
-            vals.update(role_permissions)
-        return super().create(vals)
+        for vals in vals_list:
+            if 'role' in vals:
+                role_permissions = self._get_role_permissions(vals['role'])
+                vals.update(role_permissions)
+        return super().create(vals_list)
     
     def write(self, vals):
         """Update permissions when role changes"""
@@ -101,13 +104,86 @@ class FarmDashboardAccess(models.Model):
         """Get permissions for current or specified user"""
         if not user_id:
             user_id = self.env.user.id
+        # Convert to integer ID if a recordset was provided
+        if hasattr(user_id, '_name') and user_id._name == 'res.users':
+            user_id = user_id.id
+        _logger.info(f"Fetching permissions for user_id: {user_id}")
         
-        access_record = self.search([
-            ('user_id', '=', user_id),
-            ('active', '=', True)
-        ], limit=1)
+        # Get the user record
+        user = self.env['res.users'].sudo().browse(user_id)
+        _logger.info(f"Current model: {self._name}, User: {user.name}")
         
+        # First determine the user's role based on security groups - consistent with dashboard_data._get_user_role
+        role = None
+        if user.has_group('base.group_system') or user.has_group('base.group_erp_manager'):
+            # Admin users get owner role
+            role = 'owner'
+            _logger.info(f"User {user_id} is admin, assigned role: {role}")
+        elif user.has_group('farm_management_dashboard.group_farm_owner'):
+            role = 'owner'
+            _logger.info(f"User {user_id} has Farm Owner group")
+        elif user.has_group('farm_management_dashboard.group_farm_manager'):
+            role = 'manager'
+            _logger.info(f"User {user_id} has Farm Manager group")
+        elif user.has_group('farm_management_dashboard.group_farm_accountant'):
+            role = 'accountant'
+            _logger.info(f"User {user_id} has Farm Accountant group")
+        
+        # If no role could be determined from security groups, don't provide access by default
+        if not role:
+            _logger.info(f"User {user_id} has no farm dashboard roles - no access granted")
+            # Return minimal access - no access to dashboard tabs
+            return {
+                'role': 'no_access',
+                'tabs': {
+                    'overview': False,
+                    'projects': False,
+                    'crops': False, 
+                    'financials': False,
+                    'sales': False,
+                    'purchases': False,
+                    'inventory': False,
+                    'reports': False,
+                },
+                'permissions': {
+                    'export_data': False,
+                    'modify_filters': False,
+                    'view_costs': False,
+                    'view_profits': False,
+                }
+            }
+        
+        # Now that we have determined the user's role from security groups,
+        # check if there is a custom access record
+        domain = [('user_id', '=', user_id), ('active', '=', True)]
+        access_record = self.search(domain, limit=1)
+        
+        # If there's an existing record that doesn't match the security group role,
+        # update it to maintain consistency
+        if access_record and access_record.role != role:
+            try:
+                _logger.info(f"Updating access record role from {access_record.role} to {role}")
+                access_record.sudo().write({'role': role})
+            except Exception as e:
+                _logger.error(f"Failed to update access record role: {e}")
+        
+        # If no custom record exists, create one
+        if not access_record:
+            try:
+                _logger.info(f"Creating new access record with role: {role}")
+                access_record = self.sudo().create({
+                    'name': f"Auto-generated for {user.name}",
+                    'user_id': user_id,
+                    'role': role,
+                    # The rest will be set by the create method's role defaults
+                })
+                _logger.info(f"Created new access record: {access_record}")
+            except Exception as e:
+                _logger.error(f"Failed to create access record: {e}")
+        
+        # If we have an access record, use its permissions
         if access_record:
+            _logger.info(f"Access record role: {access_record.role}")
             return {
                 'role': access_record.role,
                 'tabs': {
@@ -127,28 +203,28 @@ class FarmDashboardAccess(models.Model):
                     'view_profits': access_record.can_view_profits,
                 }
             }
-        else:
-            # Default permissions for users without specific access record
-            # For demo purposes, allow access to all tabs
-            return {
-                'role': 'demo_user',
-                'tabs': {
-                    'overview': True,
-                    'projects': True,
-                    'crops': True,
-                    'financials': True,
-                    'sales': True,
-                    'purchases': True,
-                    'inventory': True,
-                    'reports': True,
-                },
-                'permissions': {
-                    'export_data': False,  # Keep export restricted for security
-                    'modify_filters': True,
-                    'view_costs': True,
-                    'view_profits': True,
-                }
+        
+        # Fallback permissions if creation fails - use the role-based defaults
+        permissions = self._get_role_permissions(role)
+        return {
+            'role': role,
+            'tabs': {
+                'overview': permissions.get('can_access_overview', True),
+                'projects': permissions.get('can_access_projects', True),
+                'crops': permissions.get('can_access_crops', True),
+                'financials': permissions.get('can_access_financials', True),
+                'sales': permissions.get('can_access_sales', True),
+                'purchases': permissions.get('can_access_purchases', True),
+                'inventory': permissions.get('can_access_inventory', True),
+                'reports': permissions.get('can_access_reports', True),
+            },
+            'permissions': {
+                'export_data': permissions.get('can_export_data', False),
+                'modify_filters': permissions.get('can_modify_filters', True),
+                'view_costs': permissions.get('can_view_costs', True),
+                'view_profits': permissions.get('can_view_profits', False),
             }
+        }
     
     @api.model
     def check_tab_access(self, tab_name, user_id=None):
@@ -163,23 +239,23 @@ class FarmDashboardAccess(models.Model):
         accessible_tabs = []
         
         tab_info = [
-            ('overview', '📊 Overview'),
-            ('projects', '🌱 Projects'),
-            ('crops', '🌾 Crops'),
-            ('financials', '💰 Financials'),
-            ('sales', '🛒 Sales'),
-            ('purchases', '📦 Purchases'),
-            ('inventory', '📋 Inventory'),
-            ('reports', '📈 Reports'),
+            ('overview', '🌾', _('Overview')),
+            ('projects', '🚜', _('Projects')),
+            ('crops', '🌱', _('Crops')),
+            ('financials', '💰', _('Financials')),
+            ('sales', '📊', _('Sales')),
+            ('purchases', '🛒', _('Purchases')),
+            ('inventory', '📦', _('Inventory')),
+            ('reports', '📈', _('Reports')),
         ]
         
-        for tab_key, tab_label in tab_info:
+        for tab_key, tab_icon, tab_name in tab_info:
             if permissions['tabs'].get(tab_key, False):
                 accessible_tabs.append({
                     'key': tab_key,
-                    'label': tab_label,
-                    'icon': tab_label.split()[0],  # Extract emoji
-                    'name': tab_label.split()[1]   # Extract name
+                    'label': f"{tab_icon} {tab_name}",
+                    'icon': tab_icon,
+                    'name': tab_name
                 })
         
         return accessible_tabs

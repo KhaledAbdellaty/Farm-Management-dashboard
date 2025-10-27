@@ -2,6 +2,7 @@
 
 import { Component, useState, onMounted, onWillUnmount } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { _t } from "@web/core/l10n/translation";
 
 export class PurchasesTab extends Component {
     setup() {
@@ -153,11 +154,34 @@ export class PurchasesTab extends Component {
     }
 
     // Utility methods
-    formatCurrency(amount) {
-        return new Intl.NumberFormat('en-US', {
+    formatCurrency(amount) {  
+        // Get currency settings from data if available
+        const currencyData = this.props.data?.currency_data || {
+            currency: 'USD',
+            locale: 'en-US',
+            symbol: '$',
+            position: 'before',
+            decimal_places: 2
+        };
+        
+        // Convert locale from en_US format to en-US format for Intl API
+        const locale = currencyData.locale ? currencyData.locale.replace('_', '-') : 'en-US';
+        
+        // Format with the appropriate number of decimal places
+        const formattedAmount = new Intl.NumberFormat(locale, {
             style: 'currency',
-            currency: 'USD'
+            currency: currencyData.name || currencyData.currency || 'USD',
+            minimumFractionDigits: currencyData.decimal_places || 2,
+            maximumFractionDigits: currencyData.decimal_places || 2
         }).format(amount || 0);
+        
+        // If position is 'after', move the currency symbol
+        if (currencyData.position === 'after') {
+            // Remove the currency symbol from the beginning and add it to the end
+            return formattedAmount.replace(currencyData.symbol, '') + ' ' + currencyData.symbol;
+        }
+        
+        return formattedAmount;
     }
 
     formatNumber(num) {
@@ -197,12 +221,12 @@ export class PurchasesTab extends Component {
 
     getStateLabel(state) {
         const labels = {
-            'draft': 'Draft',
-            'sent': 'RFQ Sent',
-            'to approve': 'To Approve',
-            'purchase': 'Purchase Order',
-            'done': 'Done',
-            'cancel': 'Cancelled'
+            'draft': _t('Draft'),
+            'sent': _t('RFQ Sent'),
+            'to approve': _t('To Approve'),
+            'purchase': _t('Purchase Order'),
+            'done': _t('Done'),
+            'cancel': _t('Cancelled')
         };
         return labels[state] || state;
     }
@@ -247,13 +271,13 @@ export class PurchasesTab extends Component {
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Orders',
+                    label: _t('Orders'),
                     data: orders,
                     borderColor: '#007bff',
                     backgroundColor: 'rgba(0, 123, 255, 0.1)',
                     yAxisID: 'y'
                 }, {
-                    label: 'Amount ($)',
+                    label: _t('Amount ($)'),
                     data: amounts,
                     borderColor: '#28a745',
                     backgroundColor: 'rgba(40, 167, 69, 0.1)',
@@ -327,7 +351,7 @@ export class PurchasesTab extends Component {
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Total Amount ($)',
+                    label: _t('Total Amount ($)'),
                     data: data,
                     backgroundColor: '#007bff'
                 }]
@@ -413,7 +437,7 @@ export class PurchasesTab extends Component {
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Total Amount ($)',
+                    label: _t('Total Amount ($)'),
                     data: data,
                     backgroundColor: '#28a745'
                 }]
@@ -443,12 +467,12 @@ export class PurchasesTab extends Component {
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Count',
+                    label: _t('Count'),
                     data: counts,
                     backgroundColor: '#007bff',
                     yAxisID: 'y'
                 }, {
-                    label: 'Amount ($)',
+                    label: _t('Amount ($)'),
                     data: amounts,
                     backgroundColor: '#28a745',
                     yAxisID: 'y1'
@@ -492,7 +516,7 @@ export class PurchasesTab extends Component {
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Monthly Costs ($)',
+                    label: _t('Monthly Costs ($)'),
                     data: data,
                     borderColor: '#dc3545',
                     backgroundColor: 'rgba(220, 53, 69, 0.1)',
@@ -520,7 +544,7 @@ export class PurchasesTab extends Component {
         this.charts.budgetAnalysisChart = new Chart(canvas, {
             type: 'doughnut',
             data: {
-                labels: ['Spent', 'Remaining'],
+                labels: [_t('Spent'), _t('Remaining')],
                 datasets: [{
                     data: [totalSpent, remaining > 0 ? remaining : 0],
                     backgroundColor: ['#dc3545', '#28a745']

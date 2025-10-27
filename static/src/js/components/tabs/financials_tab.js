@@ -3,9 +3,13 @@
 import { Component, useState, onMounted, onWillUnmount } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
+import { SmartButton } from "../common/smart_button";
 
 export class FinancialsTab extends Component {
     static template = "farm_management_dashboard.FinancialsTabTemplate";
+    static components = {
+        SmartButton,
+    };
     static props = {
         data: Object,
         filters: Object,
@@ -96,6 +100,83 @@ export class FinancialsTab extends Component {
         return this.props.data.summary || {};
     }
     
+    // Quick Actions for Financials Tab
+    get quickActions() {
+        const actions = [
+            { icon: 'fa-plus-circle', label: _t('New Invoice'), type: 'primary', size: 'sm', action: 'account.move', permission: 'can_create_invoices' },
+            // { icon: 'fa-file-text-o', label: _t('New Bill'), type: 'success', size: 'sm', action: 'account.move', permission: 'can_create_bills' },
+            { icon: 'fa-credit-card', label: _t('New Payment'), type: 'primary', size: 'sm', action: 'account.payment', permission: 'can_create_payments' },
+            { icon: 'fa-line-chart', label: _t('Financial Reports'), type: 'secondary', size: 'sm', action: 'account.move', permission: 'can_view_financials' },
+            { icon: 'fa-calculator', label: _t('Budget Planning'), type: 'secondary', size: 'sm', action: 'account.analytic.account', permission: 'can_view_financials' }
+        ];
+        console.log('🔧 Generated quick actions:', actions);
+        return actions;
+    }
+
+    get smartActions() {
+        const actions = [];
+        
+        // Add smart actions based on financial data
+        if (this.props.data?.financial_alerts && Array.isArray(this.props.data.financial_alerts)) {
+            const alerts = this.props.data.financial_alerts;
+            if (alerts.length > 0) {
+                actions.push({
+                    icon: 'fa-exclamation-triangle',
+                    label: _t('Financial Alerts'),
+                    type: 'warning',
+                    size: 'sm',
+                    action: 'account.move',
+                    permission: 'can_view_financials',
+                    filterInfo: {
+                        domain: [['state', 'in', ['draft', 'posted']]],
+                        context: { 'search_default_alerts': 1 }
+                    }
+                });
+            }
+        }
+
+        // Check for overdue invoices
+        if (this.props.data?.aged_analysis && Array.isArray(this.props.data.aged_analysis)) {
+            const overdueInvoices = this.props.data.aged_analysis.filter(item => item.overdue_amount > 0);
+            if (overdueInvoices.length > 0) {
+                actions.push({
+                    icon: 'fa-clock-o',
+                    label: _t('Overdue Invoices'),
+                    type: 'danger',
+                    size: 'sm',
+                    action: 'account.move',
+                    permission: 'can_view_financials',
+                    filterInfo: {
+                        domain: [['invoice_date_due', '<', new Date().toISOString().split('T')[0]]],
+                        context: { 'search_default_overdue': 1 }
+                    }
+                });
+            }
+        }
+
+        // Check for high-value transactions
+        if (this.props.data?.financial_kpis) {
+            const kpis = this.props.data.financial_kpis;
+            if (kpis.total_revenue > 10000) {
+                actions.push({
+                    icon: 'fa-dollar',
+                    label: _t('High Value Transactions'),
+                    type: 'success',
+                    size: 'sm',
+                    action: 'account.move',
+                    permission: 'can_view_financials',
+                    filterInfo: {
+                        domain: [['amount_total', '>', 1000]],
+                        context: { 'search_default_high_value': 1 }
+                    }
+                });
+            }
+        }
+        
+        console.log('🔧 Generated smart actions:', actions);
+        return actions;
+    }
+    
     // ===== VIEW METHODS =====
     
     onChangeView(view) {
@@ -121,43 +202,73 @@ export class FinancialsTab extends Component {
         // Simplified for now
     }
     
+    // ===== UTILITY METHODS =====
+    
+    formatNumber(value) {
+        if (value === null || value === undefined) return '0';
+        return Number(value).toLocaleString(undefined, { 
+            minimumFractionDigits: 1, 
+            maximumFractionDigits: 1 
+        });
+    }
+    
+    formatCurrency(value) {
+        if (value === null || value === undefined) return '$0.00';
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }).format(Number(value));
+    }
+    
+    formatPercentage(value) {
+        if (value === null || value === undefined) return '0%';
+        return Number(value).toFixed(1) + '%';
+    }
+    
     // ===== CHART METHODS =====
     
     renderFinancialCharts() {
         setTimeout(() => {
-            if (this.state.selectedView === 'overview') {
-                this.renderRevenueExpenseChart();
-                this.renderAgedAnalysisChart();
-            } else if (this.state.selectedView === 'analytical_accounts') {
-                this.renderAnalyticalAccountsChart();
-            } else if (this.state.selectedView === 'invoices_bills') {
-                this.renderInvoicesBillsChart();
-                this.renderInvoicesStatusChart();
-            } else if (this.state.selectedView === 'cash_flow') {
-                this.renderCashFlowChart();
-                this.renderPaymentMethodsChart();
-            } else if (this.state.selectedView === 'financial_statements') {
-                this.renderProfitLossChart();
-                this.renderBalanceSheetChart();
+            try {
+                if (this.state.selectedView === 'overview') {
+                    this.renderRevenueExpenseChart();
+                    this.renderAgedAnalysisChart();
+                } else if (this.state.selectedView === 'analytical_accounts') {
+                    this.renderAnalyticalAccountsChart();
+                } else if (this.state.selectedView === 'invoices_bills') {
+                    this.renderInvoicesBillsChart();
+                    this.renderInvoicesStatusChart();
+                } else if (this.state.selectedView === 'cash_flow') {
+                    this.renderCashFlowChart();
+                    this.renderPaymentMethodsChart();
+                } else if (this.state.selectedView === 'financial_statements') {
+                    this.renderProfitLossChart();
+                    this.renderBalanceSheetChart();
+                }
+            } catch (error) {
+                console.error('Error rendering financial charts:', error);
             }
         }, 100);
     }
     
     renderRevenueExpenseChart() {
-        const canvas = document.getElementById('revenueExpenseChart');
-        if (!canvas) return;
-        
-        if (this.charts.revenueExpense) {
-            this.charts.revenueExpense.destroy();
-        }
-        
-        const ctx = canvas.getContext('2d');
-        this.charts.revenueExpense = new Chart(ctx, {
+        try {
+            const canvas = document.getElementById('revenueExpenseChart');
+            if (!canvas) return;
+            
+            if (this.charts.revenueExpense) {
+                this.charts.revenueExpense.destroy();
+            }
+            
+            const ctx = canvas.getContext('2d');
+            this.charts.revenueExpense = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['Revenue', 'Expenses', 'Net Income'],
+                labels: [_t('Revenue'), _t('Expenses'), _t('Net Income')],
                 datasets: [{
-                    label: 'Amount',
+                    label: _t('Amount'),
                     data: [
                         this.summary.total_revenue || 0,
                         this.summary.total_expenses || 0,
@@ -176,7 +287,7 @@ export class FinancialsTab extends Component {
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Revenue vs Expenses Analysis'
+                        text: _t('Revenue vs Expenses Analysis')
                     }
                 },
                 scales: {
@@ -191,6 +302,9 @@ export class FinancialsTab extends Component {
                 }
             }
         });
+        } catch (error) {
+            console.error('Error creating revenue expense chart:', error);
+        }
     }
     
     renderAgedAnalysisChart() {
@@ -210,10 +324,10 @@ export class FinancialsTab extends Component {
         this.charts.agedAnalysis = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['0-30 Days', '31-60 Days', '61-90 Days', '90+ Days'],
+                labels: [_t('0-30 Days'), _t('31-60 Days'), _t('61-90 Days'), _t('90+ Days')],
                 datasets: [
                     {
-                        label: 'Receivables',
+                        label: _t('Receivables'),
                         data: [
                             receivables['0-30'] || 0,
                             receivables['31-60'] || 0,
@@ -223,7 +337,7 @@ export class FinancialsTab extends Component {
                         backgroundColor: 'rgba(75, 192, 192, 0.8)'
                     },
                     {
-                        label: 'Payables',
+                        label: _t('Payables'),
                         data: [
                             -(payables['0-30'] || 0),
                             -(payables['31-60'] || 0),
@@ -240,7 +354,7 @@ export class FinancialsTab extends Component {
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Aged Receivables & Payables'
+                        text: _t('Aged Receivables & Payables')
                     }
                 },
                 scales: {
@@ -274,7 +388,7 @@ export class FinancialsTab extends Component {
             data: {
                 labels: accounts.map(a => a.name),
                 datasets: [{
-                    label: 'Balance',
+                    label: _t('Balance'),
                     data: accounts.map(a => a.balance),
                     backgroundColor: accounts.map(a => a.balance >= 0 ? 'rgba(75, 192, 192, 0.8)' : 'rgba(255, 99, 132, 0.8)')
                 }]
@@ -286,7 +400,7 @@ export class FinancialsTab extends Component {
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Analytical Accounts Balance'
+                        text: _t('Analytical Accounts Balance')
                     }
                 },
                 scales: {
@@ -321,14 +435,14 @@ export class FinancialsTab extends Component {
                 labels: dailyData.map(([date]) => date),
                 datasets: [
                     {
-                        label: 'Inbound',
+                        label: _t('Inbound'),
                         data: dailyData.map(([, data]) => data.inbound),
                         borderColor: 'rgba(75, 192, 192, 1)',
                         backgroundColor: 'rgba(75, 192, 192, 0.1)',
                         fill: false
                     },
                     {
-                        label: 'Outbound',
+                        label: _t('Outbound'),
                         data: dailyData.map(([, data]) => -data.outbound),
                         borderColor: 'rgba(255, 99, 132, 1)',
                         backgroundColor: 'rgba(255, 99, 132, 0.1)',
@@ -342,7 +456,7 @@ export class FinancialsTab extends Component {
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Daily Cash Flow (Last 30 Days)'
+                        text: _t('Daily Cash Flow (Last 30 Days)')
                     }
                 },
                 scales: {
@@ -390,14 +504,14 @@ export class FinancialsTab extends Component {
                 labels: labels,
                 datasets: [
                     {
-                        label: 'Invoices',
+                        label: _t('Invoices'),
                         data: invoiceData,
                         borderColor: 'rgba(75, 192, 192, 1)',
                         backgroundColor: 'rgba(75, 192, 192, 0.2)',
                         tension: 0.4
                     },
                     {
-                        label: 'Bills',
+                        label: _t('Bills'),
                         data: billData,
                         borderColor: 'rgba(255, 99, 132, 1)',
                         backgroundColor: 'rgba(255, 99, 132, 0.2)',
@@ -411,7 +525,7 @@ export class FinancialsTab extends Component {
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Monthly Invoice & Bill Trends'
+                        text: _t('Monthly Invoice & Bill Trends')
                     }
                 },
                 scales: {
@@ -438,9 +552,9 @@ export class FinancialsTab extends Component {
         // Create status distribution from available data
         const invoices = this.invoicesBills.customer_invoices;
         const bills = this.invoicesBills.vendor_bills || {};
-        
+
         const statusData = {
-            labels: ['Invoices', 'Bills'],
+            labels: [_t('Invoices'), _t('Bills')],
             data: [invoices.count || 0, bills.count || 0]
         };
         
@@ -547,11 +661,11 @@ export class FinancialsTab extends Component {
     
     getInvoiceStatusLabel(state) {
         const statusLabels = {
-            'draft': 'Draft',
-            'open': 'Open',
-            'in_payment': 'In Payment',
-            'paid': 'Paid',
-            'cancel': 'Cancelled'
+            'draft': _t('Draft'),
+            'open': _t('Open'),
+            'in_payment': _t('In Payment'),
+            'paid': _t('Paid'),
+            'cancel': _t('Cancelled')
         };
         return statusLabels[state] || state.charAt(0).toUpperCase() + state.slice(1);
     }
@@ -569,24 +683,45 @@ export class FinancialsTab extends Component {
     
     getPaymentStatusLabel(state) {
         const statusLabels = {
-            'draft': 'Draft',
-            'posted': 'Posted',
-            'sent': 'Sent',
-            'reconciled': 'Reconciled',
-            'cancelled': 'Cancelled'
+            'draft': _t('Draft'),
+            'posted': _t('Posted'),
+            'sent': _t('Sent'),
+            'reconciled': _t('Reconciled'),
+            'cancelled': _t('Cancelled')
         };
         return statusLabels[state] || state.charAt(0).toUpperCase() + state.slice(1);
     }
     
     // ===== UTILITY METHODS =====
     
-    formatCurrency(amount) {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
+    formatCurrency(amount) {  
+        // Get currency settings from data if available
+        const currencyData = this.props.data?.currency_data || {
             currency: 'USD',
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
+            locale: 'en-US',
+            symbol: '$',
+            position: 'before',
+            decimal_places: 2
+        };
+        
+        // Convert locale from en_US format to en-US format for Intl API
+        const locale = currencyData.locale ? currencyData.locale.replace('_', '-') : 'en-US';
+        
+        // Format with the appropriate number of decimal places
+        const formattedAmount = new Intl.NumberFormat(locale, {
+            style: 'currency',
+            currency: currencyData.name || currencyData.currency || 'USD',
+            minimumFractionDigits: currencyData.decimal_places || 2,
+            maximumFractionDigits: currencyData.decimal_places || 2
         }).format(amount || 0);
+        
+        // If position is 'after', move the currency symbol
+        if (currencyData.position === 'after') {
+            // Remove the currency symbol from the beginning and add it to the end
+            return formattedAmount.replace(currencyData.symbol, '') + ' ' + currencyData.symbol;
+        }
+        
+        return formattedAmount;
     }
     
     formatNumber(number, decimals = 2) {

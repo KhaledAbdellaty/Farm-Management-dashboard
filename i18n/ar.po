@@ -1,0 +1,4034 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* farm_management_dashboard
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-26 18:21+0000\n"
+"PO-Revision-Date: 2025-10-26 18:21+0000\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: Arabic\n"
+"Language: ar_001\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "$%(amount).2f in receivables over 90 days"
+msgstr "%(amount).2f$ في المستحقات أكثر من 90 يوماً"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "%(projects_count)s projects are running smoothly."
+msgstr "%(projects_count)s مشروع يعمل بسلاسة."
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+msgid "0-30 Days"
+msgstr "0-30 يوم"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "10 per page"
+msgstr "10 لكل صفحة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "25 per page"
+msgstr "25 لكل صفحة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "30 Days"
+msgstr "30 يوم"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "30_days"
+msgstr "30_يوم"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+msgid "31-60 Days"
+msgstr "31-60 يوم"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "5 per page"
+msgstr "5 لكل صفحة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "50 per page"
+msgstr "50 لكل صفحة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+msgid "61-90 Days"
+msgstr "61-90 يوم"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "7 Days"
+msgstr "7 أيام"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "7_days"
+msgstr "7_أيام"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "90 Days"
+msgstr "90 يوم"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+msgid "90+ Days"
+msgstr "90+ يوم"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "90_days"
+msgstr "90_يوم"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "A/P Turnover"
+msgstr "معدل دوران الحسابات الدائنة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "A/R Turnover"
+msgstr "معدل دوران الحسابات المدينة"
+
+#. module: farm_management_dashboard
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard__access_level
+msgid "Access Level"
+msgstr "مستوى الوصول"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/farm_dashboard.py:0
+msgid "Access denied: %s"
+msgstr "تم رفض الوصول: %s"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Account"
+msgstr "حساب"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Account Summary"
+msgstr "ملخص الحساب"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/sidebar/dashboard_sidebar.js:0
+#: model:ir.model.fields.selection,name:farm_management_dashboard.selection__farm_dashboard_access__role__accountant
+msgid "Accountant"
+msgstr "محاسب"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Actions"
+msgstr "إجراءات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard__active
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard_access__active
+msgid "Active"
+msgstr "نشط"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/crops_tab.js:0
+msgid "Active Crops"
+msgstr "المحاصيل النشطة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/overview_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/xml/components/overview_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Active Projects"
+msgstr "المشاريع النشطة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Active Suppliers"
+msgstr "الموردين النشطين"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Activities"
+msgstr "الأنشطة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Activity for %s"
+msgstr "نشاط لـ %s"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Actual Cost"
+msgstr "التكلفة الفعلية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Actual Cost:"
+msgstr "التكلفة الفعلية:"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Actual:"
+msgstr "فعلي:"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Add Note"
+msgstr "إضافة ملاحظة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Add Report"
+msgstr "إضافة تقرير"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Administrator"
+msgstr "مدير النظام"
+
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+msgid "Aged Receivables & Payables"
+msgstr "الذمم والديون المتقادمة"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Alert System"
+msgstr "نظام التنبيهات"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Alert monitoring is active but encountered an issue."
+msgstr "مراقبة التنبيهات نشطة ولكن واجهت مشكلة."
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/components/overview_tab.xml:0
+msgid "Alerts"
+msgstr "التنبيهات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "All Locations"
+msgstr "جميع المواقع"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "All Status"
+msgstr "جميع الحالات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "All Suppliers"
+msgstr "جميع الموردين"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "All Systems Normal"
+msgstr "جميع الأنظمة طبيعية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "All financial indicators are healthy"
+msgstr "جميع المؤشرات المالية صحية"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "All systems are operational and ready for farm management."
+msgstr "جميع الأنظمة تعمل وجاهزة لإدارة المزرعة."
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/components/overview_tab.xml:0
+msgid "All systems normal"
+msgstr "جميع الأنظمة طبيعية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Amount"
+msgstr "المبلغ"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/purchases_tab.js:0
+msgid "Amount ($)"
+msgstr "المبلغ ($)"
+
+#. module: farm_management_dashboard
+#: model:ir.model,name:farm_management_dashboard.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "الخط التحليلي"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Analytical Account Balances"
+msgstr "أرصدة الحسابات التحليلية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Analytical Accounts"
+msgstr "الحسابات التحليلية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+msgid "Analytical Accounts Balance"
+msgstr "رصيد الحسابات التحليلية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Analytical Accounts Details"
+msgstr "تفاصيل الحسابات التحليلية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/reports_tab.xml:0
+msgid "Analytics dashboard"
+msgstr "لوحة قيادة التحليلات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Apply"
+msgstr "تطبيق"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Approval Rate"
+msgstr "معدل الموافقة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Approve"
+msgstr "موافقة"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Apr 2024"
+msgstr "أبريل 2024"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+msgid "Area"
+msgstr "المساحة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+msgid "Area (Ha)"
+msgstr "المساحة (فدان)"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "As of today"
+msgstr "حتى اليوم"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Asset Turnover"
+msgstr "معدل دوران الأصول"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Assets"
+msgstr "الأصول"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Assigned"
+msgstr "معين"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Aug 2024"
+msgstr "أغسطس 2024"
+
+#. module: farm_management_dashboard
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard__auto_refresh
+msgid "Auto Refresh"
+msgstr "تحديث تلقائي"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Autumn %(year)s"
+msgstr "خريف %(year)s"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Available Qty"
+msgstr "الكمية المتاحة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Avg Order Value"
+msgstr "متوسط قيمة الطلب"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Avg Price"
+msgstr "متوسط السعر"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Avg Processing Time"
+msgstr "متوسط وقت المعالجة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+msgid "Avg Yield/Ha"
+msgstr "متوسط الإنتاج/فدان"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+msgid "BOMs Available:"
+msgstr "قوائم المواد المتاحة:"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Balance"
+msgstr "الرصيد"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Balance Sheet"
+msgstr "الميزانية العمومية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Basic Information"
+msgstr "المعلومات الأساسية"
+
+#. module: farm_management_dashboard
+#: model:res.groups,comment:farm_management_dashboard.group_farm_dashboard_access
+msgid "Basic access to farm dashboard"
+msgstr "وصول أساسي للوحة قيادة المزرعة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Bills"
+msgstr "الفواتير"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Budget"
+msgstr "الميزانية"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Budget Overrun"
+msgstr "تجاوز الميزانية"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Budget Overrun: %(project_name)s"
+msgstr "تجاوز الميزانية: %(project_name)s"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Budget Overrun: Tomato Greenhouse"
+msgstr "تجاوز الميزانية: بيت زجاجي طماطم"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+msgid "Budget Planning"
+msgstr "تخطيط الميزانية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Budget Target"
+msgstr "هدف الميزانية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/components/overview_tab.xml:0
+msgid "Budget Usage"
+msgstr "استخدام الميزانية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Budget Used"
+msgstr "الميزانية المستخدمة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Budget Utilization"
+msgstr "استغلال الميزانية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Budget Variance"
+msgstr "انحراف الميزانية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Budget Variance:"
+msgstr "انحراف الميزانية:"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Budget is automatically calculated based on the selected Crop BOM"
+msgstr "يتم حساب الميزانية تلقائياً بناءً على قائمة مواد المحصول المختارة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Budget vs. Actual Cost"
+msgstr "الميزانية مقابل التكلفة الفعلية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Budget:"
+msgstr "الميزانية:"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "By:"
+msgstr "بواسطة:"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Cancel"
+msgstr "إلغاء"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/purchases_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Cancelled"
+msgstr "ملغى"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+msgid "Cards"
+msgstr "البطاقات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Cash Balance"
+msgstr "رصيد النقد"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Cash Flow"
+msgstr "التدفق النقدي"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Cash Flow Statement"
+msgstr "قائمة التدفق النقدي"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Category"
+msgstr "الفئة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Category Analysis"
+msgstr "تحليل الفئات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Category Value"
+msgstr "قيمة الفئة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Clear"
+msgstr "مسح"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Clear Filters"
+msgstr "مسح المرشحات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Click to"
+msgstr "انقر لـ"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Close"
+msgstr "إغلاق"
+
+#. module: farm_management_dashboard
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard__company_id
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard_access__company_id
+msgid "Company"
+msgstr "الشركة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Completed"
+msgstr "مكتمل"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Completion"
+msgstr "الإنجاز"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Completion Rate"
+msgstr "معدل الإنجاز"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/reports_tab.xml:0
+msgid ""
+"Comprehensive reporting and analytics features will be implemented here."
+msgstr "سيتم تنفيذ ميزات التقارير والتحليلات الشاملة هنا."
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Confirmed"
+msgstr "مؤكد"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Contact"
+msgstr "جهة الاتصال"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Contact Information"
+msgstr "معلومات الاتصال"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Conversion Rates"
+msgstr "معدلات التحويل"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Corn"
+msgstr "الذرة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Cost Analysis"
+msgstr "تحليل التكاليف"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Cost Breakdown"
+msgstr "تفصيل التكاليف"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+msgid "Cost Efficiency"
+msgstr "كفاءة التكلفة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Cost Savings"
+msgstr "وفورات التكلفة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/components/overview_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Cost Trends"
+msgstr "اتجاهات التكلفة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Cost of Goods Sold"
+msgstr "تكلفة البضائع المباعة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/inventory_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/purchases_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/sales_tab.js:0
+msgid "Count"
+msgstr "العدد"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Create New Project"
+msgstr "إنشاء مشروع جديد"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Create Project"
+msgstr "إنشاء مشروع"
+
+#. module: farm_management_dashboard
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard__create_uid
+msgid "Created By"
+msgstr "منشأ بواسطة"
+
+#. module: farm_management_dashboard
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard__create_date
+msgid "Created On"
+msgstr "تاريخ الإنشاء"
+
+#. module: farm_management_dashboard
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard_access__create_uid
+msgid "Created by"
+msgstr "منشأ بواسطة"
+
+#. module: farm_management_dashboard
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard_access__create_date
+msgid "Created on"
+msgstr "تاريخ الإنشاء"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Creating..."
+msgstr "جاري الإنشاء..."
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Credit"
+msgstr "دائن"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Crop"
+msgstr "المحصول"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Crop BOM (Bill of Materials)"
+msgstr "قائمة مواد المحصول (قائمة المواد)"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/crops_tab.js:0
+msgid "Crop BOMs"
+msgstr "قوائم مواد المحاصيل"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+msgid "Crop Information"
+msgstr "معلومات المحصول"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+msgid "Crop Management & Analysis"
+msgstr "إدارة وتحليل المحاصيل"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Crop harvesting and yield measurement"
+msgstr "حصاد المحصول وقياس الإنتاج"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Crop planting and initial growth monitoring"
+msgstr "زراعة المحصول ومراقبة النمو الأولي"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Crop:"
+msgstr "المحصول:"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/dashboard_main.js:0
+#: model:ir.model.fields.selection,name:farm_management_dashboard.selection__farm_dashboard__dashboard_type__crops
+msgid "Crops"
+msgstr "المحاصيل"
+
+#. module: farm_management_dashboard
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard_access__can_access_crops
+msgid "Crops Access"
+msgstr "الوصول للمحاصيل"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/crops_tab.js:0
+msgid "Crops Needing Attention"
+msgstr "محاصيل تحتاج اهتمام"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Crops Sold"
+msgstr "المحاصيل المباعة"
+
+#. module: farm_management_dashboard
+#: model:ir.model,name:farm_management_dashboard.model_farm_cultivation_project
+msgid "Cultivation Project"
+msgstr "مشروع زراعي"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Cultivation Projects"
+msgstr "المشاريع الزراعية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Current Assets"
+msgstr "الأصول المتداولة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Current Cash Position"
+msgstr "الوضع النقدي الحالي"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Current Liabilities"
+msgstr "الخصوم المتداولة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Current Ratio"
+msgstr "النسبة الجارية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Custom Range"
+msgstr "نطاق مخصص"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Customer"
+msgstr "العميل"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/sales_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Customer Segments"
+msgstr "شرائح العملاء"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Customers"
+msgstr "العملاء"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+msgid "Daily Cash Flow (Last 30 Days)"
+msgstr "التدفق النقدي اليومي (آخر 30 يوم)"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Daily Cash Flow Trends"
+msgstr "اتجاهات التدفق النقدي اليومي"
+
+#. module: farm_management_dashboard
+#: model:ir.model,name:farm_management_dashboard.model_farm_daily_report
+msgid "Daily Farm Operation Report"
+msgstr "تقرير عمليات المزرعة اليومي"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Daily Reports"
+msgstr "التقارير اليومية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+#: model:ir.ui.menu,name:farm_management_dashboard.menu_farm_management_dashboard
+msgid "Dashboard"
+msgstr "لوحة القيادة"
+
+#. module: farm_management_dashboard
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard__name
+msgid "Dashboard Name"
+msgstr "اسم لوحة القيادة"
+
+#. module: farm_management_dashboard
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard_access__role
+msgid "Dashboard Role"
+msgstr "دور لوحة القيادة"
+
+#. module: farm_management_dashboard
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard__dashboard_type
+msgid "Dashboard Type"
+msgstr "نوع لوحة القيادة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/dashboard_main.js:0
+msgid "Dashboard Warning"
+msgstr "تحذير لوحة القيادة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/dashboard_main.js:0
+msgid "Dashboard filters updated"
+msgstr "تم تحديث مرشحات لوحة القيادة"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid ""
+"Dashboard is running with sample data. Create cultivation projects to see "
+"real data."
+msgstr "لوحة القيادة تعمل ببيانات عينة. أنشئ مشاريع زراعية لرؤية بيانات حقيقية."
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/dashboard_main.js:0
+msgid "Dashboard loaded with limited functionality"
+msgstr "تم تحميل لوحة القيادة بوظائف محدودة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/dashboard_main.js:0
+msgid "Data exported successfully"
+msgstr "تم تصدير البيانات بنجاح"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Date"
+msgstr "التاريخ"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Date Range"
+msgstr "نطاق التاريخ"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Days Pending"
+msgstr "أيام معلقة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Days Remaining"
+msgstr "الأيام المتبقية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Days Remaining:"
+msgstr "الأيام المتبقية:"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Days Running:"
+msgstr "أيام التشغيل:"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Debit"
+msgstr "مدين"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Deliveries"
+msgstr "التسليمات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Delivery"
+msgstr "التسليم"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/dashboard_main.js:0
+msgid "Demo Mode"
+msgstr "وضع العرض التوضيحي"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Demo Mode Active"
+msgstr "وضع العرض التوضيحي نشط"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Description"
+msgstr "الوصف"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Details"
+msgstr "التفاصيل"
+
+#. module: farm_management_dashboard
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard__display_name
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard_access__display_name
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard_data__display_name
+msgid "Display Name"
+msgstr "اسم العرض"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Document"
+msgstr "المستند"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/purchases_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Done"
+msgstr "منجز"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/purchases_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Draft"
+msgstr "مسودة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Due Date"
+msgstr "تاريخ الاستحقاق"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Edit"
+msgstr "تحرير"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Edit Project"
+msgstr "تحرير المشروع"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+msgid "Efficiency Metrics"
+msgstr "مقاييس الكفاءة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Efficiency Ratios"
+msgstr "نسب الكفاءة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Email:"
+msgstr "البريد الإلكتروني:"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "End:"
+msgstr "النهاية:"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Enter project description..."
+msgstr "أدخل وصف المشروع..."
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Enter project name..."
+msgstr "أدخل اسم المشروع..."
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Equipment"
+msgstr "المعدات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/dashboard_main.xml:0
+msgid "Error loading data:"
+msgstr "خطأ في تحميل البيانات:"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Error loading project reports"
+msgstr "خطأ في تحميل تقارير المشروع"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Estimated"
+msgstr "مقدر"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Expected project completion date"
+msgstr "تاريخ إنجاز المشروع المتوقع"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Expected revenue opportunity in next 30 days"
+msgstr "فرصة إيرادات متوقعة في الـ 30 يوماً القادمة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Expenses"
+msgstr "المصروفات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/dashboard_main.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Export"
+msgstr "تصدير"
+
+#. module: farm_management_dashboard
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard_access__can_export_data
+msgid "Export Data"
+msgstr "تصدير البيانات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Failed to create project"
+msgstr "فشل في إنشاء المشروع"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/dashboard_main.js:0
+msgid "Failed to export data"
+msgstr "فشل في تصدير البيانات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Farm"
+msgstr "المزرعة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Farm & Field"
+msgstr "المزرعة والحقل"
+
+#. module: farm_management_dashboard
+#: model:res.groups,name:farm_management_dashboard.group_farm_accountant
+msgid "Farm Accountant"
+msgstr "محاسب المزرعة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/dashboard_main.js:0
+#: code:addons/farm_management_dashboard/static/src/xml/dashboard_main.xml:0
+msgid "Farm Dashboard"
+msgstr "لوحة قيادة المزرعة"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/farm_dashboard.py:0
+msgid "Farm Dashboard - %s"
+msgstr "لوحة قيادة المزرعة - %s"
+
+#. module: farm_management_dashboard
+#: model:res.groups,name:farm_management_dashboard.group_farm_dashboard_access
+msgid "Farm Dashboard Access"
+msgstr "الوصول للوحة قيادة المزرعة"
+
+#. module: farm_management_dashboard
+#: model:ir.model,name:farm_management_dashboard.model_farm_dashboard_access
+msgid "Farm Dashboard Access Control"
+msgstr "تحكم الوصول للوحة قيادة المزرعة"
+
+#. module: farm_management_dashboard
+#: model:ir.model,name:farm_management_dashboard.model_farm_dashboard_bus_handlers
+msgid "Farm Dashboard Bus Handlers"
+msgstr "معالجات ناقل لوحة قيادة المزرعة"
+
+#. module: farm_management_dashboard
+#: model:ir.model,name:farm_management_dashboard.model_farm_dashboard_data
+msgid "Farm Dashboard Data Aggregation"
+msgstr "تجميع بيانات لوحة قيادة المزرعة"
+
+#. module: farm_management_dashboard
+#: model:ir.model,name:farm_management_dashboard.model_farm_dashboard_kpi
+msgid "Farm Dashboard KPI Calculations"
+msgstr "حسابات مؤشرات الأداء للوحة قيادة المزرعة"
+
+#. module: farm_management_dashboard
+#: model:ir.actions.client,name:farm_management_dashboard.action_farm_management_dashboard_client
+#: model:ir.model,name:farm_management_dashboard.model_farm_dashboard
+msgid "Farm Management Dashboard"
+msgstr "لوحة قيادة إدارة المزرعة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/sidebar/dashboard_sidebar.js:0
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+#: model:ir.model.fields.selection,name:farm_management_dashboard.selection__farm_dashboard_access__role__manager
+#: model:res.groups,name:farm_management_dashboard.group_farm_manager
+msgid "Farm Manager"
+msgstr "مدير المزرعة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/sidebar/dashboard_sidebar.js:0
+#: model:ir.model.fields.selection,name:farm_management_dashboard.selection__farm_dashboard_access__role__owner
+#: model:res.groups,name:farm_management_dashboard.group_farm_owner
+msgid "Farm Owner"
+msgstr "مالك المزرعة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Farm Worker"
+msgstr "عامل المزرعة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Farm:"
+msgstr "المزرعة:"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Fertilizer"
+msgstr "الأسمدة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Fertilizing"
+msgstr "التسميد"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Field"
+msgstr "الحقل"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Field Preparation"
+msgstr "تحضير الحقل"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Field:"
+msgstr "الحقل:"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Filters"
+msgstr "المرشحات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Financial Alerts"
+msgstr "التنبيهات المالية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Financial Analysis & Reporting"
+msgstr "التحليل والتقارير المالية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Financial Overview"
+msgstr "النظرة العامة المالية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+msgid "Financial Reports"
+msgstr "التقارير المالية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Financial Statements"
+msgstr "القوائم المالية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Financial Summary"
+msgstr "الملخص المالي"
+
+#. module: farm_management_dashboard
+#: model:res.groups,comment:farm_management_dashboard.group_farm_accountant
+msgid "Financial access to farm dashboard"
+msgstr "الوصول المالي للوحة قيادة المزرعة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/reports_tab.xml:0
+msgid "Financial reports"
+msgstr "التقارير المالية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/dashboard_main.js:0
+#: model:ir.model.fields.selection,name:farm_management_dashboard.selection__farm_dashboard__dashboard_type__financials
+msgid "Financials"
+msgstr "المالية"
+
+#. module: farm_management_dashboard
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard_access__can_access_financials
+msgid "Financials Access"
+msgstr "الوصول للمالية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Financing Activities"
+msgstr "أنشطة التمويل"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "From Location"
+msgstr "من الموقع"
+
+#. module: farm_management_dashboard
+#: model:res.groups,comment:farm_management_dashboard.group_farm_owner
+msgid "Full access to all farm dashboard features"
+msgstr "وصول كامل لجميع ميزات لوحة قيادة المزرعة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Gross Margin"
+msgstr "الهامش الإجمالي"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Growing"
+msgstr "النمو"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+msgid "Growing Cycle:"
+msgstr "دورة النمو:"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Growing Projects"
+msgstr "مشاريع النمو"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Harvest"
+msgstr "الحصاد"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Harvest Phase"
+msgstr "مرحلة الحصاد"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Harvest Projects"
+msgstr "مشاريع الحصاد"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Harvest Revenue by Crop"
+msgstr "إيرادات الحصاد حسب المحصول"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Harvest Sales"
+msgstr "مبيعات الحصاد"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Harvest Summary"
+msgstr "ملخص الحصاد"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/inventory_tab.js:0
+msgid "High Value Items"
+msgstr "عناصر عالية القيمة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+msgid "High Value Transactions"
+msgstr "معاملات عالية القيمة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/crops_tab.js:0
+msgid "High Yield Crops"
+msgstr "محاصيل عالية الإنتاج"
+
+#. module: farm_management_dashboard
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard__id
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard_access__id
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard_data__id
+msgid "ID"
+msgstr "المعرف"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/inventory_tab.js:0
+msgid "In"
+msgstr "داخل"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+msgid "In Payment"
+msgstr "قيد الدفع"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/inventory_tab.js:0
+msgid "In Stock"
+msgstr "في المخزن"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+msgid "Inbound"
+msgstr "وارد"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Inspection"
+msgstr "التفتيش"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Invalid project ID for editing"
+msgstr "معرف مشروع غير صحيح للتحرير"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Invalid project ID for reports"
+msgstr "معرف مشروع غير صحيح للتقارير"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/dashboard_main.js:0
+#: model:ir.model.fields.selection,name:farm_management_dashboard.selection__farm_dashboard__dashboard_type__inventory
+msgid "Inventory"
+msgstr "المخزون"
+
+#. module: farm_management_dashboard
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard_access__can_access_inventory
+msgid "Inventory Access"
+msgstr "الوصول للمخزون"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Inventory Management"
+msgstr "إدارة المخزون"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Inventory Metrics"
+msgstr "مقاييس المخزون"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/inventory_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Inventory Reports"
+msgstr "تقارير المخزون"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Inventory Valuation"
+msgstr "تقييم المخزون"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Investing Activities"
+msgstr "أنشطة الاستثمار"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Invoices"
+msgstr "الفواتير"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Invoices & Bills"
+msgstr "الفواتير والفواتير"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Irrigation"
+msgstr "الري"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Jul 2024"
+msgstr "يوليو 2024"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Jun 2024"
+msgstr "يونيو 2024"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Key Metrics"
+msgstr "المقاييس الرئيسية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Labor"
+msgstr "العمالة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Last 30 Days"
+msgstr "آخر 30 يوم"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Last 7 Days"
+msgstr "آخر 7 أيام"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Last 90 Days"
+msgstr "آخر 90 يوم"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Last Order"
+msgstr "آخر طلب"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Last Order:"
+msgstr "آخر طلب:"
+
+#. module: farm_management_dashboard
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard__write_date
+msgid "Last Updated"
+msgstr "آخر تحديث"
+
+#. module: farm_management_dashboard
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard__write_uid
+msgid "Last Updated By"
+msgstr "آخر تحديث بواسطة"
+
+#. module: farm_management_dashboard
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard_access__write_uid
+msgid "Last Updated by"
+msgstr "آخر تحديث بواسطة"
+
+#. module: farm_management_dashboard
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard_access__write_date
+msgid "Last Updated on"
+msgstr "آخر تحديث في"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/dashboard_main.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Last updated:"
+msgstr "آخر تحديث:"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Liabilities"
+msgstr "الخصوم"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Liquidity Ratios"
+msgstr "نسب السيولة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/dashboard_main.xml:0
+msgid "Live"
+msgstr "مباشر"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/dashboard_main.xml:0
+msgid "Live Refresh"
+msgstr "تحديث مباشر"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/dashboard_main.js:0
+msgid "Live refresh disabled"
+msgstr "تم تعطيل التحديث المباشر"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/dashboard_main.js:0
+msgid "Live refresh enabled"
+msgstr "تم تفعيل التحديث المباشر"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/dashboard_main.xml:0
+msgid "Loading"
+msgstr "جاري التحميل"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/dashboard_main.xml:0
+msgid "Loading Farm Dashboard..."
+msgstr "جاري تحميل لوحة قيادة المزرعة..."
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Loading project reports..."
+msgstr "جاري تحميل تقارير المشروع..."
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/components/smart_button.xml:0
+msgid "Loading..."
+msgstr "جاري التحميل..."
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Location"
+msgstr "الموقع"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Low Profitability: %(project_name)s"
+msgstr "ربحية منخفضة: %(project_name)s"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Low Profitability: Tomato Greenhouse"
+msgstr "ربحية منخفضة: بيت زجاجي طماطم"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/inventory_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Low Stock"
+msgstr "مخزون منخفض"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/inventory_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/overview_tab.js:0
+msgid "Low Stock Alerts"
+msgstr "تنبيهات المخزون المنخفض"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/inventory_tab.js:0
+msgid "Low Stock Items"
+msgstr "عناصر المخزون المنخفض"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Maintenance"
+msgstr "الصيانة"
+
+#. module: farm_management_dashboard
+#: model:ir.model,name:farm_management_dashboard.model_maintenance_request
+msgid "Maintenance Request"
+msgstr "طلب صيانة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/overview_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Manage Farms"
+msgstr "إدارة المزارع"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/overview_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Manage Fields"
+msgstr "إدارة الحقول"
+
+#. module: farm_management_dashboard
+#: model:ir.model.fields.selection,name:farm_management_dashboard.selection__farm_dashboard__access_level__manager
+msgid "Manager"
+msgstr "مدير"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Manager:"
+msgstr "المدير:"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Market Share"
+msgstr "حصة السوق"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "May 2024"
+msgstr "مايو 2024"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Method"
+msgstr "الطريقة"
+
+#. module: farm_management_dashboard
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard_access__can_modify_filters
+msgid "Modify Global Filters"
+msgstr "تعديل المرشحات العامة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Monitoring"
+msgstr "المراقبة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/purchases_tab.js:0
+msgid "Monthly Costs ($)"
+msgstr "التكاليف الشهرية ($)"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Monthly Invoice & Bill Trends"
+msgstr "اتجاهات الفواتير والفواتير الشهرية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Movement Trends"
+msgstr "اتجاهات الحركة"
+
+#. module: farm_management_dashboard
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard_access__name
+msgid "Name"
+msgstr "الاسم"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Negative Cash Flow"
+msgstr "تدفق نقدي سالب"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Negative Working Capital"
+msgstr "رأس مال عامل سالب"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Net Cash Flow"
+msgstr "صافي التدفق النقدي"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Net Income"
+msgstr "صافي الدخل"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Net Margin"
+msgstr "الهامش الصافي"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+msgid "New Bill"
+msgstr "فاتورة جديدة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/crops_tab.js:0
+msgid "New Crop"
+msgstr "محصول جديد"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/overview_tab.js:0
+msgid "New Daily Report"
+msgstr "تقرير يومي جديد"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "New Delivery"
+msgstr "تسليم جديد"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/overview_tab.js:0
+msgid "New Farm"
+msgstr "مزرعة جديدة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+msgid "New Invoice"
+msgstr "فاتورة جديدة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+msgid "New Payment"
+msgstr "دفعة جديدة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/inventory_tab.js:0
+msgid "New Product"
+msgstr "منتج جديد"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/overview_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "New Project"
+msgstr "مشروع جديد"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "New Receipt"
+msgstr "إيصال جديد"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "New Transfer"
+msgstr "تحويل جديد"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "No Active Cultivation"
+msgstr "لا توجد زراعة نشطة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "No activities recorded for this project"
+msgstr "لم يتم تسجيل أنشطة لهذا المشروع"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/dashboard_main.js:0
+msgid "No data to export"
+msgstr "لا توجد بيانات للتصدير"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "No projects are currently in growing or harvest stage."
+msgstr "لا توجد مشاريع حالياً في مرحلة النمو أو الحصاد."
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "No projects in"
+msgstr "لا توجد مشاريع في"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/components/overview_tab.xml:0
+msgid "No recent activities"
+msgstr "لا توجد أنشطة حديثة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "No reports available for this project"
+msgstr "لا توجد تقارير متاحة لهذا المشروع"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Non-Current Assets"
+msgstr "الأصول غير المتداولة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Non-Current Liabilities"
+msgstr "الخصوم غير المتداولة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Notes"
+msgstr "الملاحظات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "On-Time Delivery"
+msgstr "التسليم في الوقت المحدد"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+msgid "Open"
+msgstr "مفتوح"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Operating Activities"
+msgstr "الأنشطة التشغيلية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Operating Expenses"
+msgstr "المصروفات التشغيلية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Operation"
+msgstr "العملية"
+
+#. module: farm_management_dashboard
+#: model:res.groups,comment:farm_management_dashboard.group_farm_manager
+msgid "Operational access to farm dashboard"
+msgstr "الوصول التشغيلي للوحة قيادة المزرعة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/reports_tab.xml:0
+msgid "Operations summary"
+msgstr "ملخص العمليات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Order #"
+msgstr "رقم الطلب"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Order Date"
+msgstr "تاريخ الطلب"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Order Status"
+msgstr "حالة الطلب"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/sales_tab.js:0
+msgid "Order Status Distribution"
+msgstr "توزيع حالة الطلبات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/purchases_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Orders"
+msgstr "الطلبات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Other"
+msgstr "أخرى"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Other Expenses"
+msgstr "مصروفات أخرى"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Other Revenue"
+msgstr "إيرادات أخرى"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/inventory_tab.js:0
+msgid "Out"
+msgstr "خارج"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/inventory_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Out of Stock"
+msgstr "غير متوفر"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+msgid "Outbound"
+msgstr "صادر"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Outstanding"
+msgstr "مستحق"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Outstanding Payables"
+msgstr "المبالغ المستحقة الدفع"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Outstanding Receivables"
+msgstr "المبالغ المستحقة القبض"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Overdue"
+msgstr "متأخر"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+msgid "Overdue Invoices"
+msgstr "الفواتير المتأخرة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/overview_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Overdue Projects"
+msgstr "المشاريع المتأخرة"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Overdue Receivables"
+msgstr "المبالغ المستحقة المتأخرة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/dashboard_main.js:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+#: model:ir.model.fields.selection,name:farm_management_dashboard.selection__farm_dashboard__dashboard_type__overview
+msgid "Overview"
+msgstr "نظرة عامة"
+
+#. module: farm_management_dashboard
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard_access__can_access_overview
+msgid "Overview Access"
+msgstr "الوصول للنظرة العامة"
+
+#. module: farm_management_dashboard
+#: model:ir.model.fields.selection,name:farm_management_dashboard.selection__farm_dashboard__access_level__owner
+msgid "Owner"
+msgstr "المالك"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Owner's Equity"
+msgstr "حقوق الملكية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+msgid "Paid"
+msgstr "مدفوع"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Partner"
+msgstr "الشريك"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+msgid "Payables"
+msgstr "المبالغ المستحقة الدفع"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Payment"
+msgstr "الدفع"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Payment Methods"
+msgstr "طرق الدفع"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Pending Approvals"
+msgstr "في انتظار الموافقة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+msgid "Performance"
+msgstr "الأداء"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Performance Metrics"
+msgstr "مقاييس الأداء"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Pest Control"
+msgstr "مكافحة الآفات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Pesticides"
+msgstr "المبيدات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Phone:"
+msgstr "الهاتف:"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Pipeline"
+msgstr "خط الأنابيب"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Planned"
+msgstr "مخطط"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Planned End Date"
+msgstr "تاريخ الانتهاء المخطط"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Planned End:"
+msgstr "الانتهاء المخطط:"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Planned end date is required"
+msgstr "تاريخ الانتهاء المخطط مطلوب"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Planned end date must be after start date"
+msgstr "تاريخ الانتهاء المخطط يجب أن يكون بعد تاريخ البداية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Planning"
+msgstr "التخطيط"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Planning Projects"
+msgstr "مشاريع التخطيط"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Planting"
+msgstr "الزراعة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Planting Phase"
+msgstr "مرحلة الزراعة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Planting/Sowing"
+msgstr "الزراعة/البذر"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid ""
+"Please configure %(missing_items)s before creating cultivation projects."
+msgstr "يرجى تكوين %(missing_items)s قبل إنشاء مشاريع زراعية."
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Please fix the validation errors below"
+msgstr "يرجى إصلاح أخطاء التحقق أدناه"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Please select a crop"
+msgstr "يرجى اختيار محصول"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Please select a crop BOM"
+msgstr "يرجى اختيار قائمة مواد المحصول"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Please select a farm"
+msgstr "يرجى اختيار مزرعة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Please select a field"
+msgstr "يرجى اختيار حقل"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+msgid "Posted"
+msgstr "مرسل"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Procurement, suppliers, and cost analysis"
+msgstr "المشتريات والموردين وتحليل التكاليف"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Product"
+msgstr "المنتج"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid ""
+"Product %(product_name)s is running low (%(remaining_qty)s %(uom_name)s "
+"remaining)"
+msgstr "المنتج %(product_name)s ينفد من المخزون (متبقي %(remaining_qty)s %(uom_name)s)"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Product Categories"
+msgstr "فئات المنتجات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/inventory_tab.js:0
+msgid "Product Count"
+msgstr "عدد المنتجات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Product Performance"
+msgstr "أداء المنتج"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Product Purchase Analysis"
+msgstr "تحليل مشتريات المنتج"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Products"
+msgstr "المنتجات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+msgid "Profit"
+msgstr "الربح"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Profit & Loss Statement"
+msgstr "قائمة الأرباح والخسائر"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/components/overview_tab.xml:0
+msgid "Profit Margin"
+msgstr "هامش الربح"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Profit margin is only %(profit_margin).1f%%"
+msgstr "هامش الربح %(profit_margin).1f%% فقط"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Profit margin is only 5.1%"
+msgstr "هامش الربح 5.1% فقط"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Profit per Area"
+msgstr "الربح لكل مساحة"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Profit/Loss"
+msgstr "الربح/الخسارة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Profit/Loss:"
+msgstr "الربح/الخسارة:"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+msgid "Profitability"
+msgstr "الربحية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+msgid "Profitability Analysis"
+msgstr "تحليل الربحية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Profitability Ratios"
+msgstr "نسب الربحية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Progress"
+msgstr "التقدم"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Progress:"
+msgstr "التقدم:"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Project"
+msgstr "المشروع"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Project %(project_name)s is %(days_overdue)s days overdue"
+msgstr "المشروع %(project_name)s متأخر %(days_overdue)s يوم"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Project %(project_name)s is due in %(days_remaining)s days"
+msgstr "المشروع %(project_name)s مستحق في %(days_remaining)s يوم"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Project %(project_name)s is over budget by %(overrun_percent).1f%%"
+msgstr "المشروع %(project_name)s تجاوز الميزانية بنسبة %(overrun_percent).1f%%"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Project Activities"
+msgstr "أنشطة المشروع"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Project Code"
+msgstr "رمز المشروع"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Project Completion"
+msgstr "إنجاز المشروع"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Project Due Soon"
+msgstr "المشروع مستحق قريباً"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Project Name"
+msgstr "اسم المشروع"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Project Notes"
+msgstr "ملاحظات المشروع"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Project Overdue"
+msgstr "المشروع متأخر"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Project Overview"
+msgstr "نظرة عامة على المشروع"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Project Start"
+msgstr "بداية المشروع"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Project Timeline"
+msgstr "جدول زمني للمشروع"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid ""
+"Project code will be automatically generated using the format CP/YYYY/XXXXX"
+msgstr "سيتم إنشاء رمز المشروع تلقائياً باستخدام التنسيق CP/YYYY/XXXXX"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Project created successfully!"
+msgstr "تم إنشاء المشروع بنجاح!"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Project initiated with status: Planning"
+msgstr "تم بدء المشروع بحالة: تخطيط"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Project is %(variance).1f%% over budget ($%(overrun_amount).2f)"
+msgstr "المشروع تجاوز الميزانية بنسبة %(variance).1f%% ($%(overrun_amount).2f)"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Project is 11.3% over budget ($11,800.00)"
+msgstr "المشروع تجاوز الميزانية بنسبة 11.3% ($11,800.00)"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Project name is required"
+msgstr "اسم المشروع مطلوب"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Project successfully completed"
+msgstr "تم إنجاز المشروع بنجاح"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/dashboard_main.js:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+#: model:ir.model.fields.selection,name:farm_management_dashboard.selection__farm_dashboard__dashboard_type__projects
+msgid "Projects"
+msgstr "المشاريع"
+
+#. module: farm_management_dashboard
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard_access__can_access_projects
+msgid "Projects Access"
+msgstr "الوصول للمشاريع"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/components/overview_tab.xml:0
+msgid "Projects by Stage"
+msgstr "المشاريع حسب المرحلة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/purchases_tab.js:0
+#: model:ir.model,name:farm_management_dashboard.model_purchase_order
+msgid "Purchase Order"
+msgstr "أمر شراء"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Purchase Pipeline"
+msgstr "خط أنابيب المشتريات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Purchase Trends"
+msgstr "اتجاهات المشتريات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/dashboard_main.js:0
+#: model:ir.model.fields.selection,name:farm_management_dashboard.selection__farm_dashboard__dashboard_type__purchases
+msgid "Purchases"
+msgstr "المشتريات"
+
+#. module: farm_management_dashboard
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard_access__can_access_purchases
+msgid "Purchases Access"
+msgstr "الوصول للمشتريات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Purchases Management"
+msgstr "إدارة المشتريات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Qty"
+msgstr "الكمية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/inventory_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Quantity"
+msgstr "الكمية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Quantity Sold"
+msgstr "الكمية المباعة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/components/overview_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Quick Actions"
+msgstr "إجراءات سريعة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Quick Ratio"
+msgstr "النسبة السريعة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/components/overview_tab.xml:0
+msgid "Quick Stats"
+msgstr "إحصائيات سريعة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Quote to Sale"
+msgstr "من عرض أسعار إلى بيع"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/purchases_tab.js:0
+msgid "RFQ Sent"
+msgstr "تم إرسال طلب عرض أسعار"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "ROI"
+msgstr "عائد الاستثمار"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "RPC method not available"
+msgstr "طريقة RPC غير متاحة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Rating"
+msgstr "التقييم"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Ready to Start Farming"
+msgstr "جاهز لبدء الزراعة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Receipt"
+msgstr "إيصال"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Receipts"
+msgstr "الإيصالات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+msgid "Receivables"
+msgstr "المبالغ المستحقة القبض"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/components/overview_tab.xml:0
+msgid "Recent Activities"
+msgstr "الأنشطة الحديثة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Recent Invoices & Bills"
+msgstr "الفواتير والفواتير الحديثة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/inventory_tab.js:0
+msgid "Recent Movements"
+msgstr "الحركات الحديثة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Recent Operations"
+msgstr "العمليات الحديثة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Recent Payments"
+msgstr "المدفوعات الحديثة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+msgid "Recent Projects"
+msgstr "المشاريع الحديثة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Recent Purchase Orders"
+msgstr "أوامر الشراء الحديثة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Recent Reports"
+msgstr "التقارير الحديثة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+msgid "Reconciled"
+msgstr "متطابق"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Reference"
+msgstr "المرجع"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/dashboard_main.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Refresh"
+msgstr "تحديث"
+
+#. module: farm_management_dashboard
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard__refresh_interval
+msgid "Refresh Interval (seconds)"
+msgstr "فترة التحديث (ثواني)"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/purchases_tab.js:0
+msgid "Remaining"
+msgstr "المتبقي"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/reports_tab.xml:0
+msgid "Report builder"
+msgstr "منشئ التقارير"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Reported By"
+msgstr "مبلغ بواسطة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/dashboard_main.js:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+#: model:ir.model.fields.selection,name:farm_management_dashboard.selection__farm_dashboard__dashboard_type__reports
+msgid "Reports"
+msgstr "التقارير"
+
+#. module: farm_management_dashboard
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard_access__can_access_reports
+msgid "Reports Access"
+msgstr "الوصول للتقارير"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/reports_tab.xml:0
+msgid "Reports Tab"
+msgstr "تبويب التقارير"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Reserved Qty"
+msgstr "الكمية المحجوزة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Revenue"
+msgstr "الإيرادات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/sales_tab.js:0
+msgid "Revenue ($)"
+msgstr "الإيرادات ($)"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Revenue Trends"
+msgstr "اتجاهات الإيرادات"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Revenue per Area"
+msgstr "الإيرادات لكل مساحة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Revenue vs Expenses"
+msgstr "الإيرادات مقابل المصروفات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+msgid "Revenue vs Expenses Analysis"
+msgstr "تحليل الإيرادات مقابل المصروفات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Revenue:"
+msgstr "الإيرادات:"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/js/dashboard_main.js:0
+#: model:ir.model.fields.selection,name:farm_management_dashboard.selection__farm_dashboard__dashboard_type__sales
+msgid "Sales"
+msgstr "المبيعات"
+
+#. module: farm_management_dashboard
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard_access__can_access_sales
+msgid "Sales Access"
+msgstr "الوصول للمبيعات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Sales Management"
+msgstr "إدارة المبيعات"
+
+#. module: farm_management_dashboard
+#: model:ir.model,name:farm_management_dashboard.model_sale_order
+msgid "Sales Order"
+msgstr "أمر بيع"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Sales Pipeline"
+msgstr "خط أنابيب المبيعات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Sales Revenue"
+msgstr "إيرادات المبيعات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Sales Statistics"
+msgstr "إحصائيات المبيعات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Sales by Category"
+msgstr "المبيعات حسب الفئة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Search"
+msgstr "بحث"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Search products..."
+msgstr "بحث عن المنتجات..."
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Search purchases..."
+msgstr "بحث عن المشتريات..."
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/crops_tab.js:0
+msgid "Seasonal Crops"
+msgstr "المحاصيل الموسمية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Seeds/Plants"
+msgstr "البذور/النباتات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Select BOM..."
+msgstr "اختر قائمة المواد..."
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Select Crop First..."
+msgstr "اختر المحصول أولاً..."
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Select Crop..."
+msgstr "اختر المحصول..."
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Select Farm First..."
+msgstr "اختر المزرعة أولاً..."
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Select Farm..."
+msgstr "اختر المزرعة..."
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Select Field..."
+msgstr "اختر الحقل..."
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/financials_tab.js:0
+msgid "Sent"
+msgstr "مرسل"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Sep 2024"
+msgstr "سبتمبر 2024"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Setup Required"
+msgstr "مطلوب إعداد"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Showing"
+msgstr "يظهر"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/components/overview_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Smart Actions"
+msgstr "إجراءات ذكية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/purchases_tab.js:0
+msgid "Spent"
+msgstr "منفق"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Spring %(year)s"
+msgstr "ربيع %(year)s"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Start Date"
+msgstr "تاريخ البداية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Start Date:"
+msgstr "تاريخ البداية:"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid ""
+"Start by setting up your farms, fields, and crops, then create cultivation "
+"projects."
+msgstr "ابدأ بإعداد مزارعك وحقولك ومحاصيلك، ثم أنشئ مشاريع زراعية."
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Start date is required"
+msgstr "تاريخ البداية مطلوب"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Start:"
+msgstr "البداية:"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/dashboard_main.xml:0
+msgid "Static"
+msgstr "ثابت"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Status"
+msgstr "الحالة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Status Distribution"
+msgstr "توزيع الحالة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Status Update"
+msgstr "تحديث الحالة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Status:"
+msgstr "الحالة:"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Stock"
+msgstr "المخزون"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Stock Adjustment"
+msgstr "تعديل المخزون"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Stock Analysis"
+msgstr "تحليل المخزون"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Stock Deliveries"
+msgstr "تسليمات المخزون"
+
+#. module: farm_management_dashboard
+#: model:ir.model,name:farm_management_dashboard.model_stock_move
+msgid "Stock Move"
+msgstr "حركة المخزون"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Stock Movements"
+msgstr "حركات المخزون"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/inventory_tab.js:0
+msgid "Stock Operations"
+msgstr "عمليات المخزون"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Stock Receipts"
+msgstr "إيصالات المخزون"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Stock Status Distribution"
+msgstr "توزيع حالة المخزون"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Stock Transfers"
+msgstr "تحويلات المخزون"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/inventory_tab.js:0
+msgid "Stock Value"
+msgstr "قيمة المخزون"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Summer %(year)s"
+msgstr "صيف %(year)s"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Supplier"
+msgstr "المورد"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Supplier Details"
+msgstr "تفاصيل المورد"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Supplier Ratings"
+msgstr "تقييمات المورد"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Suppliers"
+msgstr "الموردين"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "System Status"
+msgstr "حالة النظام"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/dashboard_main.js:0
+msgid "Tab refreshed"
+msgstr "تم تحديث التبويب"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+msgid "Table"
+msgstr "جدول"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+msgid "Target:"
+msgstr "الهدف:"
+
+#. module: farm_management_dashboard
+#: model:ir.model,name:farm_management_dashboard.model_project_task
+msgid "Task"
+msgstr "مهمة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "This Year"
+msgstr "هذه السنة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Timeline"
+msgstr "الجدول الزمني"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/purchases_tab.js:0
+msgid "To Approve"
+msgstr "للموافقة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "To Location"
+msgstr "إلى الموقع"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Today"
+msgstr "اليوم"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/overview_tab.js:0
+msgid "Today's Reports"
+msgstr "تقارير اليوم"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Tomatoes"
+msgstr "الطماطم"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Top Customers"
+msgstr "أفضل العملاء"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Top Products by Amount"
+msgstr "أفضل المنتجات حسب المبلغ"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Top Products by Value"
+msgstr "أفضل المنتجات حسب القيمة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Top Selling Products"
+msgstr "أفضل المنتجات مبيعاً"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Top Suppliers by Amount"
+msgstr "أفضل الموردين حسب المبلغ"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Total Accounts"
+msgstr "إجمالي الحسابات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Total Amount"
+msgstr "إجمالي المبلغ"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/purchases_tab.js:0
+msgid "Total Amount ($)"
+msgstr "إجمالي المبلغ ($)"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/components/overview_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Total Area (Ha)"
+msgstr "إجمالي المساحة (فدان)"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Total Assets"
+msgstr "إجمالي الأصول"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Total Bills"
+msgstr "إجمالي الفواتير"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/components/overview_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Total Budget"
+msgstr "إجمالي الميزانية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Total Budget (Based on BOM)"
+msgstr "إجمالي الميزانية (بناءً على قائمة المواد)"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Total Credit"
+msgstr "إجمالي الدائن"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+msgid "Total Crops"
+msgstr "إجمالي المحاصيل"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Total Customers"
+msgstr "إجمالي العملاء"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Total Debit"
+msgstr "إجمالي المدين"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Total Expenses"
+msgstr "إجمالي المصروفات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Total Inbound"
+msgstr "إجمالي الوارد"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/inventory_tab.js:0
+msgid "Total Inventory Value"
+msgstr "إجمالي قيمة المخزون"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Total Invoices"
+msgstr "إجمالي الفواتير"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Total Liabilities"
+msgstr "إجمالي الخصوم"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Total Liabilities + Equity"
+msgstr "إجمالي الخصوم + حقوق الملكية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Total Orders"
+msgstr "إجمالي الطلبات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Total Orders:"
+msgstr "إجمالي الطلبات:"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Total Outbound"
+msgstr "إجمالي الصادر"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/inventory_tab.js:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Total Products"
+msgstr "إجمالي المنتجات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/components/overview_tab.xml:0
+msgid "Total Profit"
+msgstr "إجمالي الربح"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Total Projects"
+msgstr "إجمالي المشاريع"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Total Revenue"
+msgstr "إجمالي الإيرادات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Total Revenue:"
+msgstr "إجمالي الإيرادات:"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "Total Spent"
+msgstr "إجمالي المنفق"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Total Value"
+msgstr "إجمالي القيمة"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid ""
+"Total costs ($%(total_costs).2f) exceed total revenue "
+"($%(total_revenue).2f)"
+msgstr "إجمالي التكاليف ($%(total_costs).2f) يتجاوز إجمالي الإيرادات ($%(total_revenue).2f)"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Transfer"
+msgstr "تحويل"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Transfers"
+msgstr "التحويلات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Type"
+msgstr "النوع"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "Type:"
+msgstr "النوع:"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Unit Price"
+msgstr "سعر الوحدة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+msgid "Unit of Measure:"
+msgstr "وحدة القياس:"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/projects_tab.js:0
+msgid "Unknown User"
+msgstr "مستخدم غير معروف"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Upcoming Harvests (%(projects_count)s projects)"
+msgstr "الحصاد القادم (%(projects_count)s مشروع)"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Upcoming Harvests (1 projects)"
+msgstr "الحصاد القادم (1 مشروع)"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/sidebar/dashboard_sidebar.js:0
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard__user_id
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard_access__user_id
+#: model:ir.model.fields.selection,name:farm_management_dashboard.selection__farm_dashboard__access_level__user
+msgid "User"
+msgstr "مستخدم"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/dashboard_main.js:0
+msgid "Using demo data for ${tabKey} tab"
+msgstr "استخدام بيانات تجريبية لتبويب ${tabKey}"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Valuation Trends"
+msgstr "اتجاهات التقييم"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/inventory_tab.js:0
+msgid "Value"
+msgstr "القيمة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "View"
+msgstr "عرض"
+
+#. module: farm_management_dashboard
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard_access__can_view_costs
+msgid "View Cost Details"
+msgstr "عرض تفاصيل التكلفة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/sales_tab.xml:0
+msgid "View Details"
+msgstr "عرض التفاصيل"
+
+#. module: farm_management_dashboard
+#: model:ir.model.fields,field_description:farm_management_dashboard.field_farm_dashboard_access__can_view_profits
+msgid "View Profit Details"
+msgstr "عرض تفاصيل الربح"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "View Reports"
+msgstr "عرض التقارير"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "Waiting"
+msgstr "في الانتظار"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/components/tabs/inventory_tab.js:0
+msgid "Warehouse Management"
+msgstr "إدارة المستودع"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Welcome to Farm Management"
+msgstr "مرحباً بك في إدارة المزرعة"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Wheat"
+msgstr "القمح"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "Will be auto-generated (e.g., CP/2025/00003)"
+msgstr "سيتم إنشاؤه تلقائياً (مثل: CP/2025/00003)"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Winter %(year)s"
+msgstr "شتاء %(year)s"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/financials_tab.xml:0
+msgid "Working Capital"
+msgstr "رأس المال العامل"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Working capital is $%(amount).2f negative"
+msgstr "رأس المال العامل سالب بقيمة $%(amount).2f"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+msgid "Yield"
+msgstr "الغلة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+msgid "Yield Efficiency"
+msgstr "كفاءة الغلة"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "Yield Efficiency (%)"
+msgstr "كفاءة الغلة (%)"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/farm_dashboard.py:0
+msgid "You do not have access to the farm dashboard."
+msgstr "ليس لديك صلاحية للوصول إلى لوحة قيادة المزرعة."
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/dashboard_main.js:0
+msgid "You don't have access to this tab"
+msgstr "ليس لديك صلاحية للوصول إلى هذا التبويب"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "You don't have permission to access the farm dashboard."
+msgstr "ليس لديك إذن للوصول إلى لوحة قيادة المزرعة."
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/js/dashboard_main.js:0
+msgid "You don't have permission to export data"
+msgstr "ليس لديك إذن لتصدير البيانات"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid ""
+"You have %(farms_count)s farms, %(fields_count)s fields, and %(crops_count)s"
+" crops configured. Create your first cultivation project to see live data!"
+msgstr "لديك %(farms_count)s مزرعة، %(fields_count)s حقل، و%(crops_count)s محاصيل معدّة. أنشئ مشروعك الزراعي الأول لرؤية بيانات حية!"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "assigned"
+msgstr "معيّن"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "cancel"
+msgstr "إلغاء"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "collapse"
+msgstr "طي"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "confirmed"
+msgstr "مؤكد"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "crops"
+msgstr "محاصيل"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "custom"
+msgstr "مخصص"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/dashboard_main.xml:0
+msgid "data..."
+msgstr "بيانات..."
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+msgid "days"
+msgstr "أيام"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/crops_tab.xml:0
+msgid "days cycle"
+msgstr "دورة أيام"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "done"
+msgstr "منجز"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "draft"
+msgstr "مسودة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "entries"
+msgstr "إدخالات"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "expand"
+msgstr "توسيع"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "farms"
+msgstr "مزارع"
+
+#. module: farm_management_dashboard
+#. odoo-python
+#: code:addons/farm_management_dashboard/models/dashboard_data.py:0
+msgid "fields"
+msgstr "حقول"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "irrigation_duration"
+msgstr "مدة_الري"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "of"
+msgstr "من"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/projects_tab.xml:0
+msgid "stage"
+msgstr "مرحلة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "to"
+msgstr "إلى"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "today"
+msgstr "اليوم"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml:0
+msgid "waiting"
+msgstr "في الانتظار"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/purchases_tab.xml:0
+msgid "year"
+msgstr "سنة"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/reports_tab.xml:0
+msgid "💰 Cost Analysis"
+msgstr "💰 تحليل التكاليف"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/reports_tab.xml:0
+msgid "📈 Performance"
+msgstr "📈 الأداء"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/reports_tab.xml:0
+msgid "📊 Daily Reports"
+msgstr "📊 التقارير اليومية"
+
+#. module: farm_management_dashboard
+#. odoo-javascript
+#: code:addons/farm_management_dashboard/static/src/xml/tabs/reports_tab.xml:0
+msgid "🔧 Custom"
+msgstr "🔧 مخصص"

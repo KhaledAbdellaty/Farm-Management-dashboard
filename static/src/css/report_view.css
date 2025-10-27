@@ -1,0 +1,55 @@
+/* Styles for expanded reports view */
+.expanded-reports {
+    margin: -1rem;
+    padding: 1.5rem;
+    background-color: #f8f9fa;
+    border-radius: 0;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.expanded-reports .card {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.expanded-reports h6 {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.expanded-reports .table th {
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+}
+
+.expanded-reports .badge {
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+}
+
+.expanded-reports .avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 0.8rem;
+}
+
+/* Progress bar in cost breakdown */
+.expanded-reports .progress {
+    margin-top: 0.25rem;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.expanded-reports .progress-bar {
+    background-color: var(--farm-primary, #28a745);
+}
+
+/* Chart container */
+.expanded-reports .chart-container {
+    min-height: 200px;
+}

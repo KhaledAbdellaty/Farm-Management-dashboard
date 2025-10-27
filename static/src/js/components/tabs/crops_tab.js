@@ -3,9 +3,13 @@
 import { Component, useState, onMounted, onWillUnmount } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
+import { SmartButton } from "../common/smart_button";
 
 export class CropsTab extends Component {
     static template = "farm_management_dashboard.CropsTabTemplate";
+    static components = {
+        SmartButton,
+    };
     static props = {
         data: Object,
         filters: Object,
@@ -106,6 +110,82 @@ export class CropsTab extends Component {
     
     get yieldAnalysis() {
         return this.props.data.yield_analysis || {};
+    }
+    
+    // Quick Actions for Crops Tab
+    get quickActions() {
+        console.log('🔧 Generating quick actions for crops tab');
+        const actions = [
+            { icon: 'fa-plus-circle', label: _t('New Crop'), type: 'primary', size: 'sm', action: 'farm.crop', permission: 'can_create_crops' },
+            { icon: 'fa-leaf', label: _t('Active Crops'), type: 'success', size: 'sm', action: 'farm.crop', permission: 'can_view_details' },
+            { icon: 'fa-list', label: _t('Crop BOMs'), type: 'primary', size: 'sm', action: 'farm.crop.bom', permission: 'can_view_details' },
+
+        ];
+        console.log('🔧 Generated quick actions:', actions);
+        return actions;
+    }
+
+    get smartActions() {
+        const actions = [];
+        
+        // Add smart actions based on crop data
+        if (this.props.data?.crops) {
+            const crops = this.props.data.crops;
+            
+            // Check for high-yield crops
+            const highYieldCrops = crops.filter(crop => crop.average_yield > 100);
+            if (highYieldCrops.length > 0) {
+                actions.push({
+                    icon: 'fa-trophy',
+                    label: _t('High Yield Crops'),
+                    type: 'success',
+                    size: 'sm',
+                    action: 'farm.crop',
+                    permission: 'can_view_details',
+                    filterInfo: {
+                        domain: [['average_yield', '>', 100]],
+                        context: { 'search_default_high_yield': 1 }
+                    }
+                });
+            }
+
+            // Check for seasonal crops
+            const seasonalCrops = crops.filter(crop => crop.season);
+            if (seasonalCrops.length > 0) {
+                actions.push({
+                    icon: 'fa-leaf',
+                    label: _t('Seasonal Crops'),
+                    type: 'info',
+                    size: 'sm',
+                    action: 'farm.crop',
+                    permission: 'can_view_details',
+                    filterInfo: {
+                        domain: [['season', '!=', false]],
+                        context: { 'search_default_seasonal': 1 }
+                    }
+                });
+            }
+
+            // Check for crops needing attention
+            const attentionCrops = crops.filter(crop => crop.health_status === 'warning' || crop.health_status === 'critical');
+            if (attentionCrops.length > 0) {
+                actions.push({
+                    icon: 'fa-exclamation-triangle',
+                    label: _t('Crops Needing Attention'),
+                    type: 'warning',
+                    size: 'sm',
+                    action: 'farm.crop',
+                    permission: 'can_view_details',
+                    filterInfo: {
+                        domain: [['health_status', 'in', ['warning', 'critical']]],
+                        context: { 'search_default_attention': 1 }
+                    }
+                });
+            }
+        }
+        
+        console.log('🔧 Generated smart actions:', actions);
+        return actions;
     }
     
     // ===== FILTER METHODS =====
@@ -234,7 +314,7 @@ export class CropsTab extends Component {
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Crop Profitability Analysis'
+                        text: _t('Crop Profitability Analysis')
                     },
                     legend: {
                         position: 'top'
@@ -245,7 +325,7 @@ export class CropsTab extends Component {
                         beginAtZero: true,
                         title: {
                             display: true,
-                            text: 'Amount per Area'
+                            text: _t('Amount per Area')
                         }
                     }
                 }
@@ -275,7 +355,7 @@ export class CropsTab extends Component {
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Yield Efficiency by Crop'
+                        text: _t('Yield Efficiency by Crop')
                     },
                     legend: {
                         position: 'right'
@@ -294,13 +374,35 @@ export class CropsTab extends Component {
     
     // ===== UTILITY METHODS =====
     
-    formatCurrency(amount) {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
+   // Formatting methods
+    formatCurrency(amount) {  
+        // Get currency settings from data if available
+        const currencyData = this.props.data?.currency_data || {
             currency: 'USD',
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
+            locale: 'en-US',
+            symbol: '$',
+            position: 'before',
+            decimal_places: 2
+        };
+        
+        // Convert locale from en_US format to en-US format for Intl API
+        const locale = currencyData.locale ? currencyData.locale.replace('_', '-') : 'en-US';
+        
+        // Format with the appropriate number of decimal places
+        const formattedAmount = new Intl.NumberFormat(locale, {
+            style: 'currency',
+            currency: currencyData.name || currencyData.currency || 'USD',
+            minimumFractionDigits: currencyData.decimal_places || 2,
+            maximumFractionDigits: currencyData.decimal_places || 2
         }).format(amount || 0);
+        
+        // If position is 'after', move the currency symbol
+        if (currencyData.position === 'after') {
+            // Remove the currency symbol from the beginning and add it to the end
+            return formattedAmount.replace(currencyData.symbol, '') + ' ' + currencyData.symbol;
+        }
+        
+        return formattedAmount;
     }
     
     formatNumber(number, decimals = 2) {
@@ -330,14 +432,14 @@ export class CropsTab extends Component {
     
     getStateName(state) {
         const names = {
-            'draft': 'Planning',
-            'preparation': 'Field Preparation', 
-            'sowing': 'Planting/Sowing',
-            'growing': 'Growing',
-            'harvest': 'Harvest',
-            'sales': 'Sales',
-            'done': 'Completed',
-            'cancel': 'Cancelled'
+            'draft': _t('Planning'),
+            'preparation': _t('Field Preparation'), 
+            'sowing': _t('Planting/Sowing'),
+            'growing': _t('Growing'),
+            'harvest': _t('Harvest'),
+            'sales': _t('Sales'),
+            'done': _t('Completed'),
+            'cancel': _t('Cancelled')
         };
         return names[state] || state;
     }

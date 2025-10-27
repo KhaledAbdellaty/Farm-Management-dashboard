@@ -33,7 +33,7 @@
         - Performance optimized with read_group aggregations
     """,
     'category': 'Agriculture',
-    'author': 'Your Company',
+    'author': 'Khaled Abdellaty',
     'website': 'https://www.yourcompany.com',
     'license': 'LGPL-3',
     'depends': [
@@ -80,6 +80,9 @@
             'farm_management_dashboard/static/src/xml/tabs/inventory_tab.xml',
             'farm_management_dashboard/static/src/xml/tabs/reports_tab.xml',
             
+            # Common component templates
+            'farm_management_dashboard/static/src/xml/components/smart_button.xml',
+            
             # Then JS components
             'farm_management_dashboard/static/src/js/components/sidebar/dashboard_sidebar.js',
             'farm_management_dashboard/static/src/js/components/tabs/overview_tab.js',
@@ -91,11 +94,16 @@
             'farm_management_dashboard/static/src/js/components/tabs/inventory_tab.js',
             'farm_management_dashboard/static/src/js/components/tabs/reports_tab.js',
             
+            # Common components and services
+            'farm_management_dashboard/static/src/js/components/common/smart_button.js',
+            'farm_management_dashboard/static/src/js/services/quick_actions_service.js',
+            
             # Main dashboard component LAST
             'farm_management_dashboard/static/src/js/dashboard_main.js',
             
             # Styles
             'farm_management_dashboard/static/src/css/dashboard_main.css',
+            'farm_management_dashboard/static/src/css/report_view.css',
         ],
     },
     'images': ['static/description/index.html'],
