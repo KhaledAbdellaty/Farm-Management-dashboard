@@ -95,6 +95,20 @@ class FarmDashboardAccess(models.Model):
                 'can_modify_filters': False,
                 'can_view_costs': True,
                 'can_view_profits': True,
+            },
+            'user': {
+                'can_access_overview': True,
+                'can_access_projects': True,
+                'can_access_crops': True,
+                'can_access_financials': False,  # Basic users don't see financials
+                'can_access_sales': False,
+                'can_access_purchases': False,
+                'can_access_inventory': False,
+                'can_access_reports': True,
+                'can_export_data': False,
+                'can_modify_filters': True,
+                'can_view_costs': False,
+                'can_view_profits': False,
             }
         }
         return permissions.get(role, {})
@@ -122,12 +136,19 @@ class FarmDashboardAccess(models.Model):
         elif user.has_group('farm_management_dashboard.group_farm_owner'):
             role = 'owner'
             _logger.info(f"User {user_id} has Farm Owner group")
-        elif user.has_group('farm_management_dashboard.group_farm_manager'):
+        elif user.has_group('farm_management_dashboard.group_farm_manager') or user.has_group('farm_management.group_farm_manager'):
             role = 'manager'
             _logger.info(f"User {user_id} has Farm Manager group")
-        elif user.has_group('farm_management_dashboard.group_farm_accountant'):
+        elif user.has_group('farm_management_dashboard.group_farm_accountant') or user.has_group('farm_management.group_farm_accountant'):
             role = 'accountant'
             _logger.info(f"User {user_id} has Farm Accountant group")
+        elif user.has_group('farm_management_dashboard.group_farm_dashboard_access'):
+            # Basic dashboard access without specific role
+            role = 'user'
+            _logger.info(f"User {user_id} has basic Farm Dashboard Access group")
+        elif user.has_group('farm_management.group_farm_user'):
+            role = 'user'
+            _logger.info(f"User {user_id} has Farm Management User group")
         
         # If no role could be determined from security groups, don't provide access by default
         if not role:
