@@ -35,10 +35,14 @@ class FarmDashboardData(models.Model):
         try:
             # Check user access
             if not self._check_dashboard_access():
-                raise UserError(_("You don't have permission to access the farm dashboard."))
+                raise AccessError(_("You don't have permission to access the farm dashboard."))
             
             # Get user role for customized data
             user_role = self._get_user_role()
+            
+            # Check tab-specific access
+            if not self._check_tab_access(tab):
+                raise AccessError(_("You don't have permission to access the %s tab.") % tab)
             
             # Route to specific tab data method
             method_map = {
@@ -57,9 +61,80 @@ class FarmDashboardData(models.Model):
             else:
                 return self._get_overview_data(filters, user_role)
                 
+        except AccessError as e:
+            _logger.error(f"Access denied for tab {tab}: {str(e)}")
+            raise
         except Exception as e:
             _logger.error(f"Error getting dashboard data for tab {tab}: {str(e)}")
             return {'error': str(e)}
+    
+    def _check_dashboard_access(self):
+        """Check if current user has permission to access dashboard"""
+        user = self.env.user
+        
+        # System admin always has access
+        if user.has_group('base.group_system'):
+            return True
+        
+        # Check farm dashboard specific groups
+        if user.has_group('farm_management_dashboard.group_farm_dashboard_access'):
+            return True
+        
+        # Check farm management module groups as fallback
+        if user.has_group('farm_management.group_farm_user'):
+            return True
+        
+        return False
+    
+    def _check_tab_access(self, tab):
+        """Check if current user has permission to access specific tab"""
+        user = self.env.user
+        
+        # System admin and farm owners have access to all tabs
+        if user.has_group('base.group_system') or user.has_group('farm_management_dashboard.group_farm_owner'):
+            return True
+        
+        # Get user permissions from farm.dashboard.access model
+        dashboard_access = self.env['farm.dashboard.access']
+        user_permissions = dashboard_access.get_user_permissions(user.id)
+        
+        # Check tab-specific permission
+        tab_permission_map = {
+            'overview': 'overview',
+            'projects': 'projects',
+            'crops': 'crops',
+            'financials': 'financials',
+            'sales': 'sales',
+            'purchases': 'purchases',
+            'inventory': 'inventory',
+            'reports': 'reports',
+        }
+        
+        tab_key = tab_permission_map.get(tab)
+        if tab_key and user_permissions.get('tabs', {}).get(tab_key, False):
+            return True
+        
+        return False
+    
+    def _get_user_role(self):
+        """Get the user's role for dashboard customization"""
+        user = self.env.user
+        
+        # Check in order of privilege level (most privileged first)
+        if user.has_group('base.group_system') or user.has_group('base.group_erp_manager'):
+            return 'owner'
+        elif user.has_group('farm_management_dashboard.group_farm_owner'):
+            return 'owner'
+        elif user.has_group('farm_management_dashboard.group_farm_manager') or user.has_group('farm_management.group_farm_manager'):
+            return 'manager'
+        elif user.has_group('farm_management_dashboard.group_farm_accountant') or user.has_group('farm_management.group_farm_accountant'):
+            return 'accountant'
+        elif user.has_group('farm_management_dashboard.group_farm_dashboard_access'):
+            return 'user'
+        elif user.has_group('farm_management.group_farm_user'):
+            return 'user'
+        
+        return 'user'
     
     @api.model
     def _get_overview_data(self, filters, user_role):
